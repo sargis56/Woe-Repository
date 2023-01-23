@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TrevorNetworkTest.unity
+    guid: c6b09ac3e6620c74a9d21b9eba289b0c
   m_configObjects: {}
