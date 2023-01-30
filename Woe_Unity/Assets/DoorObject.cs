@@ -41,8 +41,6 @@ public class DoorObject : NetworkBehaviour
         float newY = transform.localPosition.y;
         float newZ = transform.localPosition.z;
 
-        Debug.Log(isOpening);
-
         switch (isOpening) {
             case true:
             if (MoveOnX == true)
