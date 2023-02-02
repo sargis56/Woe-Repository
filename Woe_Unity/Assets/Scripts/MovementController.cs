@@ -4,25 +4,59 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    public float speed = 25;
+
+    bool grounded = false;
+    Vector3 vel = new Vector3(0.0f, 0.0f, 0.0f);
+    public float velRest = -2.0f;
+    public float speed = 25.0f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 1.0f;
+
     public CharacterController charController;
-    Vector3 velocity = new Vector3(0.0f, 0.0f, 0.0f);
+    public Transform groundCheck;
+    public float distanceFromGround = 0.4f;
+    public LayerMask groundLayerMask;
 
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
+
+        if (grounded && vel.y < 0.0f)
+        {
+            print("Player: Grounded");
+            vel.y = velRest;
+        }
+
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        Vector3 movement = transform.right * moveHorizontal + transform.forward * moveVertical;
+        Move(moveHorizontal, moveVertical);
 
-        charController.Move(movement * speed * Time.deltaTime);
+        if (Input.GetButtonDown("Jump") && grounded)
+        {
+            Jump();
+        }
 
+        vel.y += gravity * Time.deltaTime;
+        charController.Move(vel * Time.deltaTime);
+    }
+
+    public void Move(float moveHorizontal_, float moveVertical_)
+    {
+        //print("Player: Move");
+        charController.Move((transform.right * moveHorizontal_ + transform.forward * moveVertical_) * speed * Time.deltaTime);
+    }
+
+    public void Jump()
+    {
+        print("Player: Jump");
+        vel.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
     }
 }
