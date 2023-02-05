@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -5,16 +6,17 @@ using UnityEngine;
 
 public class MazeMap : MonoBehaviour
 {
-    private class PillarObject
+    [Serializable]
+    public class PillarObject
     {
-        public PillarObject(PillarSpawner pillar, ButtonObject button_, MeshRenderer label_)
-        {
-            //texture = pillar.pillarLabel;
-            button = button_;
-            button.GetComponent<MeshRenderer>().material.mainTexture = pillar.pillarLabel;
-            label = label_;
-        }
-        //public Texture texture;
+        //public PillarObject(PillarSpawner pillar, ButtonObject button_, MeshRenderer label_)
+        //{
+        //    //texture = pillar.pillarLabel;
+        //    button = button_;
+        //    button.GetComponent<MeshRenderer>().material.mainTexture = pillar.pillarLabel;
+        //    label = label_;
+        //}
+        public PillarSpawner pillar;
         public ButtonObject button;
         public MeshRenderer label;
     }
@@ -23,27 +25,27 @@ public class MazeMap : MonoBehaviour
     public Texture inActiveTexture;
     public Texture activeTexture;
 
-    public PillarSpawner[] pillarSpawners;
-    public ButtonObject[] pillarButtons;
-    public MeshRenderer[] pillarLabels;
+    public PillarObject[] pillars;
 
     private List<PillarObject> activePillars = new List<PillarObject>();
     private PillarObject currentPillar;
     void Start()
     {
         isComplete = false;
-        for(int x = 0; x < pillarSpawners.Length; x++) {
-            activePillars.Add(new PillarObject(pillarSpawners[x], pillarButtons[x], pillarLabels[x]));
-            pillarButtons[x].buttonIndex = x;
-            pillarButtons[x].OnButtonClicked += CheckButton;
-            pillarLabels[x].material.mainTexture = inActiveTexture;
+        for(int x = 0; x < pillars.Length; x++) {
+            activePillars.Add(pillars[x]);
+            pillars[x].button.buttonIndex = x;
+            pillars[x].button.OnButtonClicked += CheckButton;
+            pillars[x].button.GetComponent<Renderer>().material.mainTexture = pillars[x].pillar.pillarLabel;
+            pillars[x].label.material.mainTexture = inActiveTexture;
+
         }
         AssignNextPillar();
     }
 
     void AssignNextPillar()
     {
-        currentPillar = activePillars[Random.Range(0, activePillars.Count)];
+        currentPillar = activePillars[UnityEngine.Random.Range(0, activePillars.Count - 1)];
         currentPillar.label.material.mainTexture = activeTexture;
     }
 
@@ -51,8 +53,13 @@ public class MazeMap : MonoBehaviour
     {
         if (currentPillar.button.buttonIndex == index)
         {
-            activePillars.Remove(activePillars[index]);
-            AssignNextPillar();
+            Debug.Log(index);
+            activePillars.Remove(pillars[index]);
+            if (activePillars.Count > 0)
+            {
+                Debug.Log(index);
+                AssignNextPillar();
+            }
             return;
         }
         ResetPuzzle();

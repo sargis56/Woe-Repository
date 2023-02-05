@@ -34,7 +34,7 @@ public class PlayerNetwork : NetworkBehaviour
         if (Input.GetKey(KeyCode.D)) {
             moveDirection.x = +1f;
         }
-        float moveSpeed = 3.0f;
+        float moveSpeed = 10.0f;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 }

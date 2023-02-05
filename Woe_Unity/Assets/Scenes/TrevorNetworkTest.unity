@@ -169,21 +169,19 @@ MonoBehaviour:
   isComplete: 0
   inActiveTexture: {fileID: 2800000, guid: 7a7cd194c71e8ca4f95f335d2f866cd5, type: 3}
   activeTexture: {fileID: 2800000, guid: 0dd9cd3bf02ec9c4b85f5f5561cbc709, type: 3}
-  pillarSpawners:
-  - {fileID: 592274062}
-  - {fileID: 117286687}
-  - {fileID: 1343142270}
-  - {fileID: 818269630}
-  pillarButtons:
-  - {fileID: 2079021261}
-  - {fileID: 1778472955}
-  - {fileID: 1691731578}
-  - {fileID: 929975637}
-  pillarLabels:
-  - {fileID: 671343719}
-  - {fileID: 439449448}
-  - {fileID: 446220901}
-  - {fileID: 1105189689}
+  pillars:
+  - pillar: {fileID: 592274062}
+    button: {fileID: 2079021261}
+    label: {fileID: 671343719}
+  - pillar: {fileID: 818269630}
+    button: {fileID: 929975637}
+    label: {fileID: 446220901}
+  - pillar: {fileID: 117286687}
+    button: {fileID: 1778472955}
+    label: {fileID: 439449448}
+  - pillar: {fileID: 1343142270}
+    button: {fileID: 1691731578}
+    label: {fileID: 1105189689}
 --- !u!65 &130463945
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -260,9 +258,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 671343717}
-  - {fileID: 439449446}
   - {fileID: 446220899}
   - {fileID: 1105189687}
+  - {fileID: 439449446}
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -380,7 +378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.39
+      value: -11.39
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -388,7 +386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.41
+      value: 23.37
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -420,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360459, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_Name
-      value: PillarSpawner (2)
+      value: PillarSpawnerGreen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
@@ -448,7 +446,7 @@ GameObject:
   - component: {fileID: 439449448}
   - component: {fileID: 439449447}
   m_Layer: 0
-  m_Name: Pillar2
+  m_Name: OrgPillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,7 +465,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 130463948}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &439449447
 BoxCollider:
@@ -541,7 +539,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8298133134241841573, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_Name
-      value: Button (4)
+      value: BlueButton
       objectReference: {fileID: 0}
     - target: {fileID: 8298133134241841593, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_RootOrder
@@ -606,7 +604,7 @@ GameObject:
   - component: {fileID: 446220901}
   - component: {fileID: 446220900}
   m_Layer: 0
-  m_Name: Pillar3
+  m_Name: BluePillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -625,7 +623,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 130463948}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &446220900
 BoxCollider:
@@ -1179,7 +1177,7 @@ GameObject:
   - component: {fileID: 671343719}
   - component: {fileID: 671343718}
   m_Layer: 0
-  m_Name: Pillar1
+  m_Name: RedPillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1280,7 +1278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.22
+      value: -7.34
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1320,7 +1318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360459, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_Name
-      value: PillarSpawner (1)
+      value: PillarSpawnerOrg
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
@@ -1549,7 +1547,7 @@ GameObject:
   - component: {fileID: 1105189689}
   - component: {fileID: 1105189688}
   m_Layer: 0
-  m_Name: Pillar4
+  m_Name: GreenPillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1568,7 +1566,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 130463948}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1105189688
 BoxCollider:
@@ -1642,7 +1640,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8298133134241841573, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_Name
-      value: Button (3)
+      value: GreenButton
       objectReference: {fileID: 0}
     - target: {fileID: 8298133134241841593, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_RootOrder
@@ -1714,7 +1712,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8298133134241841573, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_Name
-      value: Button (2)
+      value: OrgButton
       objectReference: {fileID: 0}
     - target: {fileID: 8298133134241841593, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_RootOrder
@@ -2065,7 +2063,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8298133134241841573, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_Name
-      value: Button (1)
+      value: RedButton
       objectReference: {fileID: 0}
     - target: {fileID: 8298133134241841593, guid: 00549d4349a04684e8ecd5cf93808de9, type: 3}
       propertyPath: m_RootOrder
@@ -2145,7 +2143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -23.86
+      value: -5.3
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2153,7 +2151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.41
+      value: 22.5
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2185,7 +2183,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360459, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_Name
-      value: PillarSpawner (3)
+      value: PillarSpawnerBlue
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
@@ -2210,7 +2208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.120003
+      value: -15.59
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360457, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2250,7 +2248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1373183376830360459, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
       propertyPath: m_Name
-      value: PillarSpawner
+      value: PillarSpawnerRed
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e66b11ab984fd2b479df8490c607998a, type: 3}
