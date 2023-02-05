@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class ButtonObject : NetworkBehaviour
 {
-    public delegate void ButtonClicked();
+    public delegate void ButtonClicked(int buttonIndex);
     public event ButtonClicked OnButtonClicked;
 
+    public int buttonIndex;
     private void OnTriggerEnter(Collider other)
     {
-        OnButtonClicked();
+        OnButtonClicked(buttonIndex);
     }
 }

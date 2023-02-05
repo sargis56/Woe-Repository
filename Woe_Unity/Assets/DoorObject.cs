@@ -24,7 +24,7 @@ public class DoorObject : NetworkBehaviour
         linkedButton.OnButtonClicked += ToggleDoor;
     }
 
-    void ToggleDoor()
+    void ToggleDoor(int buttonIndex)
     {
         if (isMoving == true)
         {
