@@ -24,6 +24,7 @@ public class MazeMap : MonoBehaviour
     public bool isComplete;
     public Texture inActiveTexture;
     public Texture activeTexture;
+    public DoorObject[] exitDoors;
 
     public PillarObject[] pillars;
 
@@ -31,16 +32,13 @@ public class MazeMap : MonoBehaviour
     private PillarObject currentPillar;
     void Start()
     {
-        isComplete = false;
-        for(int x = 0; x < pillars.Length; x++) {
-            activePillars.Add(pillars[x]);
+        for (int x = 0; x < pillars.Length; x++)
+        {
             pillars[x].button.buttonIndex = x;
             pillars[x].button.OnButtonClicked += CheckButton;
             pillars[x].button.GetComponent<Renderer>().material.mainTexture = pillars[x].pillar.pillarLabel;
-            pillars[x].label.material.mainTexture = inActiveTexture;
-
         }
-        AssignNextPillar();
+        ResetPuzzle();
     }
 
     void AssignNextPillar()
@@ -51,14 +49,26 @@ public class MazeMap : MonoBehaviour
 
     void CheckButton(int index)
     {
+        if (isComplete)
+        {
+            return;
+        }
+
+        Debug.Log("trigger");
         if (currentPillar.button.buttonIndex == index)
         {
-            Debug.Log(index);
-            activePillars.Remove(pillars[index]);
+            activePillars.Remove(currentPillar);
             if (activePillars.Count > 0)
             {
-                Debug.Log(index);
                 AssignNextPillar();
+            }
+            else
+            {
+                isComplete = true;
+                foreach(DoorObject door in exitDoors)
+                {
+                    door.ToggleDoor(0);
+                }
             }
             return;
         }
@@ -67,6 +77,14 @@ public class MazeMap : MonoBehaviour
 
     void ResetPuzzle()
     {
-
+        Debug.Log("reset");
+        activePillars.Clear();
+        isComplete = false;
+        for (int x = 0; x < pillars.Length; x++)
+        {
+            activePillars.Add(pillars[x]);
+            pillars[x].label.material.mainTexture = inActiveTexture;
+        }
+        AssignNextPillar();
     }
 }

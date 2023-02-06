@@ -21,10 +21,13 @@ public class DoorObject : NetworkBehaviour
     void Start()
     {
         originalPosition = transform.localPosition;
-        linkedButton.OnButtonClicked += ToggleDoor;
+        if (linkedButton != null)
+        {
+            linkedButton.OnButtonClicked += ToggleDoor;
+        }
     }
 
-    void ToggleDoor(int buttonIndex)
+    public void ToggleDoor(int buttonIndex)
     {
         if (isMoving == true)
         {
