@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    bool hazard = false;
+
     public int currentHealth;
     
     public CharacterController charController;
     public Transform groundCheck;
+    public float distanceFromGround = 0.4f;
+    public LayerMask hazardLayerMask;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +23,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
+
+        if (hazard)
+        {
+            TakeDamage(5);
+        }
     }
 
     void FixedUpdate()
@@ -41,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            //Do something when ded
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
