@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     bool hazard = false;
 
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
+
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
 
         if (hazard)

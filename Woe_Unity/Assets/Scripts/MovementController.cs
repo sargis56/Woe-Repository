@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using Unity.Netcode;
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class MovementController : NetworkBehaviour
 {
     public bool Debug = false;
 
@@ -28,7 +30,7 @@ public class MovementController : MonoBehaviour
     public LayerMask bounceLayerMask;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
         bounceHeight_ORG = bounceHeight;
     }
@@ -36,6 +38,8 @@ public class MovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
+
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
 
