@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    public bool Debug = false;
+    public bool debug = false;
 
     bool grounded = false;
     bool bounce = false;
+    bool tired = false;
+    public float sprintTimer = 0.0f;
+    public float sprintSeconds = 5.0f;
+
     Vector3 vel = new Vector3(0.0f, 0.0f, 0.0f);
     public float velRest = -2.0f;
     public float speed = 5.0f;
@@ -18,6 +22,8 @@ public class MovementController : MonoBehaviour
     public float bounceHeight_ORG;
 
     public CharacterController charController;
+    float charControllerX_ORG;
+
     public GameObject camera;
     public Transform groundCheck;
     public Transform spawnPoint;
@@ -31,6 +37,7 @@ public class MovementController : MonoBehaviour
     void Start()
     {
         bounceHeight_ORG = bounceHeight;
+        charControllerX_ORG = charController.center.x;
     }
 
     // Update is called once per frame
@@ -41,7 +48,7 @@ public class MovementController : MonoBehaviour
 
         if (grounded && vel.y < 0.0f)
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Grounded");
             }
@@ -50,7 +57,7 @@ public class MovementController : MonoBehaviour
 
         if (bounce && vel.y < 0.0f)
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Bounce");
             }
@@ -58,6 +65,7 @@ public class MovementController : MonoBehaviour
         }
         bounceHeight = bounceHeight_ORG;
 
+        charController.center = new Vector3(0, charControllerX_ORG, 0);
         camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
 
         float moveHorizontal = Input.GetAxis("Horizontal");
@@ -65,7 +73,7 @@ public class MovementController : MonoBehaviour
 
         if (Input.GetButton("Crouch"))
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Crouch");
             }
@@ -74,17 +82,33 @@ public class MovementController : MonoBehaviour
 
         }
 
-        if (Input.GetButton("Sprint"))
+        if (Input.GetButton("Sprint") && !tired)
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Sprint");
             }
+
+            sprintTimer += Time.deltaTime;
+
+            if (sprintTimer < sprintSeconds)
+            {
+                Move(moveHorizontal, moveVertical, sprintSpeed);
+            }
+            else
+            {
+                tired = true;
+            }
             
-            Move(moveHorizontal, moveVertical, sprintSpeed);
         }
         else
         {
+            sprintTimer -= Time.deltaTime;
+            if (sprintTimer <= 0)
+            {
+                sprintTimer = 0;
+                tired = false;
+            }
             Move(moveHorizontal, moveVertical, speed);
         }
 
@@ -100,7 +124,7 @@ public class MovementController : MonoBehaviour
 
     public void Move(float moveHorizontal_, float moveVertical_, float speed_)
     {
-        if (Debug)
+        if (debug)
         {
             print("Player: Move");
         }
@@ -110,7 +134,7 @@ public class MovementController : MonoBehaviour
 
     public void Jump(float height_)
     {
-        if (Debug)
+        if (debug)
         {
             print("Player: Jump");
         }
@@ -120,6 +144,7 @@ public class MovementController : MonoBehaviour
 
     public void Crouch()
     {
+        charController.center = new Vector3(0, 0.5f, 0);
         camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
         vel.y += (gravity * 2) * Time.deltaTime;
         bounceHeight = bounceHeight * 2;
