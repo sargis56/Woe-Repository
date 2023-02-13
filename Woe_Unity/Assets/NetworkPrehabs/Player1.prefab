@@ -557,7 +557,7 @@ GameObject:
   - component: {fileID: 6800540068933159306}
   m_Layer: 0
   m_Name: Player1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -635,6 +635,9 @@ MonoBehaviour:
   hazardLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  playerEyes:
+  - {fileID: 208829556719878656}
+  - {fileID: 208829558263069612}
 --- !u!114 &208829557886505411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,7 +659,7 @@ MonoBehaviour:
   bounceHeight: 5
   bounceHeight_ORG: 0
   charController: {fileID: 208829557886505409}
-  camera: {fileID: 208829557274926388}
+  cameraController: {fileID: 6800540068933159306}
   groundCheck: {fileID: 208829557391806502}
   spawnPoint: {fileID: 0}
   crouchPoint: {fileID: 5700401947212082892}
@@ -708,6 +711,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraHolder: {fileID: 6629157629662688453}
   offset: {x: 0, y: 0.4, z: 0}
+  crouchPoint: {fileID: 0}
+  straightPoint: {fileID: 0}
 --- !u!1 &208829558263069612
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,7 +834,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5700401946638330604}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -891,8 +896,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6629157629662688453}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.000000059604645, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -8,6 +8,9 @@ public class CameraController : NetworkBehaviour {
     public GameObject cameraHolder;
     public Vector3 offset;
 
+    public Transform crouchPoint;
+    public Transform straightPoint;
+
     public override void OnNetworkSpawn() {
         if (!IsOwner) { return; }
         cameraHolder.SetActive(true);

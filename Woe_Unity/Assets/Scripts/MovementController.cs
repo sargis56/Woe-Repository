@@ -20,7 +20,8 @@ public class MovementController : NetworkBehaviour
     public float bounceHeight_ORG;
 
     public CharacterController charController;
-    public GameObject camera;
+    public CameraController cameraController;
+    //public GameObject camera;
     public Transform groundCheck;
     public Transform spawnPoint;
     public Transform crouchPoint;
@@ -62,7 +63,7 @@ public class MovementController : NetworkBehaviour
         }
         bounceHeight = bounceHeight_ORG;
 
-        camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
+        cameraController.offset = new Vector3(straightPoint.localPosition.x, straightPoint.localPosition.y, straightPoint.localPosition.z);
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
@@ -124,7 +125,7 @@ public class MovementController : NetworkBehaviour
 
     public void Crouch()
     {
-        camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
+        cameraController.offset = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
         vel.y += (gravity * 2) * Time.deltaTime;
         bounceHeight = bounceHeight * 2;
     }

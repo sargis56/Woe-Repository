@@ -11,6 +11,9 @@ public class ButtonObject : NetworkBehaviour
     public int buttonIndex;
     private void OnTriggerEnter(Collider other)
     {
-        OnButtonClicked(buttonIndex);
+        if (other.tag == "Player")
+        {
+            OnButtonClicked(buttonIndex);
+        }
     }
 }

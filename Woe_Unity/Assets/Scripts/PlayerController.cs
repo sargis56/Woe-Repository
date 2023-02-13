@@ -16,13 +16,17 @@ public class PlayerController : NetworkBehaviour
     public float distanceFromGround = 0.4f;
     public LayerMask hazardLayerMask;
 
-    // Start is called before the first frame update
-    void Start()
+    public GameObject[] playerEyes;
+    public override void OnNetworkSpawn()
     {
-        
+        GameManager.Instance.AddPlayer(this.gameObject);
+        if (!IsOwner) { return; }
+        for (int i = 0; i < playerEyes.Length; i++)
+        {
+            playerEyes[i].SetActive(false);
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!IsOwner) { return; }
