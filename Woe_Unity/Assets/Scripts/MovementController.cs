@@ -32,6 +32,7 @@ public class MovementController : MonoBehaviour
     public float distanceFromGround = 0.4f;
     public LayerMask groundLayerMask;
     public LayerMask bounceLayerMask;
+    public LayerMask roomLayerMask;
 
     // Start is called before the first frame update
     void Start()

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Waypoint
+  - Waypoint Room
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - Hazard
   - Bounce
   - Player
-  - 
+  - Room
   - 
   - 
   - 

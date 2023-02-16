@@ -5,14 +5,17 @@ using UnityEngine.AI;
 
 public class MonsterController : MonoBehaviour
 {
-    public enum MonsternState { Idle, Investigate, Attack, Patrol, Retreat };
+    public enum MonsternState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Retreat };
     public MonsternState currentState;
 
     public NavMeshAgent agent;
     float navAgentSpeed_ORG;
-    public GameObject player1;
 
+    public GameObject[] players;
+    public int playerTarget = 0;
+    public GameObject playerTargeting = null;
     public LayerMask playerLayerMask;
+
     public float forwardRayDistance = 10.0f;
     public float forwardRayHeightUp = 0.05f;
     public float forwardRayHeightDown = 0.1f;
@@ -61,10 +64,20 @@ public class MonsterController : MonoBehaviour
     Ray raySideR;
     Ray raySideL;
 
+    public GameObject objectForward;
+    public GameObject objectBack;
+    public GameObject objectRight;
+    public GameObject objectLeft;
+
     public GameObject[] waypoints;
+    public GameObject[] waypointsRoom;
     public int waypointIndex = 0;
+    public int waypointRoomIndex = 0;
     public int patience = 0;
 
+    //Make Monster go to the start when it idles
+    public bool idleToStart = false;
+    public bool pausePatrol = false;
     public bool debug = false;
 
     // Start is called before the first frame update
@@ -73,6 +86,7 @@ public class MonsterController : MonoBehaviour
         navAgentSpeed_ORG = agent.speed;
 
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+        players = GameObject.FindGameObjectsWithTag("Player");
 
         currentState = MonsternState.Idle;
     }
@@ -172,16 +186,62 @@ public class MonsterController : MonoBehaviour
             (Physics.Raycast(rayForwardL1, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
             (Physics.Raycast(rayForwardM2, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
             (Physics.Raycast(rayForwardR2, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
-            (Physics.Raycast(rayForwardL2, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
-
-            (Physics.Raycast(rayBackM, out hitBackData, backRayDistance, playerLayerMask)) ||
-            (Physics.Raycast(rayBackR, out hitBackData, backRayDistance, playerLayerMask)) ||
-            (Physics.Raycast(rayBackL, out hitBackData, backRayDistance, playerLayerMask)) ||
-
-            (Physics.Raycast(raySideR, out hitRightData, sideDistance, playerLayerMask)) ||
-            (Physics.Raycast(raySideL, out hitLeftData, sideDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+            (Physics.Raycast(rayForwardL2, out hitForwardData, forwardRayDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
         {
-            print("Hit");
+            if (debug)
+            {
+                print("Hit");
+            }
+
+            objectForward = hitForwardData.collider.gameObject;
+
+            playerTargeting = objectForward;
+
+            ChangeState(MonsternState.Attack);
+        }
+
+        if (((Physics.Raycast(rayBackM, out hitBackData, backRayDistance, playerLayerMask)) ||
+        (Physics.Raycast(rayBackR, out hitBackData, backRayDistance, playerLayerMask)) ||
+        (Physics.Raycast(rayBackL, out hitBackData, backRayDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+        {
+            if (debug)
+            {
+                print("Hit");
+            }
+
+            objectBack = hitBackData.collider.gameObject;
+
+            playerTargeting = objectBack;
+
+            ChangeState(MonsternState.Attack);
+        }
+
+        if (((Physics.Raycast(raySideR, out hitRightData, sideDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+        {
+            if (debug)
+            {
+                print("Hit");
+            }
+
+            objectRight = hitRightData.collider.gameObject;
+            objectLeft = hitLeftData.collider.gameObject;
+
+            playerTargeting = objectRight;
+
+            ChangeState(MonsternState.Attack);
+        }
+
+        if (((Physics.Raycast(raySideL, out hitLeftData, sideDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+        {
+            if (debug)
+            {
+                print("Hit");
+            }
+
+            objectLeft = hitLeftData.collider.gameObject;
+
+            playerTargeting = objectLeft;
+
             ChangeState(MonsternState.Attack);
         }
 
@@ -220,12 +280,28 @@ public class MonsterController : MonoBehaviour
                 Investigate();
                 break;
 
+            case MonsternState.InvestigateRoom:
+                if (debug)
+                {
+                    print("In MonsternState.InvestigateRoom");
+                }
+                InvestigateRoom();
+                break;
+
             case MonsternState.Attack:
                 if (debug)
                 {
                     print("In MonsternState.Attack");
                 }
                 Attack();
+                break;
+
+            case MonsternState.Ambush:
+                if (debug)
+                {
+                    print("In MonsternState.Ambush");
+                }
+                Ambush();
                 break;
 
             case MonsternState.Patrol:
@@ -249,35 +325,101 @@ public class MonsterController : MonoBehaviour
 
     void Idle()
     {
+        playerTarget = 0;
+        playerTargeting = null;
         agent.autoBraking = true;
         agent.speed = navAgentSpeed_ORG;
-        ChangeState(MonsternState.Patrol);
+        if(idleToStart)
+        {
+            waypointIndex = 0;
+        }
+        waypointRoomIndex = 0;
+        waypointsRoom = new GameObject[0];
+
+        if (pausePatrol)
+        {
+            ChangeState(MonsternState.Idle);
+        }
+        else
+        {
+
+            ChangeState(MonsternState.Patrol);
+        }
     }
 
     void Investigate()
     {
         GameObject closestWaypoint = null;
-        closestWaypoint = ClosestWaypoint(player1.transform.position);
+
+        closestWaypoint = ClosestWaypoint(playerTargeting.transform.position);
         agent.SetDestination(closestWaypoint.transform.position);
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            agent.speed = navAgentSpeed_ORG;
-            ChangeState(MonsternState.Patrol);
+            agent.autoBraking = false;
+            if (closestWaypoint.gameObject.layer == LayerMask.NameToLayer("Room"))
+            {
+                int index = 0;
+                waypointsRoom = new GameObject[closestWaypoint.transform.childCount];
+                foreach (Transform child in closestWaypoint.transform)
+                {
+                    if (child.tag == "Waypoint Room")
+                    {
+                        waypointsRoom[index] = child.gameObject;
+                        index += 1;
+                    }
+                }
+
+                ChangeState(MonsternState.InvestigateRoom);
+            }
+            else
+            {
+                ChangeState(MonsternState.Idle);
+            }
         }
+    }
+
+    void InvestigateRoom()
+    {
+        if (waypointRoomIndex >= waypointsRoom.Length)
+        {
+            ChangeState(MonsternState.Idle);
+        }
+        else
+        {
+            agent.SetDestination(waypointsRoom[waypointRoomIndex].transform.position);
+            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            {
+                waypointRoomIndex += 1;
+            }
+        }
+
+
     }
 
     void Attack()
     {
         agent.autoBraking = false;
         agent.speed = navAgentSpeed_ORG;
-        agent.SetDestination(player1.transform.position);
+        agent.SetDestination(playerTargeting.transform.position);
+    }
+
+    void Ambush()
+    {
+
     }
 
     void Patrol()
     {
+        if (pausePatrol)
+        {
+            ChangeState(MonsternState.Idle);
+        }
+
         if (patience >= 5)
         {
+            playerTarget = Random.Range(0, players.Length);
+            playerTargeting = players[playerTarget];
             ChangeState(MonsternState.Investigate);
             patience = 0;
         }
@@ -288,7 +430,7 @@ public class MonsterController : MonoBehaviour
             {
                 waypointIndex = Random.Range(0, waypoints.Length);
                 patience = patience + 1;
-                agent.speed = agent.speed + 5;
+                agent.speed = agent.speed + 1.0f;
             }
         }
         
