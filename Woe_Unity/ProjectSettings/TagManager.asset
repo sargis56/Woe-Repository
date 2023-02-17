@@ -7,6 +7,10 @@ TagManager:
   - Enemy
   - Waypoint
   - Waypoint Room
+  - Ambush Spot
+  - Vent
+  - Monster
+  - Item
   layers:
   - Default
   - TransparentFX

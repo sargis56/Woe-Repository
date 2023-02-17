@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MovementController : MonoBehaviour
 {
+    public TextMeshProUGUI staminaText;
+
     public bool debug = false;
 
     bool grounded = false;
@@ -44,6 +47,8 @@ public class MovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        staminaText.text = "Stamina: " + sprintTimer.ToString();
+
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
 

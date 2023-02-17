@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using TMPro;
 public class MonsterController : MonoBehaviour
 {
-    public enum MonsternState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Retreat };
+    public TextMeshProUGUI stateText;
+    public TextMeshProUGUI targetText;
+
+    public enum MonsternState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Vent, Retreat };
     public MonsternState currentState;
 
     public NavMeshAgent agent;
@@ -74,6 +77,14 @@ public class MonsterController : MonoBehaviour
     public int waypointIndex = 0;
     public int waypointRoomIndex = 0;
     public int patience = 0;
+    public int patienceMax = 0;
+    public GameObject[] ambushSpots;
+    public float chanceToAmbush = 0.25f;
+    public float ambushWaitTime = 60.0f;
+    float ambushWaitTime_ORG;
+    public GameObject[] vents;
+    public int ventIndex = 0;
+    public float chanceToVent = 0.25f;
 
     //Make Monster go to the start when it idles
     public bool idleToStart = false;
@@ -84,9 +95,12 @@ public class MonsterController : MonoBehaviour
     void Start()
     {
         navAgentSpeed_ORG = agent.speed;
+        ambushWaitTime_ORG = ambushWaitTime;
 
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         players = GameObject.FindGameObjectsWithTag("Player");
+        ambushSpots = GameObject.FindGameObjectsWithTag("Ambush Spot");
+        vents = GameObject.FindGameObjectsWithTag("Vent");
 
         currentState = MonsternState.Idle;
     }
@@ -94,28 +108,56 @@ public class MonsterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (debug)
+        {
+            stateText.text = "Monster's State: " + currentState.ToString();
+            targetText.text = "Monster's Target: " + playerTarget.ToString();
+        }
+        else
+        {
+            stateText.text = "";
+            targetText.text = "";
+        }
+
         SetupRays();
         UpdateState();
 
         if (Input.GetKeyDown("[0]") && debug)
         {
+            playerTarget = Random.Range(0, players.Length);
+            playerTargeting = players[playerTarget];
             ChangeState(MonsternState.Retreat);
-        }
-        if (Input.GetKeyDown("[3]") && debug)
-        {
-            ChangeState(MonsternState.Attack);
-        }
-        if (Input.GetKeyDown("[2]") && debug)
-        {
-            ChangeState(MonsternState.Investigate);
         }
         if (Input.GetKeyDown("[1]") && debug)
         {
             ChangeState(MonsternState.Idle);
         }
+        if (Input.GetKeyDown("[2]") && debug)
+        {
+            playerTarget = Random.Range(0, players.Length);
+            playerTargeting = players[playerTarget];
+            ChangeState(MonsternState.Investigate);
+        }
+        if (Input.GetKeyDown("[3]") && debug)
+        {
+            ChangeState(MonsternState.Attack);
+        }
+        if (Input.GetKeyDown("[4]") && debug)
+        {
+            ChangeState(MonsternState.Vent);
+        }
+        if (Input.GetKeyDown("[5]") && debug)
+        {
+            playerTarget = Random.Range(0, players.Length);
+            playerTargeting = players[playerTarget];
+        }
+        if (Input.GetKeyDown("[6]") && debug)
+        {
+            ventIndex = Random.Range(0, vents.Length);
+        }
     }
 
-    void ChangeState(MonsternState state)
+    public void ChangeState(MonsternState state)
     {
         currentState = state;
     }
@@ -224,7 +266,6 @@ public class MonsterController : MonoBehaviour
             }
 
             objectRight = hitRightData.collider.gameObject;
-            objectLeft = hitLeftData.collider.gameObject;
 
             playerTargeting = objectRight;
 
@@ -312,6 +353,14 @@ public class MonsterController : MonoBehaviour
                 Patrol();
                 break;
 
+            case MonsternState.Vent:
+                if (debug)
+                {
+                    print("In MonsternState.Vent");
+                }
+                Vent();
+                break;
+
             case MonsternState.Retreat:
                 if (debug)
                 {
@@ -325,6 +374,7 @@ public class MonsterController : MonoBehaviour
 
     void Idle()
     {
+        patienceMax = Random.Range(1, 5);
         playerTarget = 0;
         playerTargeting = null;
         agent.autoBraking = true;
@@ -351,7 +401,7 @@ public class MonsterController : MonoBehaviour
     {
         GameObject closestWaypoint = null;
 
-        closestWaypoint = ClosestWaypoint(playerTargeting.transform.position);
+        closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, waypoints);
         agent.SetDestination(closestWaypoint.transform.position);
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
@@ -383,7 +433,15 @@ public class MonsterController : MonoBehaviour
     {
         if (waypointRoomIndex >= waypointsRoom.Length)
         {
-            ChangeState(MonsternState.Idle);
+            if (Random.value < chanceToVent)
+            {
+                ventIndex = Random.Range(0, vents.Length);
+                ChangeState(MonsternState.Vent);
+            }
+            else
+            {
+                ChangeState(MonsternState.Idle);
+            }
         }
         else
         {
@@ -406,7 +464,22 @@ public class MonsterController : MonoBehaviour
 
     void Ambush()
     {
+        GameObject closestWaypoint = null;
 
+        closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, ambushSpots);
+        agent.SetDestination(closestWaypoint.transform.position);
+
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(closestWaypoint.transform.GetChild(0).localPosition), Time.deltaTime * 2.5f);
+
+            ambushWaitTime -= Time.deltaTime;
+            if (ambushWaitTime < 0)
+            {
+                ambushWaitTime = ambushWaitTime_ORG;
+                ChangeState(MonsternState.Idle);
+            }
+        }
     }
 
     void Patrol()
@@ -416,11 +489,23 @@ public class MonsterController : MonoBehaviour
             ChangeState(MonsternState.Idle);
         }
 
-        if (patience >= 5)
+        if (patience >= patienceMax)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
-            ChangeState(MonsternState.Investigate);
+            if (Random.value < chanceToAmbush)
+            {
+                ChangeState(MonsternState.Ambush);
+            }
+            else if(Random.value < chanceToVent)
+            {
+                ventIndex = Random.Range(0, vents.Length);
+                ChangeState(MonsternState.Vent);
+            }
+            else
+            {
+                ChangeState(MonsternState.Investigate);
+            }
             patience = 0;
         }
         else
@@ -436,10 +521,19 @@ public class MonsterController : MonoBehaviour
         
     }
 
+    void Vent()
+    {
+        agent.SetDestination(vents[ventIndex].transform.position);
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            ChangeState(MonsternState.Idle);
+        }
+    }
+
     void Retreat()
     {
         GameObject closestWaypoint = null;
-        closestWaypoint = ClosestWaypoint(transform.position);
+        closestWaypoint = ClosestWaypoint(transform.position, waypoints);
 
         agent.SetDestination(closestWaypoint.transform.position);
 
@@ -449,13 +543,13 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    GameObject ClosestWaypoint(Vector3 position)
+    GameObject ClosestWaypoint(Vector3 position_, GameObject[] waypoints_)
     {
         GameObject closestWaypoint = null;
         float distance = Mathf.Infinity;
-        foreach (GameObject waypoint in waypoints)
+        foreach (GameObject waypoint in waypoints_)
         {
-            Vector3 diff = waypoint.transform.position - position;
+            Vector3 diff = waypoint.transform.position - position_;
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance)
             {
