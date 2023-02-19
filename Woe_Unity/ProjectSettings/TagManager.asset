@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Waypoint
+  - Waypoint Room
+  - Ambush Spot
+  - Vent
+  - Monster
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -11,11 +18,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Hazard
+  - Bounce
+  - Player
+  - Room
   - 
   - 
   - 
