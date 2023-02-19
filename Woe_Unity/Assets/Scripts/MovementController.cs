@@ -47,7 +47,7 @@ public class MovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        staminaText.text = "Stamina: " + sprintTimer.ToString();
+        // staminaText.text = "Stamina: " + sprintTimer.ToString();
 
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);

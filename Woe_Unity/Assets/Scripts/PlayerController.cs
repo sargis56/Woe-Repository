@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        healthText.text = "Health: " + currentHealth.ToString();
+        //healthText.text = "Health: " + currentHealth.ToString();
 
         if (hasItem)
         {
@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            itemText.text = "Item: " + "None";
+            //itemText.text = "Item: " + "None";
         }
         
 
