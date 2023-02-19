@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2048
     height: 1060.8
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Scene
   m_RootView: {fileID: 3}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 129
+  controlID: 87
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 16
+  controlID: 88
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 17
+  controlID: 89
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -390,24 +390,24 @@ MonoBehaviour:
     m_SaveData: []
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      scrollPos: {x: 0, y: 134.79999}
+      m_SelectedIDs: be630000
       m_LastClickedID: 0
-      m_ExpandedIDs: 7429ffff3c6cffff2efbffff
+      m_ExpandedIDs: 321dffff5a22ffff6c48ffff44e5ffff2efbffff965f0000c4610000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: 
-        m_OriginalName: 
+        m_Name: 'Maze Pillar '
+        m_OriginalName: 'Maze Pillar '
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 0
+        m_UserData: -104522
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 11
+        m_OriginalEventType: 4
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 9}
       m_SearchString: 
@@ -494,7 +494,7 @@ MonoBehaviour:
       floating: 1
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 4, y: 207.6}
+      snapOffset: {x: 4, y: 228.6}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-transform-toolbar
@@ -675,9 +675,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 172.00844, y: -123.88051, z: 28.33186}
+    m_Target: {x: -56.43859, y: 16.717655, z: -662.5861}
     speed: 2
-    m_Value: {x: 172.00844, y: -123.88051, z: 28.33186}
+    m_Value: {x: -56.43859, y: 16.717655, z: -662.5861}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -724,20 +724,20 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.23635595, y: -0.6362515, z: 0.21668178, w: -0.7004426}
+    m_Target: {x: -0.1882838, y: -0.72415787, z: 0.2025105, w: -0.6291569}
     speed: 2
-    m_Value: {x: -0.23688793, y: -0.6357563, z: 0.2165164, w: -0.70201033}
+    m_Value: {x: -0.18954346, y: -0.7250499, z: 0.20392972, w: -0.62991154}
   m_Size:
-    m_Target: 136.18765
+    m_Target: 2.5680199
     speed: 2
-    m_Value: 130.32312
+    m_Value: 2.56802
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 1
-    m_SpeedNormalized: 0.5
+    m_Speed: 1.1604208
+    m_SpeedNormalized: 0.5800004
     m_SpeedMin: 0.001
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -901,9 +901,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 325e0000
-    m_LastClickedID: 24114
-    m_ExpandedIDs: 00000000005e0000025e0000045e000000ca9a3bffffff7f
+    m_SelectedIDs: bc640000
+    m_LastClickedID: 25788
+    m_ExpandedIDs: 0000000014640000166400001864000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -931,7 +931,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000005e0000025e0000045e0000
+    m_ExpandedIDs: 00000000146400001664000018640000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -958,7 +958,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1009,7 +1009,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 780.8
-    width: 1626.2
+    width: 1579.8
     height: 282.60004
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
