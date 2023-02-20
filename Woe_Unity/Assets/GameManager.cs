@@ -6,11 +6,22 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     //private NetworkVariable<List<GameObject>> players = new NetworkVariable<List<GameObject>>(new List<GameObject>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    GameObject[] players;
+    public GameObject[] players;
     public static GameManager Instance;
-    void Start()
+    private ButtonObject[] buttonObjects;
+    public GameObject interactiveTextPrompt;
+
+    void Awake()
     {
         Instance = this;
+
+        GameObject[] buttonGameObjects = GameObject.FindGameObjectsWithTag("Button");
+        buttonObjects = new ButtonObject[buttonGameObjects.Length];
+        for (int i = 0; i < buttonGameObjects.Length; i++)
+        {
+            buttonObjects[i] = buttonGameObjects[i].GetComponent<ButtonObject>();
+            buttonObjects[i].interactiveTextPrompt = interactiveTextPrompt;
+        }
     }
 
     public void AddPlayer(GameObject player)

@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 8298133134241841597}
   m_Layer: 0
   m_Name: Button
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd7690030eeb6ab4ab768e5c1f0ce6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonIndex: 0
 --- !u!114 &8298133134241841598
 MonoBehaviour:
   m_ObjectHideFlags: 0
