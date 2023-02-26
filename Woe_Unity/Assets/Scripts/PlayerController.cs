@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public GameObject itemHand;
     public GameObject monster;
 
+    public bool debug = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,17 +51,32 @@ public class PlayerController : MonoBehaviour
 
         if (hazard)
         {
-            TakeDamage(5);
+            TakeDamage(1);
         }
 
         if (Input.GetButton("Fire1") && hasItem)
         {
-            monster.GetComponent<MonsterController>().currentState = MonsterController.MonsternState.Retreat;
+            monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Retreat;
             //monster.GetComponent<MonsterController>().playerTarget = 1;
             monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
             Destroy(currentItem);
             currentItem = null;
             hasItem = false;
+        }
+
+        if (currentHealth <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        if (Input.GetKeyDown("[8]") && debug)
+        {
+            TakeDamage(50);
+        }
+
+        if (Input.GetKeyDown("[9]") && debug)
+        {
+            TakeDamage(100);
         }
     }
 
@@ -80,23 +97,18 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-
-        if (currentHealth <= 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.tag == "Enemy")
-        {
-            TakeDamage(3);
-        }
-        if (hit.gameObject.tag == "Monster")
-        {
-            TakeDamage(5);
-        }
+        //if (hit.gameObject.tag == "Enemy")
+        //{
+        //    TakeDamage(3);
+        //}
+        //if (hit.gameObject.tag == "Monster")
+        //{
+        //    TakeDamage(1);
+        //}
         if (hit.gameObject.tag == "Item")
         {
             hasItem = true;
@@ -104,6 +116,14 @@ public class PlayerController : MonoBehaviour
             //Destroy(hit.gameObject);
         }
     }
+
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Monster")
+    //    {
+    //        TakeDamage(1);
+    //    }
+    //}
 
 
 }

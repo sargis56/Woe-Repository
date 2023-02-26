@@ -8,8 +8,8 @@ public class MonsterController : MonoBehaviour
     public TextMeshProUGUI stateText;
     public TextMeshProUGUI targetText;
 
-    public enum MonsternState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Vent, Retreat };
-    public MonsternState currentState;
+    public enum MonsterState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Vent, Retreat };
+    public MonsterState currentState;
 
     public NavMeshAgent agent;
     float navAgentSpeed_ORG;
@@ -102,7 +102,7 @@ public class MonsterController : MonoBehaviour
         ambushSpots = GameObject.FindGameObjectsWithTag("Ambush Spot");
         vents = GameObject.FindGameObjectsWithTag("Vent");
 
-        currentState = MonsternState.Idle;
+        currentState = MonsterState.Idle;
     }
 
     // Update is called once per frame
@@ -126,25 +126,25 @@ public class MonsterController : MonoBehaviour
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
-            ChangeState(MonsternState.Retreat);
+            ChangeState(MonsterState.Retreat);
         }
         if (Input.GetKeyDown("[1]") && debug)
         {
-            ChangeState(MonsternState.Idle);
+            ChangeState(MonsterState.Idle);
         }
         if (Input.GetKeyDown("[2]") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
-            ChangeState(MonsternState.Investigate);
+            ChangeState(MonsterState.Investigate);
         }
         if (Input.GetKeyDown("[3]") && debug)
         {
-            ChangeState(MonsternState.Attack);
+            ChangeState(MonsterState.Attack);
         }
         if (Input.GetKeyDown("[4]") && debug)
         {
-            ChangeState(MonsternState.Vent);
+            ChangeState(MonsterState.Vent);
         }
         if (Input.GetKeyDown("[5]") && debug)
         {
@@ -157,7 +157,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    public void ChangeState(MonsternState state)
+    public void ChangeState(MonsterState state)
     {
         currentState = state;
     }
@@ -228,7 +228,7 @@ public class MonsterController : MonoBehaviour
             (Physics.Raycast(rayForwardL1, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
             (Physics.Raycast(rayForwardM2, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
             (Physics.Raycast(rayForwardR2, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
-            (Physics.Raycast(rayForwardL2, out hitForwardData, forwardRayDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+            (Physics.Raycast(rayForwardL2, out hitForwardData, forwardRayDistance, playerLayerMask))) && currentState != MonsterState.Retreat)
         {
             if (debug)
             {
@@ -239,12 +239,12 @@ public class MonsterController : MonoBehaviour
 
             playerTargeting = objectForward;
 
-            ChangeState(MonsternState.Attack);
+            ChangeState(MonsterState.Attack);
         }
 
         if (((Physics.Raycast(rayBackM, out hitBackData, backRayDistance, playerLayerMask)) ||
         (Physics.Raycast(rayBackR, out hitBackData, backRayDistance, playerLayerMask)) ||
-        (Physics.Raycast(rayBackL, out hitBackData, backRayDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+        (Physics.Raycast(rayBackL, out hitBackData, backRayDistance, playerLayerMask))) && currentState != MonsterState.Retreat)
         {
             if (debug)
             {
@@ -255,10 +255,10 @@ public class MonsterController : MonoBehaviour
 
             playerTargeting = objectBack;
 
-            ChangeState(MonsternState.Attack);
+            ChangeState(MonsterState.Attack);
         }
 
-        if (((Physics.Raycast(raySideR, out hitRightData, sideDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+        if (((Physics.Raycast(raySideR, out hitRightData, sideDistance, playerLayerMask))) && currentState != MonsterState.Retreat)
         {
             if (debug)
             {
@@ -269,10 +269,10 @@ public class MonsterController : MonoBehaviour
 
             playerTargeting = objectRight;
 
-            ChangeState(MonsternState.Attack);
+            ChangeState(MonsterState.Attack);
         }
 
-        if (((Physics.Raycast(raySideL, out hitLeftData, sideDistance, playerLayerMask))) && currentState != MonsternState.Retreat)
+        if (((Physics.Raycast(raySideL, out hitLeftData, sideDistance, playerLayerMask))) && currentState != MonsterState.Retreat)
         {
             if (debug)
             {
@@ -283,7 +283,7 @@ public class MonsterController : MonoBehaviour
 
             playerTargeting = objectLeft;
 
-            ChangeState(MonsternState.Attack);
+            ChangeState(MonsterState.Attack);
         }
 
         Debug.DrawRay(transform.position, forwardM1 * hitForwardData.distance, Color.yellow);
@@ -305,66 +305,66 @@ public class MonsterController : MonoBehaviour
     {
         switch (currentState)
         {
-            case MonsternState.Idle:
+            case MonsterState.Idle:
                 if (debug)
                 {
-                    print("In MonsternState.Idle");
+                    print("In MonsterState.Idle");
                 }
                 Idle();
                 break;
 
-            case MonsternState.Investigate:
+            case MonsterState.Investigate:
                 if (debug)
                 {
-                    print("In MonsternState.Investigate");
+                    print("In MonsterState.Investigate");
                 }
                 Investigate();
                 break;
 
-            case MonsternState.InvestigateRoom:
+            case MonsterState.InvestigateRoom:
                 if (debug)
                 {
-                    print("In MonsternState.InvestigateRoom");
+                    print("In MonsterState.InvestigateRoom");
                 }
                 InvestigateRoom();
                 break;
 
-            case MonsternState.Attack:
+            case MonsterState.Attack:
                 if (debug)
                 {
-                    print("In MonsternState.Attack");
+                    print("In MonsterState.Attack");
                 }
                 Attack();
                 break;
 
-            case MonsternState.Ambush:
+            case MonsterState.Ambush:
                 if (debug)
                 {
-                    print("In MonsternState.Ambush");
+                    print("In MonsterState.Ambush");
                 }
                 Ambush();
                 break;
 
-            case MonsternState.Patrol:
+            case MonsterState.Patrol:
                 if (debug)
                 {
-                    print("In MonsternState.Patrol");
+                    print("In MonsterState.Patrol");
                 }
                 Patrol();
                 break;
 
-            case MonsternState.Vent:
+            case MonsterState.Vent:
                 if (debug)
                 {
-                    print("In MonsternState.Vent");
+                    print("In MonsterState.Vent");
                 }
                 Vent();
                 break;
 
-            case MonsternState.Retreat:
+            case MonsterState.Retreat:
                 if (debug)
                 {
-                    print("In MonsternState.Retreat");
+                    print("In MonsterState.Retreat");
                 }
                 Retreat();
                 break;
@@ -388,12 +388,12 @@ public class MonsterController : MonoBehaviour
 
         if (pausePatrol)
         {
-            ChangeState(MonsternState.Idle);
+            ChangeState(MonsterState.Idle);
         }
         else
         {
 
-            ChangeState(MonsternState.Patrol);
+            ChangeState(MonsterState.Patrol);
         }
     }
 
@@ -420,11 +420,11 @@ public class MonsterController : MonoBehaviour
                     }
                 }
 
-                ChangeState(MonsternState.InvestigateRoom);
+                ChangeState(MonsterState.InvestigateRoom);
             }
             else
             {
-                ChangeState(MonsternState.Idle);
+                ChangeState(MonsterState.Idle);
             }
         }
     }
@@ -436,11 +436,11 @@ public class MonsterController : MonoBehaviour
             if (Random.value < chanceToVent)
             {
                 ventIndex = Random.Range(0, vents.Length);
-                ChangeState(MonsternState.Vent);
+                ChangeState(MonsterState.Vent);
             }
             else
             {
-                ChangeState(MonsternState.Idle);
+                ChangeState(MonsterState.Idle);
             }
         }
         else
@@ -477,7 +477,7 @@ public class MonsterController : MonoBehaviour
             if (ambushWaitTime < 0)
             {
                 ambushWaitTime = ambushWaitTime_ORG;
-                ChangeState(MonsternState.Idle);
+                ChangeState(MonsterState.Idle);
             }
         }
     }
@@ -486,7 +486,7 @@ public class MonsterController : MonoBehaviour
     {
         if (pausePatrol)
         {
-            ChangeState(MonsternState.Idle);
+            ChangeState(MonsterState.Idle);
         }
 
         if (patience >= patienceMax)
@@ -495,16 +495,16 @@ public class MonsterController : MonoBehaviour
             playerTargeting = players[playerTarget];
             if (Random.value < chanceToAmbush)
             {
-                ChangeState(MonsternState.Ambush);
+                ChangeState(MonsterState.Ambush);
             }
             else if(Random.value < chanceToVent)
             {
                 ventIndex = Random.Range(0, vents.Length);
-                ChangeState(MonsternState.Vent);
+                ChangeState(MonsterState.Vent);
             }
             else
             {
-                ChangeState(MonsternState.Investigate);
+                ChangeState(MonsterState.Investigate);
             }
             patience = 0;
         }
@@ -526,7 +526,7 @@ public class MonsterController : MonoBehaviour
         agent.SetDestination(vents[ventIndex].transform.position);
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            ChangeState(MonsternState.Idle);
+            ChangeState(MonsterState.Idle);
         }
     }
 
@@ -539,7 +539,7 @@ public class MonsterController : MonoBehaviour
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            ChangeState(MonsternState.Investigate);
+            ChangeState(MonsterState.Investigate);
         }
     }
 
@@ -559,5 +559,26 @@ public class MonsterController : MonoBehaviour
         }
 
         return closestWaypoint;
+    }
+
+    //void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    if (hit.gameObject.tag == "Player")
+    //    {
+    //        hit.gameObject.GetComponent<PlayerController>().TakeDamage(50);
+    //    }
+    //}
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerController>().TakeDamage(50);
+        }
+
+        if ((collision.gameObject.tag == "Enemy") && currentState == MonsterState.Attack)
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }
