@@ -19,6 +19,7 @@ public class MazeMap : MonoBehaviour
         public PillarSpawner pillar;
         public ButtonObject button;
         public MeshRenderer label;
+        public GameObject buttonPanel;
     }
 
     public bool isComplete;
@@ -36,7 +37,7 @@ public class MazeMap : MonoBehaviour
         {
             pillars[x].button.buttonIndex = x;
             pillars[x].button.OnButtonClicked += CheckButton;
-            pillars[x].button.GetComponent<Renderer>().material.mainTexture = pillars[x].pillar.pillarLabel;
+            pillars[x].buttonPanel.GetComponent<Renderer>().material.mainTexture = pillars[x].pillar.pillarLabel;
         }
         ResetPuzzle();
     }
