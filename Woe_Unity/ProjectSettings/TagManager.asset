@@ -5,7 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
-  - Button
+  - Waypoint
+  - Waypoint Room
+  - Ambush Spot
+  - Vent
+  - Monster
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -16,8 +21,8 @@ TagManager:
   - Ground
   - Hazard
   - Bounce
-  - 
-  - 
+  - Player
+  - Room
   - 
   - 
   - 

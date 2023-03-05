@@ -1,15 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using Unity.Netcode;
 using UnityEngine;
+using TMPro;
 
-public class MovementController : NetworkBehaviour
+public class MovementController : MonoBehaviour
 {
-    public bool Debug = false;
+    public TextMeshProUGUI staminaText;
+
+    public bool debug = false;
 
     bool grounded = false;
     bool bounce = false;
+    bool tired = false;
+    public float sprintTimer = 0.0f;
+    public float sprintSeconds = 5.0f;
+
     Vector3 vel = new Vector3(0.0f, 0.0f, 0.0f);
     public float velRest = -2.0f;
     public float speed = 5.0f;
@@ -20,8 +25,9 @@ public class MovementController : NetworkBehaviour
     public float bounceHeight_ORG;
 
     public CharacterController charController;
-    public CameraController cameraController;
-    //public GameObject camera;
+    float charControllerX_ORG;
+
+    public GameObject camera;
     public Transform groundCheck;
     public Transform spawnPoint;
     public Transform crouchPoint;
@@ -29,24 +35,26 @@ public class MovementController : NetworkBehaviour
     public float distanceFromGround = 0.4f;
     public LayerMask groundLayerMask;
     public LayerMask bounceLayerMask;
+    public LayerMask roomLayerMask;
 
     // Start is called before the first frame update
-    public override void OnNetworkSpawn()
+    void Start()
     {
         bounceHeight_ORG = bounceHeight;
+        charControllerX_ORG = charController.center.x;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner) { return; }
+        // staminaText.text = "Stamina: " + sprintTimer.ToString();
 
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
 
         if (grounded && vel.y < 0.0f)
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Grounded");
             }
@@ -55,7 +63,7 @@ public class MovementController : NetworkBehaviour
 
         if (bounce && vel.y < 0.0f)
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Bounce");
             }
@@ -63,14 +71,15 @@ public class MovementController : NetworkBehaviour
         }
         bounceHeight = bounceHeight_ORG;
 
-        cameraController.offset = new Vector3(straightPoint.localPosition.x, straightPoint.localPosition.y, straightPoint.localPosition.z);
+        charController.center = new Vector3(0, charControllerX_ORG, 0);
+        camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
         if (Input.GetButton("Crouch"))
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Crouch");
             }
@@ -79,17 +88,33 @@ public class MovementController : NetworkBehaviour
 
         }
 
-        if (Input.GetButton("Sprint"))
+        if (Input.GetButton("Sprint") && !tired)
         {
-            if (Debug)
+            if (debug)
             {
                 print("Player: Sprint");
             }
+
+            sprintTimer += Time.deltaTime;
+
+            if (sprintTimer < sprintSeconds)
+            {
+                Move(moveHorizontal, moveVertical, sprintSpeed);
+            }
+            else
+            {
+                tired = true;
+            }
             
-            Move(moveHorizontal, moveVertical, sprintSpeed);
         }
         else
         {
+            sprintTimer -= Time.deltaTime;
+            if (sprintTimer <= 0)
+            {
+                sprintTimer = 0;
+                tired = false;
+            }
             Move(moveHorizontal, moveVertical, speed);
         }
 
@@ -105,7 +130,7 @@ public class MovementController : NetworkBehaviour
 
     public void Move(float moveHorizontal_, float moveVertical_, float speed_)
     {
-        if (Debug)
+        if (debug)
         {
             print("Player: Move");
         }
@@ -115,7 +140,7 @@ public class MovementController : NetworkBehaviour
 
     public void Jump(float height_)
     {
-        if (Debug)
+        if (debug)
         {
             print("Player: Jump");
         }
@@ -125,7 +150,8 @@ public class MovementController : NetworkBehaviour
 
     public void Crouch()
     {
-        cameraController.offset = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
+        charController.center = new Vector3(0, 0.5f, 0);
+        camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
         vel.y += (gravity * 2) * Time.deltaTime;
         bounceHeight = bounceHeight * 2;
     }
