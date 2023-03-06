@@ -36,6 +36,8 @@ public class LobbyUI : MonoBehaviour {
         LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
         LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnLeftLobby;
 
+        LobbyManager.Instance.Authenticate(EditPlayerName.Instance.GetPlayerName());
+
         Hide();
     }
 

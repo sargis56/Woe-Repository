@@ -62,7 +62,7 @@ public class LobbyManager : MonoBehaviour {
 
     private void Start()
     {
-        Authenticate(EditPlayerName.Instance.GetPlayerName());
+        //await Authenticate(EditPlayerName.Instance.GetPlayerName());
     }
 
     private void Update() {
