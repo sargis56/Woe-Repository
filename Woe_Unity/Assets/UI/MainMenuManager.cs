@@ -20,4 +20,9 @@ public class MainMenuManager : MonoBehaviour
 
         titleScreen.SetActive(false);
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

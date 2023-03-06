@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/UI/MainMenu.unity
+    guid: 5329607df557dd2469c4a1a36cb4ed3e
+  - enabled: 1
     path: Assets/Scenes/TrevorNetworkTest.unity
     guid: c6b09ac3e6620c74a9d21b9eba289b0c
   m_configObjects: {}
