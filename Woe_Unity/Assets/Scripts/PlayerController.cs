@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public GameObject itemHand;
     public GameObject monster;
 
+    public float pressure = 0.0f;
+
     public bool debug = false;
 
     // Start is called before the first frame update

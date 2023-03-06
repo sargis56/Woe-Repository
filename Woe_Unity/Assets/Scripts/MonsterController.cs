@@ -8,8 +8,11 @@ public class MonsterController : MonoBehaviour
     public TextMeshProUGUI stateText;
     public TextMeshProUGUI targetText;
 
-    public enum MonsterState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Vent, Retreat };
+    public enum MonsterState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Vent, Retreat, Follow, Caution };
     public MonsterState currentState;
+
+    public enum MonsterIntelligence { Dumb, Incompetent, Competent, Smart};
+    public MonsterIntelligence intelligence;
 
     public NavMeshAgent agent;
     float navAgentSpeed_ORG;
@@ -120,7 +123,7 @@ public class MonsterController : MonoBehaviour
         }
 
         SetupRays();
-        UpdateState();
+        UpdateStates();
 
         if (Input.GetKeyDown("[0]") && debug)
         {
@@ -301,8 +304,28 @@ public class MonsterController : MonoBehaviour
         Debug.DrawRay(transform.position, sideL * hitLeftData.distance, Color.yellow);
     }
 
-    void UpdateState()
+    void UpdateStates()
     {
+        switch (intelligence)
+        {
+            case MonsterIntelligence.Dumb:
+                //Add modifiers to monster's ray detection, speed and persistence
+                break;
+
+            case MonsterIntelligence.Incompetent:
+                //Add modifiers to monster's ray detection, speed and persistence
+                break;
+
+            case MonsterIntelligence.Competent:
+                //Add modifiers to monster's ray detection, speed and persistence
+                break;
+
+            case MonsterIntelligence.Smart:
+                //Add modifiers to monster's ray detection, speed and persistence
+                break;
+
+        }
+
         switch (currentState)
         {
             case MonsterState.Idle:
@@ -367,6 +390,22 @@ public class MonsterController : MonoBehaviour
                     print("In MonsterState.Retreat");
                 }
                 Retreat();
+                break;
+
+            case MonsterState.Follow:
+                if (debug)
+                {
+                    print("In MonsterState.Follow");
+                }
+                Follow();
+                break;
+
+            case MonsterState.Caution:
+                if (debug)
+                {
+                    print("In MonsterState.Caution");
+                }
+                Caution();
                 break;
 
         }
@@ -541,6 +580,18 @@ public class MonsterController : MonoBehaviour
         {
             ChangeState(MonsterState.Investigate);
         }
+    }
+
+    void Follow()
+    {
+        /*State used for monster to follow around the player but not necessarily try to attack them, 
+        intended to be used when player is solving puzzles and the monster is not permitted to attack*/
+    }
+
+    void Caution()
+    {
+        /*State used for monster to slowly approch the player when they are holding certain items in front of them, 
+        intended to be used as a way for the player to have a little space when the monster is chasing them*/
     }
 
     GameObject ClosestWaypoint(Vector3 position_, GameObject[] waypoints_)
