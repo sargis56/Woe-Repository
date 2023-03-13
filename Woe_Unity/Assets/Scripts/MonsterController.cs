@@ -16,6 +16,8 @@ public class MonsterController : MonoBehaviour
 
     public NavMeshAgent agent;
     float navAgentSpeed_ORG;
+    float additiveSpeed;
+    float speedModifer;
 
     public GameObject[] players;
     public int playerTarget = 0;
@@ -70,10 +72,10 @@ public class MonsterController : MonoBehaviour
     Ray raySideR;
     Ray raySideL;
 
-    public GameObject objectForward;
-    public GameObject objectBack;
-    public GameObject objectRight;
-    public GameObject objectLeft;
+    GameObject objectForward;
+    GameObject objectBack;
+    GameObject objectRight;
+    GameObject objectLeft;
 
     public GameObject[] waypoints;
     public GameObject[] waypointsRoom;
@@ -81,6 +83,8 @@ public class MonsterController : MonoBehaviour
     public int waypointRoomIndex = 0;
     public int patience = 0;
     public int patienceMax = 0;
+    int patienceMaxRangeMax = 0;
+    int patienceMaxRangeMin = 0;
     public GameObject[] ambushSpots;
     public float chanceToAmbush = 0.25f;
     public float ambushWaitTime = 60.0f;
@@ -88,6 +92,16 @@ public class MonsterController : MonoBehaviour
     public GameObject[] vents;
     public int ventIndex = 0;
     public float chanceToVent = 0.25f;
+
+    bool lingerInRoom;
+    float lingerWaitTime = 5.0f;
+    float lingerWaitTime_ORG;
+
+    float restVentTime = 5.0f;
+    float restVentTime_ORG;
+
+    float cautionWaitTime = 3.0f;
+    float cautionWaitTime_ORG;
 
     //Make Monster go to the start when it idles
     public bool idleToStart = false;
@@ -99,6 +113,8 @@ public class MonsterController : MonoBehaviour
     {
         navAgentSpeed_ORG = agent.speed;
         ambushWaitTime_ORG = ambushWaitTime;
+        lingerWaitTime_ORG = lingerWaitTime;
+        restVentTime_ORG = restVentTime;
 
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         players = GameObject.FindGameObjectsWithTag("Player");
@@ -310,18 +326,42 @@ public class MonsterController : MonoBehaviour
         {
             case MonsterIntelligence.Dumb:
                 //Add modifiers to monster's ray detection, speed and persistence
+                patienceMaxRangeMax = 10;
+                patienceMaxRangeMin = 8;
+                chanceToVent = 0.5f;
+                speedModifer = -0.05f;
+                additiveSpeed = 0.25f;
+                lingerInRoom = false;
                 break;
 
             case MonsterIntelligence.Incompetent:
                 //Add modifiers to monster's ray detection, speed and persistence
+                patienceMaxRangeMax = 8;
+                patienceMaxRangeMin = 5;
+                chanceToVent = 0.45f;
+                speedModifer = -0.025f;
+                additiveSpeed = 0.5f;
+                lingerInRoom = false;
                 break;
 
             case MonsterIntelligence.Competent:
                 //Add modifiers to monster's ray detection, speed and persistence
+                patienceMaxRangeMax = 5;
+                patienceMaxRangeMin = 1;
+                chanceToVent = 0.35f;
+                speedModifer = 0.0f;
+                additiveSpeed = 1.0f;
+                lingerInRoom = true;
                 break;
 
             case MonsterIntelligence.Smart:
                 //Add modifiers to monster's ray detection, speed and persistence
+                patienceMaxRangeMax = 2;
+                patienceMaxRangeMin = 1;
+                chanceToVent = 0.25f;
+                speedModifer = 0.05f;
+                additiveSpeed = 2.0f;
+                lingerInRoom = true;
                 break;
 
         }
@@ -413,11 +453,11 @@ public class MonsterController : MonoBehaviour
 
     void Idle()
     {
-        patienceMax = Random.Range(1, 5);
+        patienceMax = Random.Range(patienceMaxRangeMin, patienceMaxRangeMax);
         playerTarget = 0;
         playerTargeting = null;
         agent.autoBraking = true;
-        agent.speed = navAgentSpeed_ORG;
+        agent.speed = navAgentSpeed_ORG + speedModifer;
         if(idleToStart)
         {
             waypointIndex = 0;
@@ -470,6 +510,8 @@ public class MonsterController : MonoBehaviour
 
     void InvestigateRoom()
     {
+        agent.speed = navAgentSpeed_ORG;
+
         if (waypointRoomIndex >= waypointsRoom.Length)
         {
             if (Random.value < chanceToVent)
@@ -487,7 +529,19 @@ public class MonsterController : MonoBehaviour
             agent.SetDestination(waypointsRoom[waypointRoomIndex].transform.position);
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
             {
-                waypointRoomIndex += 1;
+                if (lingerInRoom)
+                {
+                    lingerWaitTime -= Time.deltaTime;
+                    if (lingerWaitTime < 0.0f)
+                    {
+                        lingerWaitTime = lingerWaitTime_ORG;
+                        waypointRoomIndex += 1;
+                    }
+                }
+                else
+                {
+                    waypointRoomIndex += 1;
+                }
             }
         }
 
@@ -503,6 +557,8 @@ public class MonsterController : MonoBehaviour
 
     void Ambush()
     {
+        agent.speed = navAgentSpeed_ORG;
+
         GameObject closestWaypoint = null;
 
         closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, ambushSpots);
@@ -513,7 +569,7 @@ public class MonsterController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(closestWaypoint.transform.GetChild(0).localPosition), Time.deltaTime * 2.5f);
 
             ambushWaitTime -= Time.deltaTime;
-            if (ambushWaitTime < 0)
+            if (ambushWaitTime < 0.0f)
             {
                 ambushWaitTime = ambushWaitTime_ORG;
                 ChangeState(MonsterState.Idle);
@@ -543,7 +599,15 @@ public class MonsterController : MonoBehaviour
             }
             else
             {
-                ChangeState(MonsterState.Investigate);
+                if(playerTargeting.GetComponent<MovementController>().safe)
+                {
+                    ChangeState(MonsterState.Follow);
+                }
+                else
+                {
+                    ChangeState(MonsterState.Investigate);
+                }
+                
             }
             patience = 0;
         }
@@ -554,7 +618,7 @@ public class MonsterController : MonoBehaviour
             {
                 waypointIndex = Random.Range(0, waypoints.Length);
                 patience = patience + 1;
-                agent.speed = agent.speed + 1.0f;
+                agent.speed = agent.speed + additiveSpeed;
             }
         }
         
@@ -562,10 +626,24 @@ public class MonsterController : MonoBehaviour
 
     void Vent()
     {
+        restVentTime -= Time.deltaTime;
+        if (restVentTime < 0.0f)
+        {
+            restVentTime = restVentTime_ORG;
+            foreach (GameObject vent in vents)
+            {
+                vent.SetActive(true);
+            }
+        }
+
         agent.SetDestination(vents[ventIndex].transform.position);
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            ChangeState(MonsterState.Idle);
+            if (restVentTime == restVentTime_ORG)
+            {
+
+                ChangeState(MonsterState.Idle);
+            }
         }
     }
 
@@ -586,12 +664,35 @@ public class MonsterController : MonoBehaviour
     {
         /*State used for monster to follow around the player but not necessarily try to attack them, 
         intended to be used when player is solving puzzles and the monster is not permitted to attack*/
+
+        GameObject closestWaypoint = null;
+        closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, vents);
+        agent.SetDestination(closestWaypoint.transform.position);
+
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            closestWaypoint.SetActive(false);
+            ChangeState(MonsterState.Vent);
+        }
     }
 
     void Caution()
     {
         /*State used for monster to slowly approch the player when they are holding certain items in front of them, 
         intended to be used as a way for the player to have a little space when the monster is chasing them*/
+
+        cautionWaitTime -= Time.deltaTime;
+        if (cautionWaitTime < 0.0f)
+        {
+            agent.speed = navAgentSpeed_ORG;
+            cautionWaitTime = cautionWaitTime_ORG;
+        }
+        else
+        {
+            agent.speed = 1.5f;
+        }
+
+        agent.SetDestination(playerTargeting.transform.position);
     }
 
     GameObject ClosestWaypoint(Vector3 position_, GameObject[] waypoints_)
@@ -612,24 +713,11 @@ public class MonsterController : MonoBehaviour
         return closestWaypoint;
     }
 
-    //void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-    //    if (hit.gameObject.tag == "Player")
-    //    {
-    //        hit.gameObject.GetComponent<PlayerController>().TakeDamage(50);
-    //    }
-    //}
-
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<PlayerController>().TakeDamage(50);
-        }
-
-        if ((collision.gameObject.tag == "Enemy") && currentState == MonsterState.Attack)
-        {
-            Destroy(collision.gameObject);
         }
     }
 }

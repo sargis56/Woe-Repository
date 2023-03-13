@@ -11,6 +11,7 @@ public class MovementController : MonoBehaviour
 
     bool grounded = false;
     bool bounce = false;
+    public bool safe = false;
     bool tired = false;
     public float sprintTimer = 0.0f;
     public float sprintSeconds = 5.0f;
@@ -36,6 +37,7 @@ public class MovementController : MonoBehaviour
     public LayerMask groundLayerMask;
     public LayerMask bounceLayerMask;
     public LayerMask roomLayerMask;
+    public LayerMask safeZoneLayerMask;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +53,7 @@ public class MovementController : MonoBehaviour
 
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
+        safe = Physics.CheckSphere(groundCheck.position, distanceFromGround, safeZoneLayerMask);
 
         if (grounded && vel.y < 0.0f)
         {
