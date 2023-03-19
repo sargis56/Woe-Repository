@@ -27,7 +27,7 @@ public class MovementController : MonoBehaviour
     public CharacterController charController;
     float charControllerX_ORG;
 
-    public GameObject camera;
+    //public GameObject camera;
     public Transform groundCheck;
     public Transform spawnPoint;
     public Transform crouchPoint;
@@ -72,7 +72,7 @@ public class MovementController : MonoBehaviour
         bounceHeight = bounceHeight_ORG;
 
         charController.center = new Vector3(0, charControllerX_ORG, 0);
-        camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
+        //camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
@@ -151,7 +151,7 @@ public class MovementController : MonoBehaviour
     public void Crouch()
     {
         charController.center = new Vector3(0, 0.5f, 0);
-        camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
+        //camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
         vel.y += (gravity * 2) * Time.deltaTime;
         bounceHeight = bounceHeight * 2;
     }

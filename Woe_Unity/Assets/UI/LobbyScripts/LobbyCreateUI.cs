@@ -64,10 +64,9 @@ public class LobbyCreateUI : MonoBehaviour {
     public void Show() {
         gameObject.SetActive(true);
 
-        lobbyName = "MyLobby";
+        lobbyName = "Lobby";
         isPrivate = false;
         maxPlayers = 2;
-        //gameMode = LobbyManager.GameMode.CaptureTheFlag;
 
         UpdateText();
     }
