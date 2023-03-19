@@ -11,6 +11,7 @@ TagManager:
   - Vent
   - Monster
   - Item
+  - Bot
   layers:
   - Default
   - TransparentFX
@@ -23,8 +24,8 @@ TagManager:
   - Bounce
   - Player
   - Room
-  - 
-  - 
+  - Safe Zone
+  - Monster
   - 
   - 
   - 
