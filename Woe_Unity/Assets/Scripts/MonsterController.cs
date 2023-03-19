@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
-public class MonsterController : MonoBehaviour
+using Unity.Netcode;
+
+public class MonsterController : NetworkBehaviour
 {
     public TextMeshProUGUI stateText;
     public TextMeshProUGUI targetText;
@@ -109,7 +111,7 @@ public class MonsterController : MonoBehaviour
     public bool debug = false;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
         navAgentSpeed_ORG = agent.speed;
         ambushWaitTime_ORG = ambushWaitTime;
@@ -127,6 +129,8 @@ public class MonsterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
+
         if (debug)
         {
             stateText.text = "Monster's State: " + currentState.ToString();

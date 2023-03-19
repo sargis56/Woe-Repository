@@ -628,6 +628,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad807e6fa5194934b83040643e76f823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthText: {fileID: 0}
+  itemText: {fileID: 0}
   currentHealth: 100
   charController: {fileID: 208829557886505409}
   groundCheck: {fileID: 208829557391806502}
@@ -635,9 +637,18 @@ MonoBehaviour:
   hazardLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  playerEyes:
-  - {fileID: 208829556719878656}
-  - {fileID: 208829558263069612}
+  hasItem: 0
+  currentItem: {fileID: 0}
+  itemHand: {fileID: 0}
+  monster: {fileID: 0}
+  monsterLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  forwardRayDistance: 7.5
+  forwardRayHeight: 0
+  objectForward: {fileID: 0}
+  pressure: 0
+  debug: 0
 --- !u!114 &208829557886505411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,7 +661,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88bae5ab1d5ac884daebade85be853e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debug: 0
+  staminaText: {fileID: 0}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  debug: 0
+  safe: 0
+  sprintTimer: 0
+  sprintSeconds: 5
   velRest: -2
   speed: 5
   sprintSpeed: 10
@@ -659,7 +675,6 @@ MonoBehaviour:
   bounceHeight: 5
   bounceHeight_ORG: 0
   charController: {fileID: 208829557886505409}
-  cameraController: {fileID: 6800540068933159306}
   groundCheck: {fileID: 208829557391806502}
   spawnPoint: {fileID: 0}
   crouchPoint: {fileID: 5700401947212082892}
@@ -671,6 +686,12 @@ MonoBehaviour:
   bounceLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  roomLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  safeZoneLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &-229874911775579784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -888,7 +909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2635263161666744257
 Transform:
   m_ObjectHideFlags: 0
@@ -897,7 +918,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6629157629662688453}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000000059604645, z: 0}
+  m_LocalPosition: {x: 127.558525, y: -0.2600003, z: 119.41571}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Globalization;
+using Unity.Netcode;
 
-public class MovementController : MonoBehaviour
+public class MovementController : NetworkBehaviour
 {
     public TextMeshProUGUI staminaText;
+    public Vector3 spawnPosition;
 
     public bool debug = false;
 
@@ -40,15 +43,19 @@ public class MovementController : MonoBehaviour
     public LayerMask safeZoneLayerMask;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         bounceHeight_ORG = bounceHeight;
         charControllerX_ORG = charController.center.x;
+        transform.position = spawnPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
+
         // staminaText.text = "Stamina: " + sprintTimer.ToString();
 
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
