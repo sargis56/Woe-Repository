@@ -12,6 +12,8 @@ public class MovementController : MonoBehaviour
     bool grounded = false;
     bool bounce = false;
     public bool safe = false;
+    public bool hidden = false;
+
     bool tired = false;
     public float sprintTimer = 0.0f;
     public float sprintSeconds = 5.0f;
@@ -38,6 +40,7 @@ public class MovementController : MonoBehaviour
     public LayerMask bounceLayerMask;
     public LayerMask roomLayerMask;
     public LayerMask safeZoneLayerMask;
+    public LayerMask hiddenLayerMask;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +57,7 @@ public class MovementController : MonoBehaviour
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
         safe = Physics.CheckSphere(groundCheck.position, distanceFromGround, safeZoneLayerMask);
+        hidden = Physics.CheckSphere(groundCheck.position, distanceFromGround, hiddenLayerMask);
 
         if (grounded && vel.y < 0.0f)
         {
@@ -73,6 +77,19 @@ public class MovementController : MonoBehaviour
             Jump(bounceHeight);
         }
         bounceHeight = bounceHeight_ORG;
+
+        if (hidden)
+        {
+            if (debug)
+            {
+                print("Player: Hidden");
+            }
+            this.gameObject.layer = LayerMask.NameToLayer("Hidden");
+        }
+        else
+        {
+            this.gameObject.layer = LayerMask.NameToLayer("Player");
+        }
 
         charController.center = new Vector3(0, charControllerX_ORG, 0);
         camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);

@@ -12,6 +12,7 @@ TagManager:
   - Monster
   - Item
   - Bot
+  - Spray
   layers:
   - Default
   - TransparentFX
@@ -26,9 +27,9 @@ TagManager:
   - Room
   - Safe Zone
   - Monster
-  - 
-  - 
-  - 
+  - Bot
+  - Enemy
+  - Hidden
   - 
   - 
   - 

@@ -8,6 +8,15 @@ public class PlayerController : MonoBehaviour
 {
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI itemText;
+    public TextMeshProUGUI ammoText;
+
+    public enum ItemState {Empty, Spray, Noisemaker, Taser};
+    public ItemState currentItem;
+    int sprayAmmo = 0;
+    int noisemakerAmmo = 0;
+    int taserAmmo = 0;
+
+    //public GameObject currentItem;
 
     bool hazard = false;
 
@@ -17,12 +26,22 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public float distanceFromGround = 0.4f;
     public LayerMask hazardLayerMask;
-    public bool hasItem = false;
-    public GameObject currentItem;
+    
+    public bool hasSpray = false;
+    public bool hasNoisemaker = false;
+    public bool hasTaser = false;
+    public bool hasInjector = false;
+
     public GameObject itemHand;
     public GameObject monster;
+
     bool monsterInRange = false;
+    bool botInRange = false;
+    bool enemyInRange = false;
+
     public LayerMask monsterLayerMask;
+    public LayerMask botLayerMask;
+    public LayerMask enemyLayerMask;
 
     public float forwardRayDistance = 7.5f;
     public float forwardRayHeight = 0.0f;
@@ -43,6 +62,8 @@ public class PlayerController : MonoBehaviour
 
     public GameObject objectForward;
 
+    public bool requestHealth = false;
+
     public float pressure = 0.0f;
 
     public bool debug = false;
@@ -50,6 +71,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
     }
 
@@ -60,33 +82,23 @@ public class PlayerController : MonoBehaviour
         healthText.text = "Health: " + currentHealth.ToString();
 
         SetupRays();
+        UpdateStates();
 
-        if (hasItem)
-        {
-            itemText.text = "Item: " + currentItem.name;
-            currentItem.transform.position = new Vector3(itemHand.transform.position.x, itemHand.transform.position.y, itemHand.transform.position.z);
-        }
-        else
-        {
-            itemText.text = "Item: " + "None";
-        }
-        
+        //if (hasSpray)
+        //{
+        //    itemText.text = "Item: " + currentItem.ToString();
+        //    currentItem.transform.position = new Vector3(itemHand.transform.position.x, itemHand.transform.position.y, itemHand.transform.position.z);
+        //}
+        //else
+        //{
+        //    itemText.text = "Item: " + "None";
+        //}
 
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
 
         if (hazard)
         {
             TakeDamage(1);
-        }
-
-        if (Input.GetButton("Fire1") && hasItem && monsterInRange)
-        {
-            monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Retreat;
-            //monster.GetComponent<MonsterController>().playerTarget = 1;
-            monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
-            Destroy(currentItem);
-            currentItem = null;
-            hasItem = false;
         }
 
         if (currentHealth <= 0)
@@ -103,6 +115,30 @@ public class PlayerController : MonoBehaviour
         {
             TakeDamage(100);
         }
+
+        if (Input.GetKeyDown("1") && hasSpray)
+        {
+            ChangeItem(ItemState.Spray);
+        }
+        if (Input.GetKeyDown("2") && hasNoisemaker)
+        {
+            ChangeItem(ItemState.Noisemaker);
+        }
+        if (Input.GetKeyDown("3") && hasTaser)
+        {
+            ChangeItem(ItemState.Taser);
+        }
+        //if (Input.GetKeyDown("4") && hasInjector)
+        //{
+        //    ChangeItem(ItemState.Injector);
+        //}
+
+        if (Input.GetKeyDown("e") && requestHealth)
+        {
+            AddHealth(5);
+        }
+        requestHealth = false;
+        itemText.text = "Item: " + currentItem.ToString();
     }
 
     void SetupRays()
@@ -117,9 +153,10 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask))
         {
             monsterInRange = true;
-            if (hasItem)
+            objectForward = hitForwardData.collider.gameObject;
+            if ((currentItem == ItemState.Spray) && (monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
             {
-                monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Caution;
+                objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Caution;
             }
             
         }
@@ -128,12 +165,88 @@ public class PlayerController : MonoBehaviour
             monsterInRange = false;
         }
 
+        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask))
+        {
+            botInRange = true;
+            objectForward = hitForwardData.collider.gameObject;
+        }
+        else
+        {
+            botInRange = false;
+        }
+
+        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask))
+        {
+            enemyInRange = true;
+            objectForward = hitForwardData.collider.gameObject;
+        }
+        else
+        {
+            enemyInRange = false;
+        }
+
         Debug.DrawRay(transform.position, forwardM * hitForwardData.distance, Color.yellow);
     }
 
     void FixedUpdate()
     {
 
+    }
+
+    void UpdateStates()
+    {
+        switch (currentItem)
+        {
+            case ItemState.Empty:
+                ammoText.text = "";
+                break;
+
+            case ItemState.Spray:
+                ammoText.text = "Ammo: " + sprayAmmo.ToString();
+
+
+                if ((Input.GetButton("Fire1")) && (sprayAmmo > 0))
+                {
+                    if (monsterInRange)
+                    {
+                        monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Retreat;
+                        monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
+                    }
+                    sprayAmmo -= 1;
+                }
+                break;
+
+            case ItemState.Noisemaker:
+                ammoText.text = "Ammo: " + noisemakerAmmo.ToString();
+
+                if ((Input.GetButton("Fire1")) && (noisemakerAmmo > 0))
+                {
+
+                    noisemakerAmmo -= 1;
+                }
+                break;
+
+            case ItemState.Taser:
+                ammoText.text = "Ammo: " + taserAmmo.ToString();
+
+                if ((Input.GetButton("Fire1")) && (taserAmmo > 0))
+                {
+
+                    taserAmmo -= 1;
+                }
+                break;
+
+            //case ItemState.Injector:
+            //    ammoText.text = "";
+
+            //    break;
+
+        }
+    }
+
+    public void ChangeItem(ItemState state)
+    {
+        currentItem = state;
     }
 
     public void AddHealth(int health_)
@@ -160,11 +273,35 @@ public class PlayerController : MonoBehaviour
         //{
         //    TakeDamage(1);
         //}
-        if (hit.gameObject.tag == "Item")
+        if (hit.gameObject.tag == "Spray")
         {
-            hasItem = true;
-            currentItem = hit.gameObject;
-            //Destroy(hit.gameObject);
+            if (hasSpray == false)
+            {
+                ChangeItem(ItemState.Spray);
+                hasSpray = true;
+            }
+            sprayAmmo += 1;
+            Destroy(hit.gameObject);
+        }
+        if (hit.gameObject.tag == "Noisemaker")
+        {
+            if (hasNoisemaker == false)
+            {
+                ChangeItem(ItemState.Noisemaker);
+                hasNoisemaker = true;
+            }
+            noisemakerAmmo += 1;
+            Destroy(hit.gameObject);
+        }
+        if (hit.gameObject.tag == "Taser")
+        {
+            if (hasTaser == false)
+            {
+                ChangeItem(ItemState.Taser);
+                hasTaser = true;
+            }
+            taserAmmo += 1;
+            Destroy(hit.gameObject);
         }
     }
 
