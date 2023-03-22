@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        healthText.text = "Health: " + currentHealth.ToString();
+        //healthText.text = "Health: " + currentHealth.ToString();
 
         SetupRays();
         UpdateStates();

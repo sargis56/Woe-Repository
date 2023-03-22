@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class MouseController : MonoBehaviour
+public class MouseController : NetworkBehaviour
 {
     public float sensitivity = 1000.0f;
     public Transform body;
@@ -19,6 +20,7 @@ public class MouseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
         mouse.x = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
         mouse.y = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 
