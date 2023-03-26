@@ -13,7 +13,9 @@ TagManager:
   - Item
   - Bot
   - Spray
-  - Button
+  - HealthText
+  - StaminaText
+  - ItemText
   layers:
   - Default
   - TransparentFX

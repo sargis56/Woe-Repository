@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -73,6 +74,9 @@ public class PlayerController : MonoBehaviour
     {
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
+        healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
+        ammoText = GameObject.FindGameObjectWithTag("StaminaText").GetComponent<TextMeshProUGUI>();
+        itemText = GameObject.FindGameObjectWithTag("ItemText").GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -278,6 +282,7 @@ public class PlayerController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        //Debug.Log(hit.gameObject.name);
         //if (hit.gameObject.tag == "Enemy")
         //{
         //    TakeDamage(3);

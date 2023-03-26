@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BotController : MonoBehaviour
+public class BotController : NetworkBehaviour
 {
     public enum BotType { DoctorBot, NurseBot, SecurityBot};
     public BotType botType;
@@ -63,6 +65,7 @@ public class BotController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
         SetupRays();
         UpdateState();
     }
