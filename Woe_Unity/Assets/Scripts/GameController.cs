@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameController : MonoBehaviour
     public float menace = 0.0f;
 
     public GameObject[] bots;
-
+    
     public bool globalDebug = false;
 
     // Start is called before the first frame update

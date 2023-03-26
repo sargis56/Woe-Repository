@@ -78,16 +78,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        //healthText.text = "Health: " + currentHealth.ToString();
+        healthText.text = "Health: " + currentHealth.ToString();
 
         SetupRays();
         UpdateStates();
 
-        //if (hasSpray)
+        //if ((hasSpray) || (hasNoisemaker) || (hasTaser) || (hasInjector) )
         //{
         //    itemText.text = "Item: " + currentItem.ToString();
-        //    currentItem.transform.position = new Vector3(itemHand.transform.position.x, itemHand.transform.position.y, itemHand.transform.position.z);
+        //    //currentItem.transform.position = new Vector3(itemHand.transform.position.x, itemHand.transform.position.y, itemHand.transform.position.z);
         //}
         //else
         //{
@@ -116,6 +115,10 @@ public class PlayerController : MonoBehaviour
             TakeDamage(100);
         }
 
+        if (Input.GetKeyDown("0"))
+        {
+            ChangeItem(ItemState.Empty);
+        }
         if (Input.GetKeyDown("1") && hasSpray)
         {
             ChangeItem(ItemState.Spray);
@@ -138,7 +141,17 @@ public class PlayerController : MonoBehaviour
             AddHealth(5);
         }
         requestHealth = false;
-        itemText.text = "Item: " + currentItem.ToString();
+
+        if (currentItem == ItemState.Empty)
+        {
+            itemText.text = "";
+        }
+        else
+        {
+            itemText.text = "Item: " + currentItem.ToString();
+        }
+
+            
     }
 
     void SetupRays()
@@ -269,10 +282,10 @@ public class PlayerController : MonoBehaviour
         //{
         //    TakeDamage(3);
         //}
-        //if (hit.gameObject.tag == "Monster")
-        //{
-        //    TakeDamage(1);
-        //}
+        if (hit.gameObject.tag == "Monster")
+        {
+            TakeDamage(100);
+        }
         if (hit.gameObject.tag == "Spray")
         {
             if (hasSpray == false)

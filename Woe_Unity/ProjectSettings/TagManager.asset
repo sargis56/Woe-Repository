@@ -13,6 +13,7 @@ TagManager:
   - Item
   - Bot
   - Spray
+  - Button
   layers:
   - Default
   - TransparentFX
