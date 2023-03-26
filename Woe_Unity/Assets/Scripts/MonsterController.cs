@@ -13,7 +13,7 @@ public class MonsterController : NetworkBehaviour
     public enum MonsterState { Idle, Investigate, InvestigateRoom, Attack, Ambush, Patrol, Vent, Retreat, Follow, Caution };
     public MonsterState currentState;
 
-    public enum MonsterIntelligence { Dumb, Incompetent, Competent, Smart};
+    public enum MonsterIntelligence { Dumb, Incompetent, Competent, Smart, ApexPredator};
     public MonsterIntelligence intelligence;
 
     public NavMeshAgent agent;
@@ -104,6 +104,8 @@ public class MonsterController : NetworkBehaviour
 
     float cautionWaitTime = 3.0f;
     float cautionWaitTime_ORG;
+
+    public float remainingWaypointDistance = 1.5f; //0.5f;
 
     //Make Monster go to the start when it idles
     public bool idleToStart = false;
@@ -368,6 +370,17 @@ public class MonsterController : NetworkBehaviour
                 lingerInRoom = true;
                 break;
 
+            case MonsterIntelligence.ApexPredator:
+                //Add modifiers to monster's ray detection, speed and persistence
+                patienceMaxRangeMax = 1;
+                patienceMaxRangeMin = 1;
+                chanceToVent = 0.0f;
+                chanceToAmbush = 0.0f;
+                speedModifer = 0.1f;
+                additiveSpeed = 2.5f;
+                lingerInRoom = true;
+                break;
+
         }
 
         switch (currentState)
@@ -487,7 +500,7 @@ public class MonsterController : NetworkBehaviour
         closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, waypoints);
         agent.SetDestination(closestWaypoint.transform.position);
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
         {
             agent.autoBraking = false;
             if (closestWaypoint.gameObject.layer == LayerMask.NameToLayer("Room"))
@@ -531,7 +544,7 @@ public class MonsterController : NetworkBehaviour
         else
         {
             agent.SetDestination(waypointsRoom[waypointRoomIndex].transform.position);
-            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
             {
                 if (lingerInRoom)
                 {
@@ -568,7 +581,7 @@ public class MonsterController : NetworkBehaviour
         closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, ambushSpots);
         agent.SetDestination(closestWaypoint.transform.position);
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(closestWaypoint.transform.GetChild(0).localPosition), Time.deltaTime * 2.5f);
 
@@ -618,7 +631,7 @@ public class MonsterController : NetworkBehaviour
         else
         {
             agent.SetDestination(waypoints[waypointIndex].transform.position);
-            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
             {
                 waypointIndex = Random.Range(0, waypoints.Length);
                 patience = patience + 1;
@@ -641,7 +654,7 @@ public class MonsterController : NetworkBehaviour
         }
 
         agent.SetDestination(vents[ventIndex].transform.position);
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
         {
             if (restVentTime == restVentTime_ORG)
             {
@@ -658,7 +671,7 @@ public class MonsterController : NetworkBehaviour
 
         agent.SetDestination(closestWaypoint.transform.position);
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
         {
             ChangeState(MonsterState.Investigate);
         }
@@ -673,7 +686,7 @@ public class MonsterController : NetworkBehaviour
         closestWaypoint = ClosestWaypoint(playerTargeting.transform.position, vents);
         agent.SetDestination(closestWaypoint.transform.position);
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < remainingWaypointDistance)
         {
             closestWaypoint.SetActive(false);
             ChangeState(MonsterState.Vent);
