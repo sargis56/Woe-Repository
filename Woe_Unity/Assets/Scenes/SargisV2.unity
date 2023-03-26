@@ -7908,7 +7908,7 @@ GameObject:
   - component: {fileID: 464528919}
   m_Layer: 5
   m_Name: HealthText
-  m_TagString: HealthText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12237,7 +12237,7 @@ GameObject:
   - component: {fileID: 790627596}
   m_Layer: 5
   m_Name: StaminaText
-  m_TagString: StaminaText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15648,7 +15648,7 @@ GameObject:
   - component: {fileID: 937330298}
   m_Layer: 5
   m_Name: ItemText
-  m_TagString: ItemText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
