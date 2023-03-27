@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI itemText;
     public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI livesText;
+
+    public enum PlayerState { Alive, Dead };
+    public PlayerState playerState;
 
     public enum ItemState {Empty, Spray, Noisemaker, Taser};
     public ItemState currentItem;
@@ -35,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject itemHand;
     public GameObject monster;
+    public GameObject director;
 
     bool monsterInRange = false;
     bool botInRange = false;
@@ -72,6 +77,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        director = GameObject.FindGameObjectWithTag("Director");
+
+        if (director.GetComponent<GameController>().deadPlayersNum > 0)
+        {
+            director.GetComponent<GameController>().TakeDeadPlayer(1);
+        }
+
+        playerState = PlayerState.Alive;
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
         healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
@@ -82,20 +95,39 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        livesText.text = "Lives: " + director.GetComponent<GameController>().playerLives.ToString();
+
+        switch (playerState)
+        {
+            case PlayerState.Alive:
+                if (debug)
+                {
+                    print("Player is alive");
+                }
+                UpdateAlive();
+                break;
+
+            case PlayerState.Dead:
+                if (debug)
+                {
+                    print("Player is dead");
+                }
+                UpdateDead();
+                break;
+        }
+    }
+
+    void UpdateDead()
+    {
+        healthText.text = "Dead";
+    }
+
+    void UpdateAlive()
+    {
         healthText.text = "Health: " + currentHealth.ToString();
 
         SetupRays();
         UpdateStates();
-
-        //if ((hasSpray) || (hasNoisemaker) || (hasTaser) || (hasInjector) )
-        //{
-        //    itemText.text = "Item: " + currentItem.ToString();
-        //    //currentItem.transform.position = new Vector3(itemHand.transform.position.x, itemHand.transform.position.y, itemHand.transform.position.z);
-        //}
-        //else
-        //{
-        //    itemText.text = "Item: " + "None";
-        //}
 
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
 
@@ -106,7 +138,9 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            ChangeState(PlayerState.Dead);
+            director.GetComponent<GameController>().TakeLives(1);
+            director.GetComponent<GameController>().AddDeadPlayer(1);
         }
 
         if (Input.GetKeyDown("[8]") && debug)
@@ -229,6 +263,10 @@ public class PlayerController : MonoBehaviour
                         monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Retreat;
                         monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
                     }
+                    if (enemyInRange)
+                    {
+                        Destroy(objectForward.gameObject);
+                    }
                     sprayAmmo -= 1;
                 }
                 break;
@@ -248,7 +286,10 @@ public class PlayerController : MonoBehaviour
 
                 if ((Input.GetButton("Fire1")) && (taserAmmo > 0))
                 {
-
+                    if (botInRange)
+                    {
+                        Destroy(objectForward.gameObject);
+                    }
                     taserAmmo -= 1;
                 }
                 break;
@@ -283,10 +324,10 @@ public class PlayerController : MonoBehaviour
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         //Debug.Log(hit.gameObject.name);
-        //if (hit.gameObject.tag == "Enemy")
-        //{
-        //    TakeDamage(3);
-        //}
+        if (hit.gameObject.tag == "Enemy")
+        {
+            TakeDamage(3);
+        }
         if (hit.gameObject.tag == "Monster")
         {
             TakeDamage(100);
@@ -321,15 +362,17 @@ public class PlayerController : MonoBehaviour
             taserAmmo += 1;
             Destroy(hit.gameObject);
         }
+        if (hit.gameObject.tag == "Heart")
+        {
+            director.GetComponent<GameController>().AddLives(1);
+            Destroy(hit.gameObject);
+        }
     }
 
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Monster")
-    //    {
-    //        TakeDamage(1);
-    //    }
-    //}
+    public void ChangeState(PlayerState state)
+    {
+        playerState = state;
+    }
 
 
 }

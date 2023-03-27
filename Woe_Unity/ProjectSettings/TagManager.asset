@@ -16,6 +16,13 @@ TagManager:
   - HealthText
   - StaminaText
   - ItemText
+  - Button
+  - Noisemaker
+  - Taser
+  - UIHealthText
+  - UIStaminaText
+  - Director
+  - Heart
   layers:
   - Default
   - TransparentFX

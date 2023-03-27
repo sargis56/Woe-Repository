@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class ThrallController : MonoBehaviour
 {
-    public enum ThrallState { Idle, Wander, Stop, SlowDown, Retreat, Attack };
+    public enum ThrallState { Idle, Wander, Stop, SlowDown, Attack };
     public ThrallState currentState;
 
     public GameObject monster;
@@ -44,6 +44,9 @@ public class ThrallController : MonoBehaviour
     public LayerMask playerLayerMask;
     public LayerMask monsterLayerMask;
     public LayerMask botLayerMask;
+    public LayerMask enemyLayerMask;
+
+    bool playerInRange = false;
 
     public bool debug = false;
 
@@ -54,7 +57,6 @@ public class ThrallController : MonoBehaviour
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
         currentState = ThrallState.Idle;
-        waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         monster = GameObject.FindGameObjectWithTag("Monster");
     }
 
@@ -89,19 +91,31 @@ public class ThrallController : MonoBehaviour
             (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, playerLayerMask))))
         {
             objectForward = hitForwardData.collider.gameObject;
+            playerInRange = true;
+            playerTargeting = objectForward;
 
+            ChangeState(ThrallState.Attack);
+
+        }
+        else
+        {
+            playerInRange = false;
         }
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||
             (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, monsterLayerMask))))
         {
-            ChangeState(ThrallState.SlowDown);
+            ChangeState(ThrallState.Stop);
         }
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, botLayerMask)) ||
-            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))))
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))) || 
+            
+            ((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, enemyLayerMask))))
         {
             ChangeState(ThrallState.SlowDown);
         }
@@ -148,13 +162,6 @@ public class ThrallController : MonoBehaviour
                 }
                 Wander();
                 break;
-            case ThrallState.Retreat:
-                if (debug)
-                {
-                    print("In ThrallState.Retreat");
-                }
-                Retreat();
-                break;
 
             case ThrallState.Attack:
                 if (debug)
@@ -175,7 +182,6 @@ public class ThrallController : MonoBehaviour
     {
         agent.speed = navAgentSpeed_ORG;
         agent.radius = navAgentRadius_ORG;
-        waypointIndex = 0;
         ChangeState(ThrallState.Wander);
     }
 
@@ -183,7 +189,7 @@ public class ThrallController : MonoBehaviour
     {
         agent.speed = 0.0f;
         agent.radius = 0.1f;
-
+        waypointIndex = 0;
         ChangeState(ThrallState.Idle);
     }
 
@@ -196,55 +202,38 @@ public class ThrallController : MonoBehaviour
     }
 
     void Wander()
-    {
-
-    }
-
-    void Retreat()
-    {
-        //agent.speed = 5.0f;
-        //agent.radius = 0.1f;
-
-        //GameObject closestWaypoint = null;
-        //closestWaypoint = ClosestWaypoint(monster.transform.position, waypoints);
-
-        //agent.SetDestination(closestWaypoint.transform.position);
-
-        //if (!agent.pathPending && agent.remainingDistance < 0.5)
-        //{
-        //    ChangeState(ThrallState.Idle);
-        //}
-
-
-        agent.SetDestination(monster.transform.position);
-
-        if (!agent.pathPending && agent.remainingDistance < 0.5)
+    {  
+        agent.SetDestination(waypoints[waypointIndex].transform.position);
+        if (!agent.pathPending && agent.remainingDistance < monster.GetComponent<MonsterController>().remainingWaypointDistance)
         {
-            ChangeState(ThrallState.Idle);
+            waypointIndex = Random.Range(0, waypoints.Length);
+            if (waypointIndex > (waypoints.Length-1))
+            {
+                waypointIndex = Random.Range(1, (waypoints.Length - 1));
+            }
         }
     }
 
     void Attack()
     {
+        agent.autoBraking = false;
         agent.speed = navAgentSpeed_ORG;
         agent.SetDestination(playerTargeting.transform.position);
-    }
 
-    GameObject ClosestWaypoint(Vector3 position_, GameObject[] waypoints_)
-    {
-        GameObject closestWaypoint = null;
-        float distance = Mathf.Infinity;
-        foreach (GameObject waypoint in waypoints_)
+        if (playerInRange)
         {
-            Vector3 diff = waypoint.transform.position - position_;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
-            {
-                closestWaypoint = waypoint;
-                distance = curDistance;
-            }
+            followTime = followTime_ORG;
+        }
+        else
+        {
+            followTime -= Time.deltaTime;
+        }
+        
+        if (followTime < 0.0f)
+        {
+            followTime = followTime_ORG;
+            ChangeState(ThrallState.Idle);
         }
 
-        return closestWaypoint;
     }
 }

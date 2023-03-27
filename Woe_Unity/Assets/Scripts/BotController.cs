@@ -49,6 +49,7 @@ public class BotController : NetworkBehaviour
     public LayerMask playerLayerMask;
     public LayerMask monsterLayerMask;
     public LayerMask botLayerMask;
+    public LayerMask enemyLayerMask;
 
     public bool debug = false;
 
@@ -148,7 +149,11 @@ public class BotController : NetworkBehaviour
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, botLayerMask)) ||
-            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))))
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))) ||
+
+            ((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, enemyLayerMask))))
         {
             ChangeState(BotState.SlowDown);
         }
