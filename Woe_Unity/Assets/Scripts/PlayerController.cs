@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -69,9 +70,16 @@ public class PlayerController : MonoBehaviour
 
     public bool debug = false;
 
-    // Start is called before the first frame update
+    public GameObject pauseMenu;
+    //public CameraController cameraController;
+
+    //void Awake()
+    //{
+    //    pauseMenu = GameObject.Find("PauseMenu");
+    //}
     void Start()
     {
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
         //healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
@@ -141,6 +149,15 @@ public class PlayerController : MonoBehaviour
         {
             AddHealth(5);
         }
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            //cameraController.cameraMovementToggle = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            pauseMenu.SetActive(true);
+        }
+
         requestHealth = false;
         itemText.text = "Item: " + currentItem.ToString();
     }

@@ -11,12 +11,18 @@ public class CameraController : NetworkBehaviour {
     public Transform crouchPoint;
     public Transform straightPoint;
 
+    //public bool cameraMovementToggle;
+
     public override void OnNetworkSpawn() {
         if (!IsOwner) { return; }
+        //cameraMovementToggle = true;
         cameraHolder.SetActive(true);
     }
 
     public void Update() {
-        cameraHolder.transform.position = transform.position + offset;
+        //if (cameraMovementToggle)
+        //{
+            cameraHolder.transform.position = transform.position + offset;
+        //}
     }
 }
