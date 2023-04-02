@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject settingsMenu;
 
     //public CameraController cameraController;
+    public PlayerController playerController;
     public void ToggleSettingsMenu()
     {
         menu.SetActive(false);
@@ -26,6 +27,7 @@ public class PauseMenu : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        playerController.isInMenu = false;
         //cameraController.cameraMovementToggle = true;
         this.gameObject.SetActive(false);
     }
@@ -37,7 +39,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             ReturnToGame();
         }

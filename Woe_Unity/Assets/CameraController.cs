@@ -22,7 +22,7 @@ public class CameraController : NetworkBehaviour {
     public void Update() {
         //if (cameraMovementToggle)
         //{
-            cameraHolder.transform.position = transform.position + offset;
+        //    cameraHolder.transform.position = transform.position + offset;
         //}
     }
 }

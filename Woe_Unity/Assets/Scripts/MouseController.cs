@@ -10,9 +10,12 @@ public class MouseController : NetworkBehaviour
     Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
     Vector3 mouse = new Vector3(0.0f, 0.0f, 0.0f);
 
+    public PlayerController playerController;
+
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         //Locks the moust to the center
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -20,7 +23,7 @@ public class MouseController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner) { return; }
+        if (!IsOwner || playerController.isInMenu) { return; }
         mouse.x = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
         mouse.y = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 

@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
 using System;
+using Unity.Netcode;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI itemText;
@@ -71,17 +72,21 @@ public class PlayerController : MonoBehaviour
     public bool debug = false;
 
     public GameObject pauseMenu;
+    public bool isInMenu;
     //public CameraController cameraController;
 
     //void Awake()
     //{
     //    pauseMenu = GameObject.Find("PauseMenu");
     //}
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
+
         //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
+        isInMenu = false;
         //healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
         //ammoText = GameObject.FindGameObjectWithTag("StaminaText").GetComponent<TextMeshProUGUI>();
         //itemText = GameObject.FindGameObjectWithTag("ItemText").GetComponent<TextMeshProUGUI>();
@@ -90,6 +95,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
 
         //healthText.text = "Health: " + currentHealth.ToString();
 
@@ -128,6 +134,20 @@ public class PlayerController : MonoBehaviour
             TakeDamage(100);
         }
 
+        if (isInMenu)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //cameraController.cameraMovementToggle = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            isInMenu = true;
+            pauseMenu.SetActive(true);
+        }
+
         if (Input.GetKeyDown("1") && hasSpray)
         {
             ChangeItem(ItemState.Spray);
@@ -148,14 +168,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown("e") && requestHealth)
         {
             AddHealth(5);
-        }
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            //cameraController.cameraMovementToggle = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            pauseMenu.SetActive(true);
         }
 
         requestHealth = false;
