@@ -1437,6 +1437,7 @@ MonoBehaviour:
   itemText: {fileID: 3640104158594654239}
   ammoText: {fileID: 7785242040368080470}
   livesText: {fileID: 8916141557531229339}
+  respawnPosition: {x: 63.07, y: 12.355, z: 55.695}
   playerState: 0
   currentItem: 0
   currentHealth: 100

@@ -14,15 +14,19 @@ public class ThrallController : MonoBehaviour
     float navAgentRadius_ORG;
     float navAgentSpeed_ORG;
 
-    public float followTime = 10.0f;
+    [SerializeField]
+    private float followTime = 10.0f;
     float followTime_ORG;
 
     public GameObject[] waypoints;
     public int waypointIndex = 0;
 
-    public float forwardRayDistance = 10.0f;
-    public float forwardRayHeight = 0.00f;
-    public float forwardRayWidth = 22.5f;
+    [SerializeField]
+    private float forwardRayDistance = 10.0f;
+    [SerializeField]
+    private float forwardRayHeight = 0.00f;
+    [SerializeField]
+    private float forwardRayWidth = 22.5f;
 
     RaycastHit hitForwardData;
 
@@ -236,4 +240,12 @@ public class ThrallController : MonoBehaviour
         }
 
     }
+
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Player")
+    //    {
+    //        collision.gameObject.GetComponent<PlayerController>().TakeDamage(25);
+    //    }
+    //}
 }

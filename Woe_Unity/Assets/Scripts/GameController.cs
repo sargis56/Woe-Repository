@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
     public GameObject[] bots;
     public GameObject[] enemies;
 
+    public GameObject[] vitaChambers;
+
     public int playerLives;
 
     public bool globalDebug = false;
@@ -30,6 +32,8 @@ public class GameController : MonoBehaviour
         monster = GameObject.FindGameObjectWithTag("Monster");
         bots = GameObject.FindGameObjectsWithTag("Bot");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        vitaChambers = GameObject.FindGameObjectsWithTag("VitaChamber");
+
 
         switch (gameDifficulty)
         {
@@ -136,6 +140,24 @@ public class GameController : MonoBehaviour
     public void TakeDeadPlayer(int amount)
     {
         deadPlayersNum -= amount;
+    }
+
+    public GameObject GetClosestVitaChamber(Vector3 position_)
+    {
+        GameObject closestWaypoint = null;
+        float distance = Mathf.Infinity;
+        foreach (GameObject vitaChamber in vitaChambers)
+        {
+            Vector3 diff = vitaChamber.transform.position - position_;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closestWaypoint = vitaChamber;
+                distance = curDistance;
+            }
+        }
+
+        return closestWaypoint;
     }
 
     void DiffEasy()

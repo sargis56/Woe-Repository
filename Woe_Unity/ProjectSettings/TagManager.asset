@@ -23,6 +23,7 @@ TagManager:
   - UIStaminaText
   - Director
   - Heart
+  - VitaChamber
   layers:
   - Default
   - TransparentFX

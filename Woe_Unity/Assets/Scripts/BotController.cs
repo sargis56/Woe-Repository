@@ -51,11 +51,26 @@ public class BotController : NetworkBehaviour
     public LayerMask botLayerMask;
     public LayerMask enemyLayerMask;
 
+    [SerializeField]
+    private GameObject itemToSpawn;
+    public GameObject objectSpawner;
+    public GameObject[] itemTable;
+    [SerializeField]
+    private Vector3 itemScale = new Vector3(0.25f, 0.25f, 0.25f);
+
+    [SerializeField]
+    private float itemSpawnTime = 180.0f; // 3 Minutes
+    float itemSpawnTime_ORG;
+
+    [SerializeField]
+    private float chanceToSpawn = 0.5f; // 50%
+
     public bool debug = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        itemSpawnTime_ORG = itemSpawnTime;
         followWaitTime_ORG = followWaitTime;
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
@@ -69,6 +84,18 @@ public class BotController : NetworkBehaviour
         if (!IsOwner) { return; }
         SetupRays();
         UpdateState();
+
+        if (botType == BotType.NurseBot)
+        {
+            itemSpawnTime -= Time.deltaTime;
+            if (itemSpawnTime < 0.0f)
+            {
+                ChangeState(BotState.Task);
+            }
+        }
+
+
+
     }
 
     void SetupRays()
@@ -261,7 +288,8 @@ public class BotController : NetworkBehaviour
     {
         if (botType == BotType.NurseBot)
         {
-
+            SpawnItem();
+            ChangeState(BotState.Idle);
         }
 
         if (botType == BotType.SecurityBot)
@@ -295,5 +323,18 @@ public class BotController : NetworkBehaviour
         }
 
         return closestWaypoint;
+    }
+
+    void SpawnItem()
+    {
+        itemToSpawn = itemTable[Random.Range(0, itemTable.Length)];
+
+        if (Random.value < chanceToSpawn)
+        {
+            GameObject spawnedObject = Instantiate(itemToSpawn, objectSpawner.transform.position, Quaternion.identity);
+            spawnedObject.transform.localScale = itemScale;
+        }
+
+        itemSpawnTime = itemSpawnTime_ORG;
     }
 }

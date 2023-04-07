@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI livesText;
 
+    [SerializeField]
+    private Transform respawnPosition;
+
     public enum PlayerState { Alive, Dead };
     public PlayerState playerState;
 
@@ -24,18 +27,21 @@ public class PlayerController : MonoBehaviour
     //public GameObject currentItem;
 
     bool hazard = false;
-
+    bool enemyHit = false;
+    
     public int currentHealth;
     
     public CharacterController charController;
     public Transform groundCheck;
     public float distanceFromGround = 0.4f;
     public LayerMask hazardLayerMask;
-    
-    public bool hasSpray = false;
-    public bool hasNoisemaker = false;
-    public bool hasTaser = false;
-    public bool hasInjector = false;
+
+    [SerializeField]
+    private bool hasSpray = false;
+    [SerializeField]
+    private bool hasNoisemaker = false;
+    [SerializeField]
+    private bool hasTaser = false;
 
     public GameObject itemHand;
     public GameObject monster;
@@ -74,16 +80,18 @@ public class PlayerController : MonoBehaviour
 
     public bool debug = false;
 
+    [SerializeField]
+    private float damageProtectTime = 3.0f;
+    float damageProtectTime_ORG;
+    [SerializeField]
+    private bool canTakeDamage = true;
+
     // Start is called before the first frame update
     void Start()
     {
         director = GameObject.FindGameObjectWithTag("Director");
 
-        if (director.GetComponent<GameController>().deadPlayersNum > 0)
-        {
-            director.GetComponent<GameController>().TakeDeadPlayer(1);
-        }
-
+        damageProtectTime_ORG = damageProtectTime;
         playerState = PlayerState.Alive;
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
@@ -120,20 +128,40 @@ public class PlayerController : MonoBehaviour
     void UpdateDead()
     {
         healthText.text = "Dead";
+
+        charController.enabled = false;
+        transform.position = new Vector3(respawnPosition.position.x, respawnPosition.position.y, respawnPosition.position.z);
+        transform.rotation = Quaternion.identity;
+        charController.enabled = true;
+
+        if (director.GetComponent<GameController>().deadPlayersNum > 0)
+        {
+            director.GetComponent<GameController>().TakeDeadPlayer(1);
+        }
+        AddHealth(999);
+        ChangeState(PlayerState.Alive);
+
     }
 
     void UpdateAlive()
     {
         healthText.text = "Health: " + currentHealth.ToString();
 
+        respawnPosition = director.GetComponent<GameController>().GetClosestVitaChamber(this.gameObject.transform.position).transform;
+
         SetupRays();
         UpdateStates();
 
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
+        enemyHit = Physics.CheckSphere(groundCheck.position, distanceFromGround, enemyLayerMask);
 
         if (hazard)
         {
-            TakeDamage(1);
+            TakeDamage(5);
+        }
+        if (enemyHit)
+        {
+            TakeDamage(15);
         }
 
         if (currentHealth <= 0)
@@ -143,14 +171,14 @@ public class PlayerController : MonoBehaviour
             director.GetComponent<GameController>().AddDeadPlayer(1);
         }
 
-        if (Input.GetKeyDown("[8]") && debug)
+        if (Input.GetKeyDown(",") && debug)
         {
             TakeDamage(50);
         }
 
-        if (Input.GetKeyDown("[9]") && debug)
+        if (Input.GetKeyDown(".") && debug)
         {
-            TakeDamage(100);
+            AddHealth(50);
         }
 
         if (Input.GetKeyDown("0"))
@@ -169,10 +197,6 @@ public class PlayerController : MonoBehaviour
         {
             ChangeItem(ItemState.Taser);
         }
-        //if (Input.GetKeyDown("4") && hasInjector)
-        //{
-        //    ChangeItem(ItemState.Injector);
-        //}
 
         if (Input.GetKeyDown("e") && requestHealth)
         {
@@ -189,7 +213,15 @@ public class PlayerController : MonoBehaviour
             itemText.text = "Item: " + currentItem.ToString();
         }
 
-            
+        if (canTakeDamage != true)
+        {
+            damageProtectTime -= Time.deltaTime;
+            if (damageProtectTime < 0.0f)
+            {
+                canTakeDamage = true;
+                damageProtectTime = damageProtectTime_ORG;
+            }
+        }
     }
 
     void SetupRays()
@@ -318,20 +350,20 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (canTakeDamage)
+        {
+            currentHealth -= damage;
+            canTakeDamage = false;
+        }
+    }
+
+    public void TakeTrueDamage(int damage)
+    {
         currentHealth -= damage;
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Debug.Log(hit.gameObject.name);
-        if (hit.gameObject.tag == "Enemy")
-        {
-            TakeDamage(3);
-        }
-        if (hit.gameObject.tag == "Monster")
-        {
-            TakeDamage(100);
-        }
         if (hit.gameObject.tag == "Spray")
         {
             if (hasSpray == false)
