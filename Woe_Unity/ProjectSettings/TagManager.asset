@@ -11,6 +11,9 @@ TagManager:
   - Vent
   - Monster
   - Item
+  - Bot
+  - Spray
+  - Button
   layers:
   - Default
   - TransparentFX
@@ -23,11 +26,11 @@ TagManager:
   - Bounce
   - Player
   - Room
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Safe Zone
+  - Monster
+  - Bot
+  - Enemy
+  - Hidden
   - 
   - 
   - 

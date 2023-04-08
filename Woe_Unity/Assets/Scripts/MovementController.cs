@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Globalization;
+using Unity.Netcode;
 
-public class MovementController : MonoBehaviour
+public class MovementController : NetworkBehaviour
 {
     public TextMeshProUGUI staminaText;
+    public Vector3 spawnPosition;
 
     public bool debug = false;
 
     bool grounded = false;
     bool bounce = false;
+    public bool safe = false;
+    public bool hidden = false;
+
     bool tired = false;
     public float sprintTimer = 0.0f;
     public float sprintSeconds = 5.0f;
@@ -27,7 +33,7 @@ public class MovementController : MonoBehaviour
     public CharacterController charController;
     float charControllerX_ORG;
 
-    public GameObject camera;
+    //public GameObject camera;
     public Transform groundCheck;
     public Transform spawnPoint;
     public Transform crouchPoint;
@@ -36,21 +42,29 @@ public class MovementController : MonoBehaviour
     public LayerMask groundLayerMask;
     public LayerMask bounceLayerMask;
     public LayerMask roomLayerMask;
+    public LayerMask safeZoneLayerMask;
+    public LayerMask hiddenLayerMask;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         bounceHeight_ORG = bounceHeight;
         charControllerX_ORG = charController.center.x;
+        transform.position = spawnPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
+
         // staminaText.text = "Stamina: " + sprintTimer.ToString();
 
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
+        safe = Physics.CheckSphere(groundCheck.position, distanceFromGround, safeZoneLayerMask);
+        hidden = Physics.CheckSphere(groundCheck.position, distanceFromGround, hiddenLayerMask);
 
         if (grounded && vel.y < 0.0f)
         {
@@ -71,8 +85,21 @@ public class MovementController : MonoBehaviour
         }
         bounceHeight = bounceHeight_ORG;
 
+        if (hidden)
+        {
+            if (debug)
+            {
+                print("Player: Hidden");
+            }
+            this.gameObject.layer = LayerMask.NameToLayer("Hidden");
+        }
+        else
+        {
+            this.gameObject.layer = LayerMask.NameToLayer("Player");
+        }
+
         charController.center = new Vector3(0, charControllerX_ORG, 0);
-        camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
+        //camera.transform.position = new Vector3(straightPoint.position.x, straightPoint.position.y, straightPoint.position.z);
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
@@ -151,7 +178,7 @@ public class MovementController : MonoBehaviour
     public void Crouch()
     {
         charController.center = new Vector3(0, 0.5f, 0);
-        camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
+        //camera.transform.position = new Vector3(crouchPoint.transform.position.x, crouchPoint.transform.position.y, crouchPoint.transform.position.z);
         vel.y += (gravity * 2) * Time.deltaTime;
         bounceHeight = bounceHeight * 2;
     }
