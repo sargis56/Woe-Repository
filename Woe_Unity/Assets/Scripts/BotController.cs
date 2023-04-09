@@ -67,6 +67,8 @@ public class BotController : NetworkBehaviour
 
     public bool debug = false;
 
+    Material defaultMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +78,7 @@ public class BotController : NetworkBehaviour
         navAgentSpeed_ORG = agent.speed;
         currentState = BotState.Idle;
         monster = GameObject.FindGameObjectWithTag("Monster");
+        defaultMaterial = this.GetComponent<MeshRenderer>().material;
     }
 
     // Update is called once per frame
@@ -93,8 +96,6 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Task);
             }
         }
-
-
 
     }
 
@@ -130,6 +131,8 @@ public class BotController : NetworkBehaviour
                 if (agent.velocity == Vector3.zero)
                 {
                     objectForward.GetComponent<PlayerController>().requestHealth = true;
+                    this.GetComponent<MeshRenderer>().material = objectForward.GetComponent<PlayerController>().selectMaterial;
+                    objectForward.GetComponent<PlayerController>().infoText.text = "Use E: Heal";
                 }
                 
             }
@@ -155,6 +158,10 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Task);
             }
 
+        }
+        else
+        {
+            this.GetComponent<MeshRenderer>().material = defaultMaterial;
         }
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||

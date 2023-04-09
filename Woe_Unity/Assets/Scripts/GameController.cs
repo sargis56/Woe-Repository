@@ -25,6 +25,8 @@ public class GameController : MonoBehaviour
 
     public bool globalDebug = false;
 
+    public bool decontamination = false;
+
     // Start is called before the first frame update
     void Start()
     {

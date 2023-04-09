@@ -9,8 +9,10 @@ public class PlayerController : MonoBehaviour
 {
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI itemText;
+    public TextMeshProUGUI infoText;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI livesText;
+    public Material selectMaterial;
 
     [SerializeField]
     private Transform respawnPosition;
@@ -42,35 +44,23 @@ public class PlayerController : MonoBehaviour
     private bool hasNoisemaker = false;
     [SerializeField]
     private bool hasTaser = false;
+    public bool hasPestFlask = false;
 
     public GameObject itemHand;
     public GameObject monster;
     public GameObject director;
+    public GameObject pesticideMachine;
+    public GameObject deconStation;
 
-    bool monsterInRange = false;
-    bool botInRange = false;
-    bool enemyInRange = false;
+    public bool monsterInRange = false;
+    public bool botInRange = false;
+    public bool enemyInRange = false;
+    public bool buttonInRange = false;
+    public bool deconButtonInRange = false;
 
     public LayerMask monsterLayerMask;
     public LayerMask botLayerMask;
     public LayerMask enemyLayerMask;
-
-    public float forwardRayDistance = 7.5f;
-    public float forwardRayHeight = 0.0f;
-
-    RaycastHit hitForwardData;
-
-    Vector3 forwardM;
-    Vector3 forwardR;
-    Vector3 forwardL;
-
-    Quaternion forwardMAngle;
-    Quaternion forwardRAngle;
-    Quaternion forwardLAngle;
-
-    Ray rayForwardM;
-    Ray rayForwardR;
-    Ray rayForwardL;
 
     public GameObject objectForward;
 
@@ -98,6 +88,10 @@ public class PlayerController : MonoBehaviour
         healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
         ammoText = GameObject.FindGameObjectWithTag("StaminaText").GetComponent<TextMeshProUGUI>();
         itemText = GameObject.FindGameObjectWithTag("ItemText").GetComponent<TextMeshProUGUI>();
+        infoText = GameObject.FindGameObjectWithTag("InfoText").GetComponent<TextMeshProUGUI>();
+
+        pesticideMachine = GameObject.FindGameObjectWithTag("PesticideMachine");
+        deconStation = GameObject.FindGameObjectWithTag("DeconStation");
     }
 
     // Update is called once per frame
@@ -122,6 +116,11 @@ public class PlayerController : MonoBehaviour
                 }
                 UpdateDead();
                 break;
+        }
+
+        if ((botInRange == false) && (buttonInRange == false) &&  (deconButtonInRange == false))
+        {
+            infoText.text = "";
         }
     }
 
@@ -149,7 +148,6 @@ public class PlayerController : MonoBehaviour
 
         respawnPosition = director.GetComponent<GameController>().GetClosestVitaChamber(this.gameObject.transform.position).transform;
 
-        SetupRays();
         UpdateStates();
 
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
@@ -204,6 +202,22 @@ public class PlayerController : MonoBehaviour
         }
         requestHealth = false;
 
+        if (Input.GetKeyDown("e") && buttonInRange) 
+        {
+            objectForward.GetComponent<DialController>().DialUp();
+        }
+        if (Input.GetKeyDown("q") && buttonInRange)
+        {
+            objectForward.GetComponent<DialController>().DialDown();
+        }
+        if (Input.GetKeyDown("e") && deconButtonInRange) 
+        {
+            if (deconStation.GetComponent<DeconStation>().flaskPlaced)
+            {
+                director.GetComponent<GameController>().decontamination = true;
+            }
+        }
+
         if (currentItem == ItemState.Empty)
         {
             itemText.text = "";
@@ -222,53 +236,6 @@ public class PlayerController : MonoBehaviour
                 damageProtectTime = damageProtectTime_ORG;
             }
         }
-    }
-
-    void SetupRays()
-    {
-        //Forward ray setup
-        forwardMAngle = Quaternion.AngleAxis(0.0f, new Vector3(0, -1, 0));
-        forwardM = forwardMAngle * (transform.forward + new Vector3(0, forwardRayHeight, 0));
-        rayForwardM = new Ray(transform.position, forwardM);
-
-        Debug.DrawRay(transform.position, forwardM * forwardRayDistance, Color.white);
-
-        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask))
-        {
-            monsterInRange = true;
-            objectForward = hitForwardData.collider.gameObject;
-            if ((currentItem == ItemState.Spray) && (monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
-            {
-                objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Caution;
-            }
-            
-        }
-        else
-        {
-            monsterInRange = false;
-        }
-
-        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask))
-        {
-            botInRange = true;
-            objectForward = hitForwardData.collider.gameObject;
-        }
-        else
-        {
-            botInRange = false;
-        }
-
-        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask))
-        {
-            enemyInRange = true;
-            objectForward = hitForwardData.collider.gameObject;
-        }
-        else
-        {
-            enemyInRange = false;
-        }
-
-        Debug.DrawRay(transform.position, forwardM * hitForwardData.distance, Color.yellow);
     }
 
     void FixedUpdate()
@@ -398,6 +365,57 @@ public class PlayerController : MonoBehaviour
         {
             director.GetComponent<GameController>().AddLives(1);
             Destroy(hit.gameObject);
+        }
+
+        if (hit.gameObject.tag == "C1")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp1Found = true;
+        }
+        if (hit.gameObject.tag == "C2")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp2Found = true;
+        }
+        if (hit.gameObject.tag == "C3")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp3Found = true;
+        }
+        if (hit.gameObject.tag == "C4")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp4Found = true;
+        }
+        if (hit.gameObject.tag == "C5")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp5Found = true;
+        }
+        if (hit.gameObject.tag == "C6")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp6Found = true;
+        }
+        if (hit.gameObject.tag == "C7")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp7Found = true;
+        }
+        if (hit.gameObject.tag == "C8")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp8Found = true;
+        }
+        if (hit.gameObject.tag == "C9")
+        {
+            Destroy(hit.gameObject);
+            pesticideMachine.GetComponent<VialMachineController>().comp9Found = true;
+        }
+        if (hit.gameObject.tag == "Pesticide")
+        {
+            Destroy(hit.gameObject);
+            hasPestFlask = true;
         }
     }
 
