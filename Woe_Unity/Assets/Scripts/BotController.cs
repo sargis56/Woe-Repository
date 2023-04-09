@@ -49,17 +49,36 @@ public class BotController : NetworkBehaviour
     public LayerMask playerLayerMask;
     public LayerMask monsterLayerMask;
     public LayerMask botLayerMask;
+    public LayerMask enemyLayerMask;
+
+    [SerializeField]
+    private GameObject itemToSpawn;
+    public GameObject objectSpawner;
+    public GameObject[] itemTable;
+    [SerializeField]
+    private Vector3 itemScale = new Vector3(0.25f, 0.25f, 0.25f);
+
+    [SerializeField]
+    private float itemSpawnTime = 180.0f; // 3 Minutes
+    float itemSpawnTime_ORG;
+
+    [SerializeField]
+    private float chanceToSpawn = 0.5f; // 50%
 
     public bool debug = false;
+
+    Material defaultMaterial;
 
     // Start is called before the first frame update
     void Start()
     {
+        itemSpawnTime_ORG = itemSpawnTime;
         followWaitTime_ORG = followWaitTime;
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
         currentState = BotState.Idle;
         monster = GameObject.FindGameObjectWithTag("Monster");
+        defaultMaterial = this.GetComponent<MeshRenderer>().material;
     }
 
     // Update is called once per frame
@@ -68,6 +87,16 @@ public class BotController : NetworkBehaviour
         if (!IsOwner) { return; }
         SetupRays();
         UpdateState();
+
+        if (botType == BotType.NurseBot)
+        {
+            itemSpawnTime -= Time.deltaTime;
+            if (itemSpawnTime < 0.0f)
+            {
+                ChangeState(BotState.Task);
+            }
+        }
+
     }
 
     void SetupRays()
@@ -102,6 +131,8 @@ public class BotController : NetworkBehaviour
                 if (agent.velocity == Vector3.zero)
                 {
                     objectForward.GetComponent<PlayerController>().requestHealth = true;
+                    this.GetComponent<MeshRenderer>().material = objectForward.GetComponent<PlayerController>().selectMaterial;
+                    objectForward.GetComponent<PlayerController>().infoText.text = "Use E: Heal";
                 }
                 
             }
@@ -128,6 +159,10 @@ public class BotController : NetworkBehaviour
             }
 
         }
+        else
+        {
+            this.GetComponent<MeshRenderer>().material = defaultMaterial;
+        }
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||
@@ -148,7 +183,11 @@ public class BotController : NetworkBehaviour
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, botLayerMask)) ||
-            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))))
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))) ||
+
+            ((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, enemyLayerMask))))
         {
             ChangeState(BotState.SlowDown);
         }
@@ -256,7 +295,8 @@ public class BotController : NetworkBehaviour
     {
         if (botType == BotType.NurseBot)
         {
-
+            SpawnItem();
+            ChangeState(BotState.Idle);
         }
 
         if (botType == BotType.SecurityBot)
@@ -290,5 +330,18 @@ public class BotController : NetworkBehaviour
         }
 
         return closestWaypoint;
+    }
+
+    void SpawnItem()
+    {
+        itemToSpawn = itemTable[Random.Range(0, itemTable.Length)];
+
+        if (Random.value < chanceToSpawn)
+        {
+            GameObject spawnedObject = Instantiate(itemToSpawn, objectSpawner.transform.position, Quaternion.identity);
+            spawnedObject.transform.localScale = itemScale;
+        }
+
+        itemSpawnTime = itemSpawnTime_ORG;
     }
 }

@@ -13,7 +13,30 @@ TagManager:
   - Item
   - Bot
   - Spray
+  - HealthText
+  - StaminaText
+  - ItemText
   - Button
+  - Noisemaker
+  - Taser
+  - UIHealthText
+  - UIStaminaText
+  - Director
+  - Heart
+  - VitaChamber
+  - InfoText
+  - C1
+  - C2
+  - C3
+  - C4
+  - C5
+  - C6
+  - C7
+  - C8
+  - C9
+  - Pesticide
+  - PesticideMachine
+  - DeconStation
   layers:
   - Default
   - TransparentFX
@@ -31,9 +54,9 @@ TagManager:
   - Bot
   - Enemy
   - Hidden
-  - 
-  - 
-  - 
+  - MachineButton
+  - DeconButton
+  - PestPlace
   - 
   - 
   - 

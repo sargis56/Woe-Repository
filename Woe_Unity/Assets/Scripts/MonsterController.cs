@@ -81,19 +81,25 @@ public class MonsterController : NetworkBehaviour
 
     public GameObject[] waypoints;
     public GameObject[] waypointsRoom;
-    public int waypointIndex = 0;
-    public int waypointRoomIndex = 0;
-    public int patience = 0;
-    public int patienceMax = 0;
+    [SerializeField]
+    private int waypointIndex = 0;
+    [SerializeField]
+    private int waypointRoomIndex = 0;
+    [SerializeField]
+    private int patience = 0;
+    [SerializeField]
+    private int patienceMax = 0;
     int patienceMaxRangeMax = 0;
     int patienceMaxRangeMin = 0;
     public GameObject[] ambushSpots;
-    public float chanceToAmbush = 0.25f;
+    [SerializeField]
+    private float chanceToAmbush = 0.25f;
     public float ambushWaitTime = 60.0f;
     float ambushWaitTime_ORG;
     public GameObject[] vents;
     public int ventIndex = 0;
-    public float chanceToVent = 0.25f;
+    [SerializeField]
+    private float chanceToVent = 0.25f;
 
     bool lingerInRoom;
     float lingerWaitTime = 5.0f;
@@ -570,6 +576,11 @@ public class MonsterController : NetworkBehaviour
         agent.autoBraking = false;
         agent.speed = navAgentSpeed_ORG;
         agent.SetDestination(playerTargeting.transform.position);
+
+        if (playerTargeting.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Dead)
+        {
+            ChangeState(MonsterState.Idle);
+        }
     }
 
     void Ambush()
@@ -734,7 +745,7 @@ public class MonsterController : NetworkBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerController>().TakeDamage(50);
+            collision.gameObject.GetComponent<PlayerController>().TakeTrueDamage(100);
         }
     }
 }
