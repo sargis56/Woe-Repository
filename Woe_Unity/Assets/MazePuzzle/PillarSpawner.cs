@@ -10,7 +10,7 @@ public class PillarSpawner : MonoBehaviour
     void Awake()
     {
         //int iterator = 0;
-        GameObject current = Instantiate(pillarPrehab, transform.localPosition, transform.rotation, this.transform);
+        GameObject current = Instantiate(pillarPrehab, transform.position, transform.rotation, this.transform);
         current.transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = pillarLabel;
         current.transform.GetChild(1).GetComponent<MeshRenderer>().material.mainTexture = pillarLabel;
         current.transform.GetChild(2).GetComponent<MeshRenderer>().material.mainTexture = pillarLabel;
