@@ -5,13 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SargisV2.unity
     guid: 73a160c1c8bdc8c4db1dea0b41c6ef4f
   - enabled: 1
     path: Assets/UI/MainMenu.unity
     guid: 5329607df557dd2469c4a1a36cb4ed3e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TrevorNetworkTest.unity
     guid: c6b09ac3e6620c74a9d21b9eba289b0c
+  - enabled: 1
+    path: Assets/Scenes/Andrew-Level.unity
+    guid: ebc7a954c6cfde64f8018c5e9a5d1f0a
   m_configObjects: {}

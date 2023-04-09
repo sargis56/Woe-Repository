@@ -16,6 +16,7 @@ public class ButtonObject : NetworkBehaviour
         if (other.tag == "Player")
         {
             interactiveTextPrompt.gameObject.SetActive(true);
+            Debug.Log("canTrigger == true");
             canTrigger = true;
         }
     }
@@ -35,6 +36,7 @@ public class ButtonObject : NetworkBehaviour
     {
         if (other.tag == "Player")
         {
+            Debug.Log("canTrigger == false");
             interactiveTextPrompt.gameObject.SetActive(false);
             canTrigger = false;
         }

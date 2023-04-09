@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class AirlockObject : MonoBehaviour
+public class AirlockObject : NetworkBehaviour
 {
     public bool isActive = false;
     public DoorObject enterDoor;
@@ -10,8 +11,9 @@ public class AirlockObject : MonoBehaviour
 
     private bool airlockState = false;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        Debug.Log("OnNetworkSpawn Airlock");
         isActive = false;
         enterDoor.ToggleDoor(0);
     }

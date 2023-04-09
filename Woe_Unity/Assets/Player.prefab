@@ -701,7 +701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   staminaText: {fileID: 0}
-  spawnPosition: {x: 63.07, y: 12.355, z: 55.695}
+  spawnPosition: {x: -18.92, y: 0.326, z: -10.417}
   debug: 1
   safe: 0
   hidden: 0

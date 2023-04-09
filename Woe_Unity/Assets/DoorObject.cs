@@ -18,7 +18,7 @@ public class DoorObject : NetworkBehaviour
     private bool isOpening = false;
     private bool isMoving = false;
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
         originalPosition = transform.localPosition;
         if (linkedButton != null)
@@ -29,6 +29,7 @@ public class DoorObject : NetworkBehaviour
 
     public void ToggleDoor(int buttonIndex)
     {
+        Debug.Log("ToggleDoor");
         if (isMoving == true)
         {
             return;
