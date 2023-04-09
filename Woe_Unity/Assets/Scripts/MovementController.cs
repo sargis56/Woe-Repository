@@ -7,8 +7,6 @@ using Unity.Netcode;
 
 public class MovementController : NetworkBehaviour
 {
-    public PlayerController playerController;
-
     public TextMeshProUGUI staminaText;
     public Vector3 spawnPosition;
 
@@ -16,8 +14,6 @@ public class MovementController : NetworkBehaviour
 
     bool grounded = false;
     bool bounce = false;
-    bool placeFLask = false;
-
     public bool safe = false;
     public bool hidden = false;
 
@@ -48,9 +44,6 @@ public class MovementController : NetworkBehaviour
     public LayerMask roomLayerMask;
     public LayerMask safeZoneLayerMask;
     public LayerMask hiddenLayerMask;
-    public LayerMask flaskPlaceLayerMask;
-
-    public GameObject deconStation;
 
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
@@ -59,9 +52,6 @@ public class MovementController : NetworkBehaviour
         bounceHeight_ORG = bounceHeight;
         charControllerX_ORG = charController.center.x;
         transform.position = spawnPosition;
-
-        deconStation = GameObject.FindGameObjectWithTag("DeconStation");
-        playerController = this.gameObject.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -69,13 +59,12 @@ public class MovementController : NetworkBehaviour
     {
         if (!IsOwner) { return; }
 
-        staminaText.text = "Stamina: " + sprintTimer.ToString();
+        // staminaText.text = "Stamina: " + sprintTimer.ToString();
 
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
         safe = Physics.CheckSphere(groundCheck.position, distanceFromGround, safeZoneLayerMask);
         hidden = Physics.CheckSphere(groundCheck.position, distanceFromGround, hiddenLayerMask);
-        placeFLask = Physics.CheckSphere(groundCheck.position, distanceFromGround, flaskPlaceLayerMask);
 
         if (grounded && vel.y < 0.0f)
         {
@@ -164,14 +153,6 @@ public class MovementController : NetworkBehaviour
 
         vel.y += gravity * Time.deltaTime;
         charController.Move(vel * Time.deltaTime);
-        
-        if (placeFLask)
-        {
-            if (playerController.GetComponent<PlayerController>().hasPestFlask)
-            {
-                deconStation.GetComponent<DeconStation>().flaskPlaced = true;
-            }
-        }
     }
 
     public void Move(float moveHorizontal_, float moveVertical_, float speed_)

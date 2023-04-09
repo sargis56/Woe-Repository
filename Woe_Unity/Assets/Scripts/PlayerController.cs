@@ -11,16 +11,7 @@ public class PlayerController : NetworkBehaviour
 {
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI itemText;
-    public TextMeshProUGUI infoText;
     public TextMeshProUGUI ammoText;
-    public TextMeshProUGUI livesText;
-    public Material selectMaterial;
-
-    [SerializeField]
-    private Transform respawnPosition;
-
-    public enum PlayerState { Alive, Dead };
-    public PlayerState playerState;
 
     public enum ItemState {Empty, Spray, Noisemaker, Taser};
     public ItemState currentItem;
@@ -31,38 +22,46 @@ public class PlayerController : NetworkBehaviour
     //public GameObject currentItem;
 
     bool hazard = false;
-    bool enemyHit = false;
-    
+
     public int currentHealth;
     
     public CharacterController charController;
     public Transform groundCheck;
     public float distanceFromGround = 0.4f;
     public LayerMask hazardLayerMask;
-
-    [SerializeField]
-    private bool hasSpray = false;
-    [SerializeField]
-    private bool hasNoisemaker = false;
-    [SerializeField]
-    private bool hasTaser = false;
-    public bool hasPestFlask = false;
+    
+    public bool hasSpray = false;
+    public bool hasNoisemaker = false;
+    public bool hasTaser = false;
+    public bool hasInjector = false;
 
     public GameObject itemHand;
     public GameObject monster;
-    public GameObject director;
-    public GameObject pesticideMachine;
-    public GameObject deconStation;
 
-    public bool monsterInRange = false;
-    public bool botInRange = false;
-    public bool enemyInRange = false;
-    public bool buttonInRange = false;
-    public bool deconButtonInRange = false;
+    bool monsterInRange = false;
+    bool botInRange = false;
+    bool enemyInRange = false;
 
     public LayerMask monsterLayerMask;
     public LayerMask botLayerMask;
     public LayerMask enemyLayerMask;
+
+    public float forwardRayDistance = 7.5f;
+    public float forwardRayHeight = 0.0f;
+
+    RaycastHit hitForwardData;
+
+    Vector3 forwardM;
+    Vector3 forwardR;
+    Vector3 forwardL;
+
+    Quaternion forwardMAngle;
+    Quaternion forwardRAngle;
+    Quaternion forwardLAngle;
+
+    Ray rayForwardM;
+    Ray rayForwardR;
+    Ray rayForwardL;
 
     public GameObject objectForward;
 
@@ -74,116 +73,65 @@ public class PlayerController : NetworkBehaviour
 
     public GameObject pauseMenu;
     public bool isInMenu;
+    //public CameraController cameraController;
 
-    [SerializeField]
-    private float damageProtectTime = 3.0f;
-    float damageProtectTime_ORG;
-    [SerializeField]
-    private bool canTakeDamage = true;
-
-    // Start is called before the first frame update
+    //void Awake()
+    //{
+    //    pauseMenu = GameObject.Find("PauseMenu");
+    //}
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) { return; }
-        director = GameObject.FindGameObjectWithTag("Director");
-        isInMenu = false;
-        damageProtectTime_ORG = damageProtectTime;
-        playerState = PlayerState.Alive;
+
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
-        healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
-        ammoText = GameObject.FindGameObjectWithTag("StaminaText").GetComponent<TextMeshProUGUI>();
-        itemText = GameObject.FindGameObjectWithTag("ItemText").GetComponent<TextMeshProUGUI>();
-        infoText = GameObject.FindGameObjectWithTag("InfoText").GetComponent<TextMeshProUGUI>();
-
-        pesticideMachine = GameObject.FindGameObjectWithTag("PesticideMachine");
-        deconStation = GameObject.FindGameObjectWithTag("DeconStation");
+        isInMenu = false;
+        //healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
+        //ammoText = GameObject.FindGameObjectWithTag("StaminaText").GetComponent<TextMeshProUGUI>();
+        //itemText = GameObject.FindGameObjectWithTag("ItemText").GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!IsOwner) { return; }
-        livesText.text = "Lives: " + director.GetComponent<GameController>().playerLives.ToString();
 
-        switch (playerState)
-        {
-            case PlayerState.Alive:
-                if (debug)
-                {
-                    print("Player is alive");
-                }
-                UpdateAlive();
-                break;
+        //healthText.text = "Health: " + currentHealth.ToString();
 
-            case PlayerState.Dead:
-                if (debug)
-                {
-                    print("Player is dead");
-                }
-                UpdateDead();
-                break;
-        }
-
-        if ((botInRange == false) && (buttonInRange == false) &&  (deconButtonInRange == false))
-        {
-            infoText.text = "";
-        }
-    }
-
-    void UpdateDead()
-    {
-        healthText.text = "Dead";
-
-        charController.enabled = false;
-        transform.position = new Vector3(respawnPosition.position.x, respawnPosition.position.y, respawnPosition.position.z);
-        transform.rotation = Quaternion.identity;
-        charController.enabled = true;
-
-        if (director.GetComponent<GameController>().deadPlayersNum > 0)
-        {
-            director.GetComponent<GameController>().TakeDeadPlayer(1);
-        }
-        AddHealth(999);
-        ChangeState(PlayerState.Alive);
-
-    }
-
-    void UpdateAlive()
-    {
-        healthText.text = "Health: " + currentHealth.ToString();
-
-        respawnPosition = director.GetComponent<GameController>().GetClosestVitaChamber(this.gameObject.transform.position).transform;
-
+        SetupRays();
         UpdateStates();
 
+        //if (hasSpray)
+        //{
+        //    itemText.text = "Item: " + currentItem.ToString();
+        //    currentItem.transform.position = new Vector3(itemHand.transform.position.x, itemHand.transform.position.y, itemHand.transform.position.z);
+        //}
+        //else
+        //{
+        //    itemText.text = "Item: " + "None";
+        //}
+
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
-        enemyHit = Physics.CheckSphere(groundCheck.position, distanceFromGround, enemyLayerMask);
 
         if (hazard)
         {
-            TakeDamage(5);
-        }
-        if (enemyHit)
-        {
-            TakeDamage(15);
+            TakeDamage(1);
         }
 
         if (currentHealth <= 0)
         {
-            ChangeState(PlayerState.Dead);
-            director.GetComponent<GameController>().TakeLives(1);
-            director.GetComponent<GameController>().AddDeadPlayer(1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        if (Input.GetKeyDown(",") && debug)
+        if (Input.GetKeyDown("[8]") && debug)
         {
             TakeDamage(50);
         }
 
-        if (Input.GetKeyDown(".") && debug)
+        if (Input.GetKeyDown("[9]") && debug)
         {
-            AddHealth(50);
+            TakeDamage(100);
         }
 
         if (isInMenu)
@@ -200,12 +148,6 @@ public class PlayerController : NetworkBehaviour
             pauseMenu.SetActive(true);
         }
 
-
-        if (Input.GetKeyDown("0"))
-        {
-            ChangeItem(ItemState.Empty);
-        }
-
         if (Input.GetKeyDown("1") && hasSpray)
         {
             ChangeItem(ItemState.Spray);
@@ -218,6 +160,10 @@ public class PlayerController : NetworkBehaviour
         {
             ChangeItem(ItemState.Taser);
         }
+        //if (Input.GetKeyDown("4") && hasInjector)
+        //{
+        //    ChangeItem(ItemState.Injector);
+        //}
 
         if (Input.GetKeyDown("e") && requestHealth)
         {
@@ -225,41 +171,54 @@ public class PlayerController : NetworkBehaviour
         }
 
         requestHealth = false;
+        itemText.text = "Item: " + currentItem.ToString();
+    }
 
-        if (Input.GetKeyDown("e") && buttonInRange) 
+    void SetupRays()
+    {
+        //Forward ray setup
+        forwardMAngle = Quaternion.AngleAxis(0.0f, new Vector3(0, -1, 0));
+        forwardM = forwardMAngle * (transform.forward + new Vector3(0, forwardRayHeight, 0));
+        rayForwardM = new Ray(transform.position, forwardM);
+
+        Debug.DrawRay(transform.position, forwardM * forwardRayDistance, Color.white);
+
+        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask))
         {
-            objectForward.GetComponent<DialController>().DialUp();
-        }
-        if (Input.GetKeyDown("q") && buttonInRange)
-        {
-            objectForward.GetComponent<DialController>().DialDown();
-        }
-        if (Input.GetKeyDown("e") && deconButtonInRange) 
-        {
-            if (deconStation.GetComponent<DeconStation>().flaskPlaced)
+            monsterInRange = true;
+            objectForward = hitForwardData.collider.gameObject;
+            if ((currentItem == ItemState.Spray) && (monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
             {
-                director.GetComponent<GameController>().decontamination = true;
+                objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Caution;
             }
-        }
-
-        if (currentItem == ItemState.Empty)
-        {
-            itemText.text = "";
+            
         }
         else
         {
-            itemText.text = "Item: " + currentItem.ToString();
+            monsterInRange = false;
         }
 
-        if (canTakeDamage != true)
+        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask))
         {
-            damageProtectTime -= Time.deltaTime;
-            if (damageProtectTime < 0.0f)
-            {
-                canTakeDamage = true;
-                damageProtectTime = damageProtectTime_ORG;
-            }
+            botInRange = true;
+            objectForward = hitForwardData.collider.gameObject;
         }
+        else
+        {
+            botInRange = false;
+        }
+
+        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask))
+        {
+            enemyInRange = true;
+            objectForward = hitForwardData.collider.gameObject;
+        }
+        else
+        {
+            enemyInRange = false;
+        }
+
+        Debug.DrawRay(transform.position, forwardM * hitForwardData.distance, Color.yellow);
     }
 
     void FixedUpdate()
@@ -286,10 +245,6 @@ public class PlayerController : NetworkBehaviour
                         monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Retreat;
                         monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
                     }
-                    if (enemyInRange)
-                    {
-                        Destroy(objectForward.gameObject);
-                    }
                     sprayAmmo -= 1;
                 }
                 break;
@@ -309,10 +264,7 @@ public class PlayerController : NetworkBehaviour
 
                 if ((Input.GetButton("Fire1")) && (taserAmmo > 0))
                 {
-                    if (botInRange)
-                    {
-                        Destroy(objectForward.gameObject);
-                    }
+
                     taserAmmo -= 1;
                 }
                 break;
@@ -341,20 +293,20 @@ public class PlayerController : NetworkBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (canTakeDamage)
-        {
-            currentHealth -= damage;
-            canTakeDamage = false;
-        }
-    }
-
-    public void TakeTrueDamage(int damage)
-    {
         currentHealth -= damage;
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        //Debug.Log(hit.gameObject.name);
+        //if (hit.gameObject.tag == "Enemy")
+        //{
+        //    TakeDamage(3);
+        //}
+        //if (hit.gameObject.tag == "Monster")
+        //{
+        //    TakeDamage(1);
+        //}
         if (hit.gameObject.tag == "Spray")
         {
             if (hasSpray == false)
@@ -385,68 +337,15 @@ public class PlayerController : NetworkBehaviour
             taserAmmo += 1;
             Destroy(hit.gameObject);
         }
-        if (hit.gameObject.tag == "Heart")
-        {
-            director.GetComponent<GameController>().AddLives(1);
-            Destroy(hit.gameObject);
-        }
-
-        if (hit.gameObject.tag == "C1")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp1Found = true;
-        }
-        if (hit.gameObject.tag == "C2")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp2Found = true;
-        }
-        if (hit.gameObject.tag == "C3")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp3Found = true;
-        }
-        if (hit.gameObject.tag == "C4")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp4Found = true;
-        }
-        if (hit.gameObject.tag == "C5")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp5Found = true;
-        }
-        if (hit.gameObject.tag == "C6")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp6Found = true;
-        }
-        if (hit.gameObject.tag == "C7")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp7Found = true;
-        }
-        if (hit.gameObject.tag == "C8")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp8Found = true;
-        }
-        if (hit.gameObject.tag == "C9")
-        {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp9Found = true;
-        }
-        if (hit.gameObject.tag == "Pesticide")
-        {
-            Destroy(hit.gameObject);
-            hasPestFlask = true;
-        }
     }
 
-    public void ChangeState(PlayerState state)
-    {
-        playerState = state;
-    }
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Monster")
+    //    {
+    //        TakeDamage(1);
+    //    }
+    //}
 
 
 }
