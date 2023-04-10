@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : NetworkBehaviour
 {
     public enum GameDifficulty { Easy, Normal, Hard, Nightmare, Unrelenting};
     public GameDifficulty gameDifficulty;
@@ -16,8 +17,9 @@ public class GameController : MonoBehaviour
     public bool globalDebug = false;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         players = GameObject.FindGameObjectsWithTag("Player");
         monster = GameObject.FindGameObjectWithTag("Monster");
         bots = GameObject.FindGameObjectsWithTag("Bot");
@@ -26,6 +28,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
         if (globalDebug)
         {
             monster.GetComponent<MonsterController>().debug = true;
