@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 8146845326577988806}
   - component: {fileID: 8146845326577988807}
   - component: {fileID: 8146845326577988804}
+  - component: {fileID: -6593065201743022357}
   m_Layer: 0
   m_Name: PesticideMachine
   m_TagString: PesticideMachine
@@ -535,6 +536,22 @@ MonoBehaviour:
   comp7Found: 0
   comp8Found: 0
   comp9Found: 0
+--- !u!114 &-6593065201743022357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146845326577988801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &8146845327439851763
 GameObject:
   m_ObjectHideFlags: 0

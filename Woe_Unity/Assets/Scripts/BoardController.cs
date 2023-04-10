@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.Netcode;
 
-public class BoardController : MonoBehaviour
+public class BoardController : NetworkBehaviour
 {
     [SerializeField]
     private int compMin;
@@ -21,8 +22,9 @@ public class BoardController : MonoBehaviour
     public int compArrayIndex;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         compIndex = Random.Range(0, compText.Length);
         compArray = new int[3];
 
@@ -35,6 +37,7 @@ public class BoardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
         compArray[0] = machine.GetComponent<VialMachineController>().comp1;
         compArray[1] = machine.GetComponent<VialMachineController>().comp2;
         compArray[2] = machine.GetComponent<VialMachineController>().comp3;

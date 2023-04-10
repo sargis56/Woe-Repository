@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class DeconStation : MonoBehaviour
+public class DeconStation : NetworkBehaviour
 {
 
     public GameObject pesticideProp;
@@ -11,14 +12,16 @@ public class DeconStation : MonoBehaviour
     public bool flaskPlaced;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         director = GameObject.FindGameObjectWithTag("Director");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
         if (flaskPlaced)
         {
             pesticideProp.gameObject.SetActive(true);

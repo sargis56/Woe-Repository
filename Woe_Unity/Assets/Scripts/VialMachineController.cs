@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.Netcode;
 
-public class VialMachineController : MonoBehaviour
+public class VialMachineController : NetworkBehaviour
 {
     public GameObject dial1;
     public GameObject dial2;
@@ -45,8 +46,9 @@ public class VialMachineController : MonoBehaviour
     public bool comp9Found = false;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         solved = false;
         comp1 = Random.Range(formulaMin, (formulaMax + 1));
         comp2 = Random.Range(formulaMin, (formulaMax + 1));
@@ -58,7 +60,7 @@ public class VialMachineController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (!IsOwner) { return; }
         if ((comp1 == comp2) || (comp1 == comp3))
         {
             comp1 = Random.Range(formulaMin, (formulaMax + 1));

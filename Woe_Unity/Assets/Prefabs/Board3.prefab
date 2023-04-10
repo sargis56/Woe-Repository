@@ -386,6 +386,7 @@ GameObject:
   - component: {fileID: 6018507355538454602}
   - component: {fileID: 6018507355538454603}
   - component: {fileID: 6018507355538454612}
+  - component: {fileID: 1169429116630975025}
   m_Layer: 0
   m_Name: Board3
   m_TagString: Untagged
@@ -493,6 +494,22 @@ MonoBehaviour:
   - {fileID: 6018507355593397018}
   compArray: 000000000000000000000000
   compArrayIndex: 2
+--- !u!114 &1169429116630975025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6018507355538454601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &6018507355593397016
 GameObject:
   m_ObjectHideFlags: 0

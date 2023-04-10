@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ThrallController : MonoBehaviour
+public class ThrallController : NetworkBehaviour
 {
     public enum ThrallState { Idle, Wander, Stop, SlowDown, Attack };
     public ThrallState currentState;
@@ -55,8 +56,9 @@ public class ThrallController : MonoBehaviour
     public bool debug = false;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         followTime_ORG = followTime;
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
@@ -67,6 +69,7 @@ public class ThrallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
         SetupRays();
         UpdateState();
     }
