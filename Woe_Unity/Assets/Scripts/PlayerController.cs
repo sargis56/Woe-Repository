@@ -145,6 +145,7 @@ public class PlayerController : NetworkBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             isInMenu = true;
+            if (pauseMenu == null) { return; }
             pauseMenu.SetActive(true);
         }
 
@@ -171,6 +172,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         requestHealth = false;
+        if (itemText == null) { return; }
         itemText.text = "Item: " + currentItem.ToString();
     }
 
@@ -228,6 +230,7 @@ public class PlayerController : NetworkBehaviour
 
     void UpdateStates()
     {
+        if (ammoText == null) { return; }
         switch (currentItem)
         {
             case ItemState.Empty:
