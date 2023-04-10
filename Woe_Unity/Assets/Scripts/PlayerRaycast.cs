@@ -97,7 +97,14 @@ public class PlayerRaycast : MonoBehaviour
             hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().selectMaterial;
             if (playerController.GetComponent<PlayerController>().hasPestFlask)
             {
-                playerController.GetComponent<PlayerController>().infoText.text = "Use E: Start decontamination";
+                if (playerController.GetComponent<PlayerController>().director.GetComponent<GameController>().decontamination)
+                {
+                    playerController.GetComponent<PlayerController>().infoText.text = "Decontamination started";
+                }
+                else
+                {
+                    playerController.GetComponent<PlayerController>().infoText.text = "Use E: Start decontamination";
+                }
             }
             else
             {

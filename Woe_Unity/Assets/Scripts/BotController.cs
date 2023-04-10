@@ -10,7 +10,7 @@ public class BotController : NetworkBehaviour
     public enum BotType { DoctorBot, NurseBot, SecurityBot};
     public BotType botType;
 
-    public enum BotState { Idle, Patrol, Stop, SlowDown, Task};
+    public enum BotState { Idle, Patrol, Stop, SlowDown, Task, ShutDown};
     public BotState currentState;
 
     public GameObject monster;
@@ -24,6 +24,7 @@ public class BotController : NetworkBehaviour
 
     public GameObject[] waypoints;
     public int waypointIndex = 0;
+    public Vector3 startingPostion;
 
     public float forwardRayDistance = 10.0f;
     public float forwardRayHeight = 0.00f;
@@ -67,6 +68,8 @@ public class BotController : NetworkBehaviour
 
     public bool debug = false;
 
+    public bool shutDown = false;
+
     Material defaultMaterial;
 
     // Start is called before the first frame update
@@ -79,6 +82,7 @@ public class BotController : NetworkBehaviour
         currentState = BotState.Idle;
         monster = GameObject.FindGameObjectWithTag("Monster");
         defaultMaterial = this.GetComponent<MeshRenderer>().material;
+        startingPostion = this.transform.position;
     }
 
     // Update is called once per frame
@@ -130,9 +134,18 @@ public class BotController : NetworkBehaviour
 
                 if (agent.velocity == Vector3.zero)
                 {
-                    objectForward.GetComponent<PlayerController>().requestHealth = true;
+
                     this.GetComponent<MeshRenderer>().material = objectForward.GetComponent<PlayerController>().selectMaterial;
-                    objectForward.GetComponent<PlayerController>().infoText.text = "Use E: Heal";
+
+                    if (shutDown)
+                    {
+                        objectForward.GetComponent<PlayerController>().infoText.text = "Doctor Bot has been shutdown";
+                    }
+                    else
+                    {
+                        objectForward.GetComponent<PlayerController>().requestHealth = true;
+                        objectForward.GetComponent<PlayerController>().infoText.text = "Use E: Heal";
+                    }
                 }
                 
             }
@@ -142,7 +155,7 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Stop);
             }
 
-            if (botType == BotType.SecurityBot)
+            if ((botType == BotType.SecurityBot) && (!shutDown))
             {
                 if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) && (Vector3.Distance(monster.transform.position, this.transform.position) > 25.0f))
                 {
@@ -175,9 +188,14 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Stop);
             }
 
-            if (botType == BotType.SecurityBot)
+            if ((botType == BotType.SecurityBot) && (!shutDown))
             {
                 ChangeState(BotState.Task);
+            }
+
+            if (shutDown)
+            {
+                Destroy(this.gameObject);
             }
         }
 
@@ -242,6 +260,13 @@ public class BotController : NetworkBehaviour
                 }
                 Task();
                 break;
+            case BotState.ShutDown:
+                if (debug)
+                {
+                    print("In BotState.ShutDown");
+                }
+                ShutDown();
+                break;
         }
     }
 
@@ -255,7 +280,15 @@ public class BotController : NetworkBehaviour
         agent.speed = navAgentSpeed_ORG;
         agent.radius = navAgentRadius_ORG;
         waypointIndex = 0;
-        ChangeState(BotState.Patrol);
+
+        if (shutDown)
+        {
+            ChangeState(BotState.ShutDown);
+        }
+        else
+        {
+            ChangeState(BotState.Patrol);
+        }
     }
 
     void Stop()
@@ -314,6 +347,11 @@ public class BotController : NetworkBehaviour
         }
     }
 
+    void ShutDown()
+    {
+        agent.SetDestination(startingPostion);
+    }
+
     GameObject ClosestWaypoint(Vector3 position_, GameObject[] waypoints_)
     {
         GameObject closestWaypoint = null;
@@ -336,7 +374,7 @@ public class BotController : NetworkBehaviour
     {
         itemToSpawn = itemTable[Random.Range(0, itemTable.Length)];
 
-        if (Random.value < chanceToSpawn)
+        if ((Random.value < chanceToSpawn) && (!shutDown))
         {
             GameObject spawnedObject = Instantiate(itemToSpawn, objectSpawner.transform.position, Quaternion.identity);
             spawnedObject.transform.localScale = itemScale;

@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
 
     public GameObject[] bots;
     public GameObject[] enemies;
+    public GameObject[] safeZones;
 
     public GameObject[] vitaChambers;
 
@@ -26,6 +27,12 @@ public class GameController : MonoBehaviour
     public bool globalDebug = false;
 
     public bool decontamination = false;
+    public float decontaminationTime = 180.0f;
+    [SerializeField]
+    private float decontaminationTime_ORG;
+    public bool updateDiff = false;
+
+    public int diffIndex = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -35,8 +42,8 @@ public class GameController : MonoBehaviour
         bots = GameObject.FindGameObjectsWithTag("Bot");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         vitaChambers = GameObject.FindGameObjectsWithTag("VitaChamber");
-
-
+        safeZones = GameObject.FindGameObjectsWithTag("Safe Zone");
+        decontaminationTime_ORG = decontaminationTime;
         switch (gameDifficulty)
         {
             case GameDifficulty.Easy:
@@ -82,44 +89,73 @@ public class GameController : MonoBehaviour
 
         if (globalDebug)
         {
-            monster.GetComponent<MonsterController>().debug = true;
+            if (monster != null)
+            {
+                monster.GetComponent<MonsterController>().debug = true;
+            }
 
             foreach (GameObject player in players)
             {
-                player.GetComponent<PlayerController>().debug = true;
-                player.GetComponent<MovementController>().debug = true;
+                if (player != null)
+                {
+                    player.GetComponent<PlayerController>().debug = true;
+                    player.GetComponent<MovementController>().debug = true;
+                }
             }
 
             foreach (GameObject bot in bots)
             {
-                bot.GetComponent<BotController>().debug = true;
+                if (bot != null)
+                {
+                    bot.GetComponent<BotController>().debug = true;
+                }
             }
 
             foreach (GameObject enemy in enemies)
             {
-                enemy.GetComponent<ThrallController>().debug = true;
+                if (enemy != null)
+                {
+                    enemy.GetComponent<ThrallController>().debug = true;
+                }
             }
 
         }
         else
         {
-            monster.GetComponent<MonsterController>().debug = false;
+            if (monster != null)
+            {
+                monster.GetComponent<MonsterController>().debug = false;
+            }
 
             foreach (GameObject player in players)
             {
-                player.GetComponent<PlayerController>().debug = false;
-                player.GetComponent<MovementController>().debug = false;
+                if (player != null)
+                {
+                    player.GetComponent<PlayerController>().debug = false;
+                    player.GetComponent<MovementController>().debug = false;
+                }
             }
 
             foreach (GameObject bot in bots)
             {
-                bot.GetComponent<BotController>().debug = false;
+                if (bot != null)
+                {
+                    bot.GetComponent<BotController>().debug = false;
+                }
             }
 
             foreach (GameObject enemy in enemies)
             {
-                enemy.GetComponent<ThrallController>().debug = false;
+                if (enemy != null)
+                {
+                    enemy.GetComponent<ThrallController>().debug = false;
+                }
             }
+        }
+
+        if (decontamination)
+        {
+            Decontaminate();
         }
 
     }
@@ -160,6 +196,72 @@ public class GameController : MonoBehaviour
         }
 
         return closestWaypoint;
+    }
+
+    void Decontaminate()
+    {
+        decontaminationTime -= Time.deltaTime;
+        if (decontaminationTime < 0.0f)
+        {
+            Destroy(monster.gameObject);
+        }
+
+        //if ( (decontaminationTime == temp) || (decontaminationTime == 135.0f) )
+        //{
+        //    updateDiff = true;
+        //    diffIndex = diffIndex + 1;
+        //}
+
+        foreach (GameObject bot in bots)
+        {
+            if (bot != null)
+            {
+                bot.GetComponent<BotController>().shutDown = true;
+                bot.GetComponent<BotController>().currentState = BotController.BotState.ShutDown;
+            }
+        }
+
+        foreach (GameObject enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+
+        foreach (GameObject safeZone in safeZones)
+        {
+            Destroy(safeZone);
+        }
+
+        if (updateDiff)
+        {
+
+            diffIndex = diffIndex + 1;
+
+            if (monster.GetComponent<MonsterController>().intelligence == MonsterController.MonsterIntelligence.Dumb)
+            {
+                monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Incompetent;
+            }
+            else if (monster.GetComponent<MonsterController>().intelligence == MonsterController.MonsterIntelligence.Incompetent)
+            {
+                monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Competent;
+            }
+            else if (monster.GetComponent<MonsterController>().intelligence == MonsterController.MonsterIntelligence.Competent)
+            {
+                monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Smart;
+            }
+            else if (monster.GetComponent<MonsterController>().intelligence == MonsterController.MonsterIntelligence.Smart)
+            {
+                monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.ApexPredator;
+            }
+            else
+            {
+                monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.ApexPredator;
+            }
+
+
+            monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Idle;
+            updateDiff = false;
+        }
+
     }
 
     void DiffEasy()

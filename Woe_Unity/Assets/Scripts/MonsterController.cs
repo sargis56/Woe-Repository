@@ -111,6 +111,9 @@ public class MonsterController : NetworkBehaviour
     float cautionWaitTime = 3.0f;
     float cautionWaitTime_ORG;
 
+    float colideWaitTime = 5.0f;
+    float colideWaitTime_ORG;
+
     public float remainingWaypointDistance = 1.5f; //0.5f;
 
     //Make Monster go to the start when it idles
@@ -125,7 +128,8 @@ public class MonsterController : NetworkBehaviour
         ambushWaitTime_ORG = ambushWaitTime;
         lingerWaitTime_ORG = lingerWaitTime;
         restVentTime_ORG = restVentTime;
-
+        cautionWaitTime_ORG = cautionWaitTime;
+        colideWaitTime_ORG = colideWaitTime;
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         players = GameObject.FindGameObjectsWithTag("Player");
         ambushSpots = GameObject.FindGameObjectsWithTag("Ambush Spot");
@@ -746,6 +750,23 @@ public class MonsterController : NetworkBehaviour
         if (collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<PlayerController>().TakeTrueDamage(100);
+        }
+
+        if (collision.gameObject.tag == "Bot")
+        {
+            if (collision.gameObject.GetComponent<BotController>().shutDown)
+            {
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                colideWaitTime -= Time.deltaTime;
+                if (colideWaitTime < 0.0f)
+                {
+                    Destroy(collision.gameObject);
+                    colideWaitTime = colideWaitTime_ORG;
+                }
+            }
         }
     }
 }

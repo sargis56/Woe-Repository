@@ -45,6 +45,8 @@ public class VialMachineController : NetworkBehaviour
     public bool comp8Found = false;
     public bool comp9Found = false;
 
+    public bool lastInput = true;
+
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
     {
@@ -80,7 +82,14 @@ public class VialMachineController : NetworkBehaviour
         selectedComp2 = dial2.GetComponent<DialController>().dialCount;
         selectedComp3 = dial3.GetComponent<DialController>().dialCount;
 
-        CheckDials();
+        if (lastInput)
+        {
+            CheckDials(false);
+        }
+        else
+        {
+            CheckDials(true);
+        }
 
         if ((selectedComp1 == comp1) && (selectedComp2 == comp2) && (selectedComp3 == comp3))
         {
@@ -106,168 +115,357 @@ public class VialMachineController : NetworkBehaviour
         }
     }
 
-    void CheckDials()
+    void CheckDials(bool dir)
     {
         if (comp1Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 1)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 1)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 1)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp2Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 2)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 2)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 2)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp3Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 3)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 3)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 3)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp4Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 4)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 4)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 4)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp5Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 5)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 5)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 5)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp6Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 6)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 6)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 6)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp7Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 7)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 7)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 7)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
         if (comp8Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 8)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 8)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 8)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
-        if (comp2Found == false)
+        if (comp9Found == false)
         {
             if (dial1.GetComponent<DialController>().dialCount == 9)
             {
+                if (dir)
+                {
 
-                dial1.GetComponent<DialController>().DialUp();
+                    dial1.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial1.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial2.GetComponent<DialController>().dialCount == 9)
             {
+                if (dir)
+                {
 
-                dial2.GetComponent<DialController>().DialUp();
+                    dial2.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial2.GetComponent<DialController>().DialDown();
+                }
             }
             if (dial3.GetComponent<DialController>().dialCount == 9)
             {
+                if (dir)
+                {
 
-                dial3.GetComponent<DialController>().DialUp();
+                    dial3.GetComponent<DialController>().DialUp();
+                }
+                else
+                {
+                    dial3.GetComponent<DialController>().DialDown();
+                }
             }
         }
     }

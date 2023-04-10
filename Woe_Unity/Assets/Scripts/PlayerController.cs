@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI infoText;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI livesText;
+    public TextMeshProUGUI deconText;
     public Material selectMaterial;
 
     [SerializeField]
@@ -98,6 +99,21 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         livesText.text = "Lives: " + director.GetComponent<GameController>().playerLives.ToString();
+        if (director.GetComponent<GameController>().decontamination)
+        {
+            if (director.GetComponent<GameController>().decontaminationTime < 0)
+            {
+                deconText.text = "Decontamination complete";
+            }
+            else
+            {
+                deconText.text = "Decontamination in progress: " + director.GetComponent<GameController>().decontaminationTime;
+            }
+        }
+        else
+        {
+            deconText.text = "";
+        }
 
         switch (playerState)
         {
@@ -205,10 +221,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown("e") && buttonInRange) 
         {
             objectForward.GetComponent<DialController>().DialUp();
+            pesticideMachine.GetComponent<VialMachineController>().lastInput = false;
         }
         if (Input.GetKeyDown("q") && buttonInRange)
         {
             objectForward.GetComponent<DialController>().DialDown();
+            pesticideMachine.GetComponent<VialMachineController>().lastInput = true;
         }
         if (Input.GetKeyDown("e") && deconButtonInRange) 
         {
