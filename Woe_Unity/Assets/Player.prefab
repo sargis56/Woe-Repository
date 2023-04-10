@@ -688,6 +688,7 @@ MonoBehaviour:
   pressure: 0
   debug: 1
   pauseMenu: {fileID: 3099993089378379434}
+  HUD: {fileID: 4758163950416932871}
   isInMenu: 0
 --- !u!114 &8653147067524247898
 MonoBehaviour:
@@ -1115,6 +1116,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 7927240258470164500, guid: f3cf530f0a7a09a42814f36e819104af, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3cf530f0a7a09a42814f36e819104af, type: 3}
 --- !u!114 &4758163949998753571 stripped
@@ -1142,6 +1147,11 @@ MonoBehaviour:
 --- !u!224 &4758163950416932867 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7927240258470164496, guid: f3cf530f0a7a09a42814f36e819104af, type: 3}
+  m_PrefabInstance: {fileID: 3173722605037389843}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4758163950416932871 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7927240258470164500, guid: f3cf530f0a7a09a42814f36e819104af, type: 3}
   m_PrefabInstance: {fileID: 3173722605037389843}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &4758163950603888462 stripped
