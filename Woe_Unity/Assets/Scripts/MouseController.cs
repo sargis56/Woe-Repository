@@ -23,7 +23,7 @@ public class MouseController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner || playerController.isInMenu) { return; }
+        if (!IsOwner || playerController == null || playerController.isInMenu) { return; }
         mouse.x = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
         mouse.y = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 

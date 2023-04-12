@@ -72,6 +72,7 @@ public class PlayerController : NetworkBehaviour
     public bool debug = false;
 
     public GameObject pauseMenu;
+    public GameObject HUD;
     public bool isInMenu;
     //public CameraController cameraController;
 
@@ -82,7 +83,10 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) { return; }
-
+        if (HUD != null)
+        {
+            HUD.SetActive(true);
+        }
         //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
@@ -97,7 +101,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) { return; }
 
-        //healthText.text = "Health: " + currentHealth.ToString();
+        healthText.text = "Health: " + currentHealth.ToString();
 
         SetupRays();
         UpdateStates();
@@ -145,6 +149,7 @@ public class PlayerController : NetworkBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             isInMenu = true;
+            if (pauseMenu == null) { return; }
             pauseMenu.SetActive(true);
         }
 
@@ -171,6 +176,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         requestHealth = false;
+        if (itemText == null) { return; }
         itemText.text = "Item: " + currentItem.ToString();
     }
 
@@ -228,6 +234,7 @@ public class PlayerController : NetworkBehaviour
 
     void UpdateStates()
     {
+        if (ammoText == null) { return; }
         switch (currentItem)
         {
             case ItemState.Empty:
