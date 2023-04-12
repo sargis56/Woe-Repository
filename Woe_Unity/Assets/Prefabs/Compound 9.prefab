@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3026971014054974432}
   - component: {fileID: 3026971014054974437}
   - component: {fileID: 3026971014054974438}
-  - component: {fileID: 3026971014054974439}
   m_Layer: 0
   m_Name: Lid
   m_TagString: Untagged
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3026971014054974439
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3026971014054974433}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3026971015171537263
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +95,7 @@ GameObject:
   - component: {fileID: 3026971015171537251}
   - component: {fileID: 3026971015171537260}
   - component: {fileID: 3026971015171537261}
+  - component: {fileID: -6267336587548410524}
   - component: {fileID: -7774575365498728779}
   - component: {fileID: 9018010260719532769}
   m_Layer: 0
@@ -197,6 +184,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-6267336587548410524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3026971015171537263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69601f0d0b11740458e893015aa5fed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monster: {fileID: 0}
 --- !u!114 &-7774575365498728779
 MonoBehaviour:
   m_ObjectHideFlags: 0

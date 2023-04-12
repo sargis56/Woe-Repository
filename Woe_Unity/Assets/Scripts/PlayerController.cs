@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI deconText;
     public Material selectMaterial;
+    public Material attackMaterial;
 
     [SerializeField]
     private Transform respawnPosition;
@@ -68,6 +69,12 @@ public class PlayerController : MonoBehaviour
     public bool requestHealth = false;
 
     public float pressure = 0.0f;
+
+    public GameObject pestToSpawn;
+    public GameObject deadBodyToSpawn;
+    public GameObject noisemakerProp;
+    public GameObject propSpawner;
+
 
     public bool debug = false;
 
@@ -144,6 +151,14 @@ public class PlayerController : MonoBehaviour
     {
         healthText.text = "Dead";
 
+        Instantiate(deadBodyToSpawn, deadBodyToSpawn.transform.position + this.transform.position, deadBodyToSpawn.transform.rotation);
+
+        if (hasPestFlask)
+        {
+            Instantiate(pestToSpawn, this.transform.position, Quaternion.identity);
+            hasPestFlask = false;
+        }
+
         charController.enabled = false;
         transform.position = new Vector3(respawnPosition.position.x, respawnPosition.position.y, respawnPosition.position.z);
         transform.rotation = Quaternion.identity;
@@ -187,7 +202,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(",") && debug)
         {
-            TakeDamage(50);
+            TakeTrueDamage(50);
         }
 
         if (Input.GetKeyDown(".") && debug)
@@ -273,7 +288,7 @@ public class PlayerController : MonoBehaviour
                 ammoText.text = "Ammo: " + sprayAmmo.ToString();
 
 
-                if ((Input.GetButton("Fire1")) && (sprayAmmo > 0))
+                if ((Input.GetButtonDown("Fire1")) && (sprayAmmo > 0))
                 {
                     if (monsterInRange)
                     {
@@ -291,9 +306,19 @@ public class PlayerController : MonoBehaviour
             case ItemState.Noisemaker:
                 ammoText.text = "Ammo: " + noisemakerAmmo.ToString();
 
-                if ((Input.GetButton("Fire1")) && (noisemakerAmmo > 0))
+                if ((Input.GetButtonDown("Fire1")) && (noisemakerAmmo > 0))
                 {
-
+                    Instantiate(noisemakerProp, propSpawner.transform.position, Quaternion.identity);
+                    if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) && (Vector3.Distance(monster.transform.position, this.transform.position) > 15.0f))
+                    {
+                        monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
+                        monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Investigate;
+                    }
+                    else
+                    {
+                        monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
+                        monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+                    }
                     noisemakerAmmo -= 1;
                 }
                 break;
@@ -301,7 +326,7 @@ public class PlayerController : MonoBehaviour
             case ItemState.Taser:
                 ammoText.text = "Ammo: " + taserAmmo.ToString();
 
-                if ((Input.GetButton("Fire1")) && (taserAmmo > 0))
+                if ((Input.GetButtonDown("Fire1")) && (taserAmmo > 0))
                 {
                     if (botInRange)
                     {
@@ -310,11 +335,6 @@ public class PlayerController : MonoBehaviour
                     taserAmmo -= 1;
                 }
                 break;
-
-            //case ItemState.Injector:
-            //    ammoText.text = "";
-
-            //    break;
 
         }
     }

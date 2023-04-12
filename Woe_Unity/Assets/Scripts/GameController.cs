@@ -44,6 +44,25 @@ public class GameController : MonoBehaviour
         vitaChambers = GameObject.FindGameObjectsWithTag("VitaChamber");
         safeZones = GameObject.FindGameObjectsWithTag("Safe Zone");
         decontaminationTime_ORG = decontaminationTime;
+
+        foreach (GameObject enemy in enemies)
+        {
+            Physics.IgnoreCollision(monster.GetComponent<CapsuleCollider>(), enemy.GetComponent<CapsuleCollider>(), true);
+            Physics.IgnoreCollision(monster.GetComponent<BoxCollider>(), enemy.GetComponent<CapsuleCollider>(), true);
+            foreach (GameObject bot in bots)
+            {
+                Physics.IgnoreCollision(enemy.GetComponent<CapsuleCollider>(), bot.GetComponent<BoxCollider>(), true);
+            }
+        }
+
+        foreach (GameObject bot in bots)
+        {
+            foreach (GameObject botOther in bots)
+            {
+                Physics.IgnoreCollision(bot.GetComponent<BoxCollider>(), botOther.GetComponent<BoxCollider>(), true);
+            }
+        }
+
         switch (gameDifficulty)
         {
             case GameDifficulty.Easy:
@@ -206,11 +225,18 @@ public class GameController : MonoBehaviour
             Destroy(monster.gameObject);
         }
 
-        //if ( (decontaminationTime == temp) || (decontaminationTime == 135.0f) )
-        //{
-        //    updateDiff = true;
-        //    diffIndex = diffIndex + 1;
-        //}
+        if (monster != null)
+        {
+            monster.GetComponent<MonsterController>().decon = true;
+        }
+
+        if ( ((decontaminationTime < 150) && diffIndex == 0) || 
+            ((decontaminationTime < 135) && diffIndex == 1) ||
+            ((decontaminationTime < 100) && diffIndex == 2) ||
+            ((decontaminationTime < 60) && diffIndex == 3))
+        {
+            updateDiff = true;
+        }
 
         foreach (GameObject bot in bots)
         {

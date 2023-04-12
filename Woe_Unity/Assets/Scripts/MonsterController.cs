@@ -111,7 +111,7 @@ public class MonsterController : NetworkBehaviour
     float cautionWaitTime = 3.0f;
     float cautionWaitTime_ORG;
 
-    float colideWaitTime = 5.0f;
+    float colideWaitTime = 2.0f;
     float colideWaitTime_ORG;
 
     public float remainingWaypointDistance = 1.5f; //0.5f;
@@ -120,6 +120,8 @@ public class MonsterController : NetworkBehaviour
     public bool idleToStart = false;
     public bool pausePatrol = false;
     public bool debug = false;
+
+    public bool decon = false;
 
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
@@ -189,6 +191,14 @@ public class MonsterController : NetworkBehaviour
         if (Input.GetKeyDown("[6]") && debug)
         {
             ventIndex = Random.Range(0, vents.Length);
+        }
+
+        if (decon)
+        {
+            foreach (GameObject vent in vents)
+            {
+                vent.SetActive(false);
+            }
         }
     }
 
@@ -622,12 +632,27 @@ public class MonsterController : NetworkBehaviour
             playerTargeting = players[playerTarget];
             if (Random.value < chanceToAmbush)
             {
-                ChangeState(MonsterState.Ambush);
+                if (decon)
+                {
+                    ChangeState(MonsterState.Investigate);
+                }
+                else
+                {
+                    ChangeState(MonsterState.Ambush);
+                }
+                
             }
             else if(Random.value < chanceToVent)
             {
-                ventIndex = Random.Range(0, vents.Length);
-                ChangeState(MonsterState.Vent);
+                if (decon)
+                {
+                    ChangeState(MonsterState.Investigate);
+                }
+                else
+                {
+                    ventIndex = Random.Range(0, vents.Length);
+                    ChangeState(MonsterState.Vent);
+                }
             }
             else
             {

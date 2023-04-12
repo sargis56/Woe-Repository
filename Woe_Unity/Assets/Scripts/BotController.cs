@@ -92,15 +92,6 @@ public class BotController : NetworkBehaviour
         SetupRays();
         UpdateState();
 
-        if (botType == BotType.NurseBot)
-        {
-            itemSpawnTime -= Time.deltaTime;
-            if (itemSpawnTime < 0.0f)
-            {
-                ChangeState(BotState.Task);
-            }
-        }
-
     }
 
     void SetupRays()
@@ -309,6 +300,15 @@ public class BotController : NetworkBehaviour
 
     void Patrol()
     {
+        if (botType == BotType.NurseBot)
+        {
+            itemSpawnTime -= Time.deltaTime;
+            if (itemSpawnTime < 0.0f)
+            {
+                SpawnItem();
+            }
+        }
+
         if (waypointIndex >= waypoints.Length)
         {
             ChangeState(BotState.Idle);
@@ -326,12 +326,6 @@ public class BotController : NetworkBehaviour
 
     void Task()
     {
-        if (botType == BotType.NurseBot)
-        {
-            SpawnItem();
-            ChangeState(BotState.Idle);
-        }
-
         if (botType == BotType.SecurityBot)
         {
 
@@ -349,7 +343,10 @@ public class BotController : NetworkBehaviour
 
     void ShutDown()
     {
-        agent.SetDestination(startingPostion);
+        if (this.gameObject != null)
+        {
+            agent.SetDestination(startingPostion);
+        }
     }
 
     GameObject ClosestWaypoint(Vector3 position_, GameObject[] waypoints_)

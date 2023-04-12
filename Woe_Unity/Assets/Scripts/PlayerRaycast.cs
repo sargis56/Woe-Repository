@@ -49,6 +49,10 @@ public class PlayerRaycast : MonoBehaviour
             {
                 playerController.GetComponent<PlayerController>().objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Caution;
             }
+            if ((playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Spray))
+            {
+                hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().attackMaterial;
+            }
 
         }
         else
@@ -60,6 +64,11 @@ public class PlayerRaycast : MonoBehaviour
         {
             playerController.GetComponent<PlayerController>().botInRange = true;
             playerController.GetComponent<PlayerController>().objectForward = hitForwardData.collider.gameObject;
+
+            if ((playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Taser))
+            {
+                hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().attackMaterial;
+            }
         }
         else
         {
@@ -70,6 +79,11 @@ public class PlayerRaycast : MonoBehaviour
         {
             playerController.GetComponent<PlayerController>().enemyInRange = true;
             playerController.GetComponent<PlayerController>().objectForward = hitForwardData.collider.gameObject;
+
+            if ((playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Spray))
+            {
+                hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().attackMaterial;
+            }
         }
         else
         {
