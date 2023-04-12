@@ -590,6 +590,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1612283442528095706}
+  - component: {fileID: 1940899605521606845}
   m_Layer: 0
   m_Name: HospitalBed
   m_TagString: Untagged
@@ -647,6 +648,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1940899605521606845
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095347637926614880}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 146.33354, y: 95.48547, z: 333.56915}
+  m_Center: {x: 2.7704406, y: -19.774458, z: -2.5101588}
 --- !u!1 &2453114478816261362
 GameObject:
   m_ObjectHideFlags: 0
