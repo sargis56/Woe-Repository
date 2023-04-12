@@ -32,7 +32,9 @@ public class PlayerController : MonoBehaviour
 
     bool hazard = false;
     bool enemyHit = false;
-    
+    bool monsterHurtBoxHit = false;
+    bool monsterKillBoxHit = false;
+
     public int currentHealth;
     
     public CharacterController charController;
@@ -61,6 +63,8 @@ public class PlayerController : MonoBehaviour
     public bool deconButtonInRange = false;
 
     public LayerMask monsterLayerMask;
+    public LayerMask monsterHurtBoxLayerMask;
+    public LayerMask monsterKillBoxLayerMask;
     public LayerMask botLayerMask;
     public LayerMask enemyLayerMask;
 
@@ -69,6 +73,8 @@ public class PlayerController : MonoBehaviour
     public bool requestHealth = false;
 
     public float pressure = 0.0f;
+    [SerializeField]
+    private float pressureDistance = 50.0f;
 
     public GameObject pestToSpawn;
     public GameObject deadBodyToSpawn;
@@ -183,6 +189,8 @@ public class PlayerController : MonoBehaviour
 
         hazard = Physics.CheckSphere(groundCheck.position, distanceFromGround, hazardLayerMask);
         enemyHit = Physics.CheckSphere(groundCheck.position, distanceFromGround, enemyLayerMask);
+        monsterHurtBoxHit = Physics.CheckSphere(groundCheck.position, distanceFromGround, monsterHurtBoxLayerMask);
+        monsterKillBoxHit = Physics.CheckSphere(groundCheck.position, distanceFromGround, monsterKillBoxLayerMask);
 
         if (hazard)
         {
@@ -191,6 +199,14 @@ public class PlayerController : MonoBehaviour
         if (enemyHit)
         {
             TakeDamage(15);
+        }
+        if (monsterHurtBoxHit)
+        {
+            TakeDamage(25);
+        }
+        if (monsterKillBoxHit)
+        {
+            TakeTrueDamage(100);
         }
 
         if (currentHealth <= 0)
@@ -267,6 +283,19 @@ public class PlayerController : MonoBehaviour
             {
                 canTakeDamage = true;
                 damageProtectTime = damageProtectTime_ORG;
+            }
+        }
+
+        if (Vector3.Distance(monster.transform.position, this.transform.position) < pressureDistance)
+        {
+            pressure += Time.deltaTime;
+        }
+        else
+        {
+            pressure -= 0.025f * Time.deltaTime;
+            if (pressure < 0)
+            {
+                pressure = 0;
             }
         }
     }

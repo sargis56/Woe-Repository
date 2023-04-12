@@ -58,8 +58,8 @@ TagManager:
   - MachineButton
   - DeconButton
   - PestPlace
-  - 
-  - 
+  - MonsterHurtBox
+  - MonsterKillBox
   - 
   - 
   - 

@@ -210,22 +210,31 @@ public class ThrallController : NetworkBehaviour
 
     void Wander()
     {  
-        agent.SetDestination(waypoints[waypointIndex].transform.position);
-        if (!agent.pathPending && agent.remainingDistance < monster.GetComponent<MonsterController>().remainingWaypointDistance)
+        if (!this.GetComponent<TurnOffAI>().monsterHit)
         {
-            waypointIndex = Random.Range(0, waypoints.Length);
-            if (waypointIndex > (waypoints.Length-1))
+            agent.SetDestination(waypoints[waypointIndex].transform.position);
+
+            if (!agent.pathPending && agent.remainingDistance < monster.GetComponent<MonsterController>().remainingWaypointDistance)
             {
-                waypointIndex = Random.Range(1, (waypoints.Length - 1));
+                waypointIndex = Random.Range(0, waypoints.Length);
+                if (waypointIndex > (waypoints.Length - 1))
+                {
+                    waypointIndex = Random.Range(1, (waypoints.Length - 1));
+                }
             }
         }
+
     }
 
     void Attack()
     {
         agent.autoBraking = false;
         agent.speed = navAgentSpeed_ORG;
-        agent.SetDestination(playerTargeting.transform.position);
+
+        if (!this.GetComponent<TurnOffAI>().monsterHit)
+        {
+            agent.SetDestination(playerTargeting.transform.position);
+        }
 
         if (playerInRange)
         {
@@ -243,12 +252,4 @@ public class ThrallController : NetworkBehaviour
         }
 
     }
-
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        collision.gameObject.GetComponent<PlayerController>().TakeDamage(25);
-    //    }
-    //}
 }

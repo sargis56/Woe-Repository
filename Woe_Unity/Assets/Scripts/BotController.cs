@@ -19,7 +19,8 @@ public class BotController : NetworkBehaviour
     float navAgentRadius_ORG;
     float navAgentSpeed_ORG;
 
-    float followWaitTime = 10.0f;
+    [SerializeField]
+    private float followWaitTime = 15.0f;
     float followWaitTime_ORG;
 
     public GameObject[] waypoints;
@@ -70,7 +71,11 @@ public class BotController : NetworkBehaviour
 
     public bool shutDown = false;
 
+    public GameObject lamp;
+    public Material activeMaterial;
+    public Material deactiveMaterial;
     Material defaultMaterial;
+
 
     // Start is called before the first frame update
     void Start()
@@ -165,6 +170,10 @@ public class BotController : NetworkBehaviour
         }
         else
         {
+            if (botType == BotType.SecurityBot)
+            {
+                lamp.GetComponent<MeshRenderer>().material = deactiveMaterial;
+            }
             this.GetComponent<MeshRenderer>().material = defaultMaterial;
         }
 
@@ -187,6 +196,13 @@ public class BotController : NetworkBehaviour
             if (shutDown)
             {
                 Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            if (botType == BotType.SecurityBot)
+            {
+                lamp.GetComponent<MeshRenderer>().material = deactiveMaterial;
             }
         }
 
@@ -315,10 +331,13 @@ public class BotController : NetworkBehaviour
         }
         else
         {
-            agent.SetDestination(waypoints[waypointIndex].transform.position);
-            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            if (!this.GetComponent<TurnOffAI>().monsterHit)
             {
-                waypointIndex += 1;
+                agent.SetDestination(waypoints[waypointIndex].transform.position);
+                if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                {
+                    waypointIndex += 1;
+                }
             }
         }
 
@@ -328,8 +347,13 @@ public class BotController : NetworkBehaviour
     {
         if (botType == BotType.SecurityBot)
         {
+            agent.speed = navAgentSpeed_ORG + 0.5f;
+            lamp.GetComponent<MeshRenderer>().material = activeMaterial;
 
-            agent.SetDestination(objectForward.transform.position);
+            if (!this.GetComponent<TurnOffAI>().monsterHit)
+            {
+                agent.SetDestination(objectForward.transform.position);
+            }
 
             followWaitTime -= Time.deltaTime;
             if (followWaitTime < 0.0f)
@@ -346,6 +370,11 @@ public class BotController : NetworkBehaviour
         if (this.gameObject != null)
         {
             agent.SetDestination(startingPostion);
+        }
+
+        if (this.GetComponent<TurnOffAI>().monsterHit)
+        {
+            Destroy(this.gameObject);
         }
     }
 

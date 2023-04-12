@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class TurnOffAI : MonoBehaviour
 {
-    private bool monsterHit = false;
+    public bool monsterHit = false;
     public GameObject monster;
 
     // Start is called before the first frame update

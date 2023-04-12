@@ -14,7 +14,8 @@ public class GameController : MonoBehaviour
     public GameObject[] players;
     public int deadPlayersNum;
     public GameObject monster;
-    public float menace = 0.0f;
+
+    public bool menaceSystem;
 
     public GameObject[] bots;
     public GameObject[] enemies;
@@ -32,7 +33,8 @@ public class GameController : MonoBehaviour
     private float decontaminationTime_ORG;
     public bool updateDiff = false;
 
-    public int diffIndex = 0;
+    [SerializeField]
+    private int diffIndex = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +50,6 @@ public class GameController : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             Physics.IgnoreCollision(monster.GetComponent<CapsuleCollider>(), enemy.GetComponent<CapsuleCollider>(), true);
-            Physics.IgnoreCollision(monster.GetComponent<BoxCollider>(), enemy.GetComponent<CapsuleCollider>(), true);
             foreach (GameObject bot in bots)
             {
                 Physics.IgnoreCollision(enemy.GetComponent<CapsuleCollider>(), bot.GetComponent<BoxCollider>(), true);
@@ -172,6 +173,34 @@ public class GameController : MonoBehaviour
             }
         }
 
+        foreach (GameObject vitaChamber in vitaChambers)
+        {
+            foreach (GameObject player in players)
+            {
+                if ((player != null) && (vitaChamber != null))
+                {
+                    if (Vector3.Distance(vitaChamber.transform.position, player.transform.position) < 2.0f) 
+                    {
+                        vitaChamber.GetComponent<VitaManager>().isActive = false;
+                    }
+                    else
+                    {
+                        vitaChamber.GetComponent<VitaManager>().isActive = true;
+                    }
+                }
+            }
+           
+        }
+
+        if (menaceSystem)
+        {
+            monster.GetComponent<MonsterController>().menaceSystemActive = true;
+        }
+        else
+        {
+            monster.GetComponent<MonsterController>().menaceSystemActive = false;
+        }
+
         if (decontamination)
         {
             Decontaminate();
@@ -207,7 +236,7 @@ public class GameController : MonoBehaviour
         {
             Vector3 diff = vitaChamber.transform.position - position_;
             float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
+            if ((curDistance < distance) && vitaChamber.GetComponent<VitaManager>().isActive)
             {
                 closestWaypoint = vitaChamber;
                 distance = curDistance;
@@ -219,6 +248,8 @@ public class GameController : MonoBehaviour
 
     void Decontaminate()
     {
+        menaceSystem = true;
+
         decontaminationTime -= Time.deltaTime;
         if (decontaminationTime < 0.0f)
         {
@@ -293,29 +324,34 @@ public class GameController : MonoBehaviour
     void DiffEasy()
     {
         playerLives = 30;
+        menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Dumb;
     }
 
     void DiffNormal()
     {
         playerLives = 15;
+        menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Incompetent;
     }
 
     void DiffHard()
     {
         playerLives = 10;
+        menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Competent;
     }
 
     void DiffNightmare()
     {
         playerLives = 5;
+        menaceSystem = false;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Smart;
     }
     void DiffUnrelenting()
     {
         playerLives = 0;
+        menaceSystem = false;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.ApexPredator;
     }
 }

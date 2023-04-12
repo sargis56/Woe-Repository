@@ -45,11 +45,14 @@ public class PlayerRaycast : MonoBehaviour
         {
             playerController.GetComponent<PlayerController>().monsterInRange = true;
             playerController.GetComponent<PlayerController>().objectForward = hitForwardData.collider.gameObject;
-            if ((playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Spray) && (playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
+            if ((playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Spray) 
+                && (playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat) &&
+                (playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState == MonsterController.MonsterState.Attack))
             {
+                hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().attackMaterial;
                 playerController.GetComponent<PlayerController>().objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Caution;
             }
-            if ((playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Spray))
+            else if(playerController.GetComponent<PlayerController>().currentItem == PlayerController.ItemState.Spray)
             {
                 hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().attackMaterial;
             }
@@ -57,6 +60,11 @@ public class PlayerRaycast : MonoBehaviour
         }
         else
         {
+            if ((playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState == MonsterController.MonsterState.Caution) 
+                && (playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
+            {
+                playerController.GetComponent<PlayerController>().objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+            }
             playerController.GetComponent<PlayerController>().monsterInRange = false;
         }
 

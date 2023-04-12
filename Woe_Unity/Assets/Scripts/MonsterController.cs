@@ -122,6 +122,9 @@ public class MonsterController : NetworkBehaviour
     public bool debug = false;
 
     public bool decon = false;
+    [SerializeField]
+    private float menace = 60.0f;
+    public bool menaceSystemActive = true;
 
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
@@ -159,36 +162,36 @@ public class MonsterController : NetworkBehaviour
         SetupRays();
         UpdateStates();
 
-        if (Input.GetKeyDown("[0]") && debug)
+        if (Input.GetKeyDown("r") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
             ChangeState(MonsterState.Retreat);
         }
-        if (Input.GetKeyDown("[1]") && debug)
+        if (Input.GetKeyDown("i") && debug)
         {
             ChangeState(MonsterState.Idle);
         }
-        if (Input.GetKeyDown("[2]") && debug)
+        if (Input.GetKeyDown("t") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
             ChangeState(MonsterState.Investigate);
         }
-        if (Input.GetKeyDown("[3]") && debug)
+        if (Input.GetKeyDown("u") && debug)
         {
             ChangeState(MonsterState.Attack);
         }
-        if (Input.GetKeyDown("[4]") && debug)
+        if (Input.GetKeyDown("y") && debug)
         {
             ChangeState(MonsterState.Vent);
         }
-        if (Input.GetKeyDown("[5]") && debug)
+        if (Input.GetKeyDown("p") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
         }
-        if (Input.GetKeyDown("[6]") && debug)
+        if (Input.GetKeyDown("h") && debug)
         {
             ventIndex = Random.Range(0, vents.Length);
         }
@@ -662,7 +665,15 @@ public class MonsterController : NetworkBehaviour
                 }
                 else
                 {
-                    ChangeState(MonsterState.Investigate);
+                    if ( (menaceSystemActive) && (playerTargeting.GetComponent<PlayerController>().pressure > menace))
+                    {
+                        playerTargeting.GetComponent<PlayerController>().pressure = 0;
+                        ChangeState(MonsterState.Patrol);
+                    }
+                    else
+                    {
+                        ChangeState(MonsterState.Investigate);
+                    }
                 }
                 
             }

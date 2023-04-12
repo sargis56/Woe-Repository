@@ -6,6 +6,7 @@ public class IgnoreMonster : MonoBehaviour
 {
 
     public GameObject monster;
+    public bool isBoxCollider = true;
 
     // Start is called before the first frame update
     void Start()
@@ -16,7 +17,17 @@ public class IgnoreMonster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), monster.GetComponent<CapsuleCollider>(), true);
-        Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), monster.GetComponent<BoxCollider>(), true);
+        if (monster != null)
+        {
+            if (isBoxCollider)
+            {
+                Physics.IgnoreCollision(this.GetComponent<BoxCollider>(), monster.GetComponent<CapsuleCollider>(), true);
+            }
+            else
+            {
+                Physics.IgnoreCollision(this.GetComponent<CapsuleCollider>(), monster.GetComponent<CapsuleCollider>(), true);
+            }
+        }
+
     }
 }
