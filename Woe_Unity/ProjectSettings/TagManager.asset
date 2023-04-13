@@ -38,6 +38,7 @@ TagManager:
   - PesticideMachine
   - DeconStation
   - Safe Zone
+  - Door
   layers:
   - Default
   - TransparentFX

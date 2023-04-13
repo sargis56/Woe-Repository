@@ -35,7 +35,6 @@ public class MovementController : NetworkBehaviour
 
     //public GameObject camera;
     public Transform groundCheck;
-    public Transform spawnPoint;
     public Transform crouchPoint;
     public Transform straightPoint;
     public float distanceFromGround = 0.4f;

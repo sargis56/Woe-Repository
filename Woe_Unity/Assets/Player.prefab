@@ -219,7 +219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6429404626340150357
 Transform:
   m_ObjectHideFlags: 0
@@ -228,7 +228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4361311640763214244}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 184.95352, y: -0.2600003, z: 47.376995}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1305,7 +1305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivity: 1000
   body: {fileID: 8653147067524247897}
-  playerController: {fileID: 0}
+  playerController: {fileID: 8653147067524247899}
 --- !u!114 &8051490715455077085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1736,7 +1736,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8653147067524247903}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 63.07, y: 12.355, z: 55.695}
+  m_LocalPosition: {x: 63.07, y: 1.25, z: 55.695}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1831,7 +1831,7 @@ MonoBehaviour:
   requestHealth: 0
   pressure: 0
   pressureDistance: 50
-  pestToSpawn: {fileID: 767766855152023161, guid: dd0704b6354e24a4eae936a5d3492dfe, type: 3}
+  pestToSpawn: {fileID: 767766855152023161, guid: 8596fb5517f187245a3e190a90bb12b6, type: 3}
   deadBodyToSpawn: {fileID: 5062266751752251131, guid: 5b9f58760c63f0240a03a695f6bc1d76, type: 3}
   noisemakerProp: {fileID: 5666847726937915913, guid: 527fc0dd603fa9e4283defd84b6fe868, type: 3}
   propSpawner: {fileID: 4499030822668207143}
@@ -1853,7 +1853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   staminaText: {fileID: 3822219022211065145}
-  spawnPosition: {x: 63.07, y: 12.355, z: 55.695}
+  spawnPosition: {x: 20, y: 1.5, z: -12.75}
   debug: 1
   safe: 0
   hidden: 0
@@ -1868,7 +1868,6 @@ MonoBehaviour:
   bounceHeight_ORG: 0
   charController: {fileID: 8653147067524247896}
   groundCheck: {fileID: 8653147068084482239}
-  spawnPoint: {fileID: 0}
   crouchPoint: {fileID: 3884402332478656085}
   straightPoint: {fileID: 3884402333127346804}
   distanceFromGround: 0.4
@@ -1943,8 +1942,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraHolder: {fileID: 4361311640763214244}
   offset: {x: 0, y: 0.4, z: 0}
-  crouchPoint: {fileID: 0}
-  straightPoint: {fileID: 0}
+  crouchPoint: {fileID: 3884402333127346804}
+  straightPoint: {fileID: 3884402332478656085}
 --- !u!1 &8653147067605149690
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,13 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
   - component: {fileID: 1176665905799915588}
-========
-  - component: {fileID: 7970693212398530963}
-  - component: {fileID: 7970693212398530988}
-  - component: {fileID: 7970693212398530989}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
   m_Layer: 0
   m_Name: Fluorescent lamp
   m_TagString: Untagged
@@ -38,61 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
 --- !u!1 &7981759324967723879
-========
---- !u!33 &7970693212398530988
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7970693212398530960}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7970693212398530989
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7970693212398530960}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 42c0999ab2876ad4992fac708cd56e98, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &7970693214412852891
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,19 +40,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
   - component: {fileID: 5030123538608524023}
   - component: {fileID: 7972527664124365507}
-========
-  - component: {fileID: 7970693214412852887}
-  - component: {fileID: 7970693214412852884}
-  - component: {fileID: 7970693214412852885}
-  - component: {fileID: -2685712890978018917}
-  - component: {fileID: 1635372848476919660}
-  - component: {fileID: -7457440030168065895}
-  - component: {fileID: 3685212742448241883}
-  - component: {fileID: -4075086767293535793}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -126,98 +55,23 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
   m_GameObject: {fileID: 7981759324967723879}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.74995774}
-========
-  m_GameObject: {fileID: 7970693214412852891}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 54.724586, y: 2.0801718, z: 70.839005}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8906867447396974493}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
 --- !u!108 &7972527664124365507
 Light:
-========
---- !u!33 &7970693214412852884
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7970693214412852891}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7970693214412852885
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7970693214412852891}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b331a4d0abc7ffc49a532864d990baa4, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-2685712890978018917
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7970693214412852891}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5, y: 5, z: 5}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1635372848476919660
-MonoBehaviour:
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7981759324967723879}
   m_Enabled: 1
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
@@ -274,21 +128,10 @@ MonoBehaviour:
   m_ShadowAngle: 0
 --- !u!1 &8129098947087459623
 GameObject:
-========
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69601f0d0b11740458e893015aa5fed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monster: {fileID: 0}
-  isBoxCollider: 1
---- !u!114 &-7457440030168065895
-MonoBehaviour:
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8906867447396974493}
@@ -371,23 +214,10 @@ MeshRenderer:
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &5063440157084571974
 BoxCollider:
-========
-  m_GameObject: {fileID: 7970693214412852891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0d0a9341c1d4ba40b8e2654d8781da9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bots: []
-  isBoxCollider: 1
---- !u!114 &3685212742448241883
-MonoBehaviour:
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Asset pack for horror game/Prefabs/Fluorescent lamp.prefab
   m_GameObject: {fileID: 8129098947087459623}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -395,41 +225,3 @@ MonoBehaviour:
   serializedVersion: 2
   m_Size: {x: 0.30023572, y: 1.5034683, z: 0.6955562}
   m_Center: {x: -0.00000008940697, y: 0.000000029802319, z: -0.3477358}
-========
-  m_GameObject: {fileID: 7970693214412852891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!114 &-4075086767293535793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7970693214412852891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  InLocalSpace: 0
-  Interpolate: 1
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/SprayItem.prefab

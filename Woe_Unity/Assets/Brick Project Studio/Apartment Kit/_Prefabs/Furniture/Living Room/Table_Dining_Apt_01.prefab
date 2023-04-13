@@ -8,16 +8,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Furniture/Living Room/Table_Dining_Apt_01.prefab
   - component: {fileID: 8980885307136447183}
   - component: {fileID: 3911078225927244122}
   - component: {fileID: 7113544162603719587}
   - component: {fileID: 8991444742491562132}
-========
-  - component: {fileID: 767766855115707699}
-  - component: {fileID: 767766855115707708}
-  - component: {fileID: 767766855115707709}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Pesticide.prefab
   m_Layer: 0
   m_Name: Table Top
   m_TagString: Untagged
@@ -88,7 +82,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Furniture/Living Room/Table_Dining_Apt_01.prefab
 --- !u!65 &8991444742491562132
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -103,9 +96,6 @@ BoxCollider:
   m_Size: {x: 2.2251778, y: 0.07049096, z: 2.2251778}
   m_Center: {x: 0.00000017881393, y: 1.0744004, z: -0.00000017881393}
 --- !u!1 &8228670744583830499
-========
---- !u!1 &767766855152023161
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Pesticide.prefab
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,21 +103,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Furniture/Living Room/Table_Dining_Apt_01.prefab
   - component: {fileID: 9003417335845753540}
   - component: {fileID: 2485621726453080696}
   - component: {fileID: 1708684590274505368}
   - component: {fileID: 5717505516186086752}
-========
-  - component: {fileID: 767766855152023160}
-  - component: {fileID: 767766855152023141}
-  - component: {fileID: 767766855152023162}
-  - component: {fileID: 767766855152023163}
-  - component: {fileID: 912900148550152415}
-  - component: {fileID: -1761949444706894803}
-  - component: {fileID: 1838023347279350446}
-  - component: {fileID: 6588663595742317405}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Pesticide.prefab
   m_Layer: 0
   m_Name: Table_Dining_Apt_01
   m_TagString: Untagged
@@ -210,80 +189,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Furniture/Living Room/Table_Dining_Apt_01.prefab
   m_Size: {x: 0.84, y: 1.0385915, z: 0.84}
   m_Center: {x: 0, y: 0.5198595, z: 0}
-========
-  m_Size: {x: 5, y: 5, z: 5}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &912900148550152415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767766855152023161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69601f0d0b11740458e893015aa5fed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monster: {fileID: 0}
-  isBoxCollider: 1
---- !u!114 &-1761949444706894803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767766855152023161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0d0a9341c1d4ba40b8e2654d8781da9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bots: []
-  isBoxCollider: 1
---- !u!114 &1838023347279350446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767766855152023161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!114 &6588663595742317405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767766855152023161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  InLocalSpace: 0
-  Interpolate: 1
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Pesticide.prefab
