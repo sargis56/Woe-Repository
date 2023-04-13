@@ -10,7 +10,7 @@ public class BotController : NetworkBehaviour
     public enum BotType { DoctorBot, NurseBot, SecurityBot};
     public BotType botType;
 
-    public enum BotState { Idle, Patrol, Stop, SlowDown, Task};
+    public enum BotState { Idle, Patrol, Stop, SlowDown, Task, ShutDown};
     public BotState currentState;
 
     public GameObject monster;
@@ -19,11 +19,13 @@ public class BotController : NetworkBehaviour
     float navAgentRadius_ORG;
     float navAgentSpeed_ORG;
 
-    float followWaitTime = 10.0f;
+    [SerializeField]
+    private float followWaitTime = 15.0f;
     float followWaitTime_ORG;
 
     public GameObject[] waypoints;
     public int waypointIndex = 0;
+    public Vector3 startingPostion;
 
     public float forwardRayDistance = 10.0f;
     public float forwardRayHeight = 0.00f;
@@ -49,17 +51,43 @@ public class BotController : NetworkBehaviour
     public LayerMask playerLayerMask;
     public LayerMask monsterLayerMask;
     public LayerMask botLayerMask;
+    public LayerMask enemyLayerMask;
+
+    [SerializeField]
+    private GameObject itemToSpawn;
+    public GameObject objectSpawner;
+    public GameObject[] itemTable;
+    [SerializeField]
+    private Vector3 itemScale = new Vector3(0.25f, 0.25f, 0.25f);
+
+    [SerializeField]
+    private float itemSpawnTime = 180.0f; // 3 Minutes
+    float itemSpawnTime_ORG;
+
+    [SerializeField]
+    private float chanceToSpawn = 0.5f; // 50%
 
     public bool debug = false;
+
+    public bool shutDown = false;
+
+    public GameObject lamp;
+    public Material activeMaterial;
+    public Material deactiveMaterial;
+    Material defaultMaterial;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        itemSpawnTime_ORG = itemSpawnTime;
         followWaitTime_ORG = followWaitTime;
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
         currentState = BotState.Idle;
         monster = GameObject.FindGameObjectWithTag("Monster");
+        defaultMaterial = this.GetComponent<MeshRenderer>().material;
+        startingPostion = this.transform.position;
     }
 
     // Update is called once per frame
@@ -68,6 +96,7 @@ public class BotController : NetworkBehaviour
         if (!IsOwner) { return; }
         SetupRays();
         UpdateState();
+
     }
 
     void SetupRays()
@@ -101,7 +130,18 @@ public class BotController : NetworkBehaviour
 
                 if (agent.velocity == Vector3.zero)
                 {
-                    objectForward.GetComponent<PlayerController>().requestHealth = true;
+
+                    this.GetComponent<MeshRenderer>().material = objectForward.GetComponent<PlayerController>().selectMaterial;
+
+                    if (shutDown)
+                    {
+                        objectForward.GetComponent<PlayerController>().infoText.text = "Doctor Bot has been shutdown";
+                    }
+                    else
+                    {
+                        objectForward.GetComponent<PlayerController>().requestHealth = true;
+                        objectForward.GetComponent<PlayerController>().infoText.text = "Use E: Heal";
+                    }
                 }
                 
             }
@@ -111,7 +151,7 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Stop);
             }
 
-            if (botType == BotType.SecurityBot)
+            if ((botType == BotType.SecurityBot) && (!shutDown))
             {
                 if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) && (Vector3.Distance(monster.transform.position, this.transform.position) > 25.0f))
                 {
@@ -128,6 +168,14 @@ public class BotController : NetworkBehaviour
             }
 
         }
+        else
+        {
+            if (botType == BotType.SecurityBot)
+            {
+                lamp.GetComponent<MeshRenderer>().material = deactiveMaterial;
+            }
+            this.GetComponent<MeshRenderer>().material = defaultMaterial;
+        }
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, monsterLayerMask)) ||
@@ -140,15 +188,31 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Stop);
             }
 
-            if (botType == BotType.SecurityBot)
+            if ((botType == BotType.SecurityBot) && (!shutDown))
             {
                 ChangeState(BotState.Task);
+            }
+
+            if (shutDown)
+            {
+                Destroy(this.gameObject);
+            }
+        }
+        else
+        {
+            if (botType == BotType.SecurityBot)
+            {
+                lamp.GetComponent<MeshRenderer>().material = deactiveMaterial;
             }
         }
 
         if (((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, botLayerMask)) ||
             (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, botLayerMask)) ||
-            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))))
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, botLayerMask))) ||
+
+            ((Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardR, out hitForwardData, forwardRayDistance, enemyLayerMask)) ||
+            (Physics.Raycast(rayForwardL, out hitForwardData, forwardRayDistance, enemyLayerMask))))
         {
             ChangeState(BotState.SlowDown);
         }
@@ -203,6 +267,13 @@ public class BotController : NetworkBehaviour
                 }
                 Task();
                 break;
+            case BotState.ShutDown:
+                if (debug)
+                {
+                    print("In BotState.ShutDown");
+                }
+                ShutDown();
+                break;
         }
     }
 
@@ -216,7 +287,15 @@ public class BotController : NetworkBehaviour
         agent.speed = navAgentSpeed_ORG;
         agent.radius = navAgentRadius_ORG;
         waypointIndex = 0;
-        ChangeState(BotState.Patrol);
+
+        if (shutDown)
+        {
+            ChangeState(BotState.ShutDown);
+        }
+        else
+        {
+            ChangeState(BotState.Patrol);
+        }
     }
 
     void Stop()
@@ -237,16 +316,28 @@ public class BotController : NetworkBehaviour
 
     void Patrol()
     {
+        if (botType == BotType.NurseBot)
+        {
+            itemSpawnTime -= Time.deltaTime;
+            if (itemSpawnTime < 0.0f)
+            {
+                SpawnItem();
+            }
+        }
+
         if (waypointIndex >= waypoints.Length)
         {
             ChangeState(BotState.Idle);
         }
         else
         {
-            agent.SetDestination(waypoints[waypointIndex].transform.position);
-            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            if (!this.GetComponent<TurnOffAI>().monsterHit)
             {
-                waypointIndex += 1;
+                agent.SetDestination(waypoints[waypointIndex].transform.position);
+                if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                {
+                    waypointIndex += 1;
+                }
             }
         }
 
@@ -254,15 +345,15 @@ public class BotController : NetworkBehaviour
 
     void Task()
     {
-        if (botType == BotType.NurseBot)
-        {
-
-        }
-
         if (botType == BotType.SecurityBot)
         {
+            agent.speed = navAgentSpeed_ORG + 0.5f;
+            lamp.GetComponent<MeshRenderer>().material = activeMaterial;
 
-            agent.SetDestination(objectForward.transform.position);
+            if (!this.GetComponent<TurnOffAI>().monsterHit)
+            {
+                agent.SetDestination(objectForward.transform.position);
+            }
 
             followWaitTime -= Time.deltaTime;
             if (followWaitTime < 0.0f)
@@ -271,6 +362,19 @@ public class BotController : NetworkBehaviour
                 ChangeState(BotState.Idle);
             }
 
+        }
+    }
+
+    void ShutDown()
+    {
+        if (this.gameObject != null)
+        {
+            agent.SetDestination(startingPostion);
+        }
+
+        if (this.GetComponent<TurnOffAI>().monsterHit)
+        {
+            Destroy(this.gameObject);
         }
     }
 
@@ -290,5 +394,18 @@ public class BotController : NetworkBehaviour
         }
 
         return closestWaypoint;
+    }
+
+    void SpawnItem()
+    {
+        itemToSpawn = itemTable[Random.Range(0, itemTable.Length)];
+
+        if ((Random.value < chanceToSpawn) && (!shutDown))
+        {
+            GameObject spawnedObject = Instantiate(itemToSpawn, objectSpawner.transform.position, Quaternion.identity);
+            spawnedObject.transform.localScale = itemScale;
+        }
+
+        itemSpawnTime = itemSpawnTime_ORG;
     }
 }

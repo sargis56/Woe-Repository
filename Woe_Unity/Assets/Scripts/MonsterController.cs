@@ -105,12 +105,20 @@ public class MonsterController : NetworkBehaviour
     float cautionWaitTime = 3.0f;
     float cautionWaitTime_ORG;
 
+    float colideWaitTime = 2.0f;
+    float colideWaitTime_ORG;
+
     public float remainingWaypointDistance = 1.5f; //0.5f;
 
     //Make Monster go to the start when it idles
     public bool idleToStart = false;
     public bool pausePatrol = false;
     public bool debug = false;
+
+    public bool decon = false;
+    [SerializeField]
+    private float menace = 60.0f;
+    public bool menaceSystemActive = true;
 
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
@@ -119,7 +127,8 @@ public class MonsterController : NetworkBehaviour
         ambushWaitTime_ORG = ambushWaitTime;
         lingerWaitTime_ORG = lingerWaitTime;
         restVentTime_ORG = restVentTime;
-
+        cautionWaitTime_ORG = cautionWaitTime;
+        colideWaitTime_ORG = colideWaitTime;
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
         players = GameObject.FindGameObjectsWithTag("Player");
         ambushSpots = GameObject.FindGameObjectsWithTag("Ambush Spot");
@@ -147,38 +156,46 @@ public class MonsterController : NetworkBehaviour
         SetupRays();
         UpdateStates();
 
-        if (Input.GetKeyDown("[0]") && debug)
+        if (Input.GetKeyDown("r") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
             ChangeState(MonsterState.Retreat);
         }
-        if (Input.GetKeyDown("[1]") && debug)
+        if (Input.GetKeyDown("i") && debug)
         {
             ChangeState(MonsterState.Idle);
         }
-        if (Input.GetKeyDown("[2]") && debug)
+        if (Input.GetKeyDown("t") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
             ChangeState(MonsterState.Investigate);
         }
-        if (Input.GetKeyDown("[3]") && debug)
+        if (Input.GetKeyDown("u") && debug)
         {
             ChangeState(MonsterState.Attack);
         }
-        if (Input.GetKeyDown("[4]") && debug)
+        if (Input.GetKeyDown("y") && debug)
         {
             ChangeState(MonsterState.Vent);
         }
-        if (Input.GetKeyDown("[5]") && debug)
+        if (Input.GetKeyDown("p") && debug)
         {
             playerTarget = Random.Range(0, players.Length);
             playerTargeting = players[playerTarget];
         }
-        if (Input.GetKeyDown("[6]") && debug)
+        if (Input.GetKeyDown("h") && debug)
         {
             ventIndex = Random.Range(0, vents.Length);
+        }
+
+        if (decon)
+        {
+            foreach (GameObject vent in vents)
+            {
+                vent.SetActive(false);
+            }
         }
     }
 
@@ -607,12 +624,27 @@ public class MonsterController : NetworkBehaviour
             playerTargeting = players[playerTarget];
             if (Random.value < chanceToAmbush)
             {
-                ChangeState(MonsterState.Ambush);
+                if (decon)
+                {
+                    ChangeState(MonsterState.Investigate);
+                }
+                else
+                {
+                    ChangeState(MonsterState.Ambush);
+                }
+                
             }
             else if(Random.value < chanceToVent)
             {
-                ventIndex = Random.Range(0, vents.Length);
-                ChangeState(MonsterState.Vent);
+                if (decon)
+                {
+                    ChangeState(MonsterState.Investigate);
+                }
+                else
+                {
+                    ventIndex = Random.Range(0, vents.Length);
+                    ChangeState(MonsterState.Vent);
+                }
             }
             else
             {
@@ -622,7 +654,15 @@ public class MonsterController : NetworkBehaviour
                 }
                 else
                 {
-                    ChangeState(MonsterState.Investigate);
+                    if ( (menaceSystemActive) && (playerTargeting.GetComponent<PlayerController>().pressure > menace))
+                    {
+                        playerTargeting.GetComponent<PlayerController>().pressure = 0;
+                        ChangeState(MonsterState.Patrol);
+                    }
+                    else
+                    {
+                        ChangeState(MonsterState.Investigate);
+                    }
                 }
                 
             }
@@ -735,6 +775,23 @@ public class MonsterController : NetworkBehaviour
         if (collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<PlayerController>().TakeDamage(50);
+        }
+
+        if (collision.gameObject.tag == "Bot")
+        {
+            if (collision.gameObject.GetComponent<BotController>().shutDown)
+            {
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                colideWaitTime -= Time.deltaTime;
+                if (colideWaitTime < 0.0f)
+                {
+                    Destroy(collision.gameObject);
+                    colideWaitTime = colideWaitTime_ORG;
+                }
+            }
         }
     }
 }
