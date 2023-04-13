@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 7688179058167521915}
   - component: {fileID: 7688179058167521919}
   - component: {fileID: 7688179058167521918}
-  - component: {fileID: 7688179058167521888}
+  - component: {fileID: 1919216331047709600}
   - component: {fileID: 7688179058167521914}
   - component: {fileID: 7688179058167521916}
   - component: {fileID: -1835521529167053045}
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monster: {fileID: 0}
   isBoxCollider: 1
---- !u!114 &7688179058167521888
+--- !u!114 &1919216331047709600
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

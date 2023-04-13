@@ -1305,6 +1305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivity: 1000
   body: {fileID: 8653147067524247897}
+  playerController: {fileID: 0}
 --- !u!114 &8051490715455077085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1837,6 +1838,8 @@ MonoBehaviour:
   debug: 1
   damageProtectTime: 3
   canTakeDamage: 1
+  pauseMenu: {fileID: 1516692188064617450, guid: 8860db77a45aead4cad7e60200f41828, type: 3}
+  isInMenu: 0
 --- !u!114 &8653147067524247898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1849,7 +1852,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88bae5ab1d5ac884daebade85be853e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
   staminaText: {fileID: 3822219022211065145}
   spawnPosition: {x: 63.07, y: 12.355, z: 55.695}
   debug: 1
@@ -1885,10 +1887,6 @@ MonoBehaviour:
   hiddenLayerMask:
     serializedVersion: 2
     m_Bits: 32768
-  flaskPlaceLayerMask:
-    serializedVersion: 2
-    m_Bits: 262144
-  deconStation: {fileID: 0}
 --- !u!114 &5057405190127791393
 MonoBehaviour:
   m_ObjectHideFlags: 0

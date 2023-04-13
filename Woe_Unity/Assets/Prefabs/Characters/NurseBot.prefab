@@ -1047,8 +1047,8 @@ GameObject:
   - component: {fileID: 5863695215414602162}
   - component: {fileID: 5863695215414602167}
   - component: {fileID: 5863695215414602164}
-  - component: {fileID: 5863695215414602166}
   - component: {fileID: 5863695215414602163}
+  - component: {fileID: 4695978413925511546}
   - component: {fileID: 5863695215414602165}
   - component: {fileID: 3396672307631048560}
   m_Layer: 13
@@ -1230,18 +1230,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monster: {fileID: 0}
   isBoxCollider: 1
---- !u!114 &5863695215414602166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5863695215414602172}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f3489b34d326734b9cc8203581eef39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!195 &5863695215414602163
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1264,6 +1252,18 @@ NavMeshAgent:
   m_BaseOffset: 1.1
   m_WalkableMask: 3
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4695978413925511546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863695215414602172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3489b34d326734b9cc8203581eef39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5863695215414602165
 MonoBehaviour:
   m_ObjectHideFlags: 0

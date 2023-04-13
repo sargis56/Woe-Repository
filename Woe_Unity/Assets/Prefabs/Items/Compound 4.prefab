@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7364878623770452628
+--- !u!1 &5464981250411690875
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,57 +8,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Apt Build Kit/Interiors/Frames Windows Stairs & Doors/Int_apt_01_Staircase_01.prefab
-  - component: {fileID: 7322839019957164238}
-  - component: {fileID: 6298493336233793655}
-  - component: {fileID: 7170756737053157428}
-  - component: {fileID: 6666822125206671542}
-========
   - component: {fileID: 5464981250411690872}
   - component: {fileID: 5464981250411690879}
   - component: {fileID: 5464981250411690878}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 4.prefab
   m_Layer: 0
-  m_Name: Int_apt_01_Staircase_01
+  m_Name: Lid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7322839019957164238
+--- !u!4 &5464981250411690872
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7364878623770452628}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 6393942455669940875}
-  m_Father: {fileID: 0}
+  m_GameObject: {fileID: 5464981250411690875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.55, z: 0}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5464981251531914257}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6298493336233793655
+--- !u!33 &5464981250411690879
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7364878623770452628}
-  m_Mesh: {fileID: 7359665457711502438, guid: c31198774d98d9f43be2ca79cb0a84dc, type: 3}
---- !u!23 &7170756737053157428
+  m_GameObject: {fileID: 5464981250411690875}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &5464981250411690878
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7364878623770452628}
+  m_GameObject: {fileID: 5464981250411690875}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -67,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e98ebe0ed4d9894d9610d836de5f478, type: 2}
+  - {fileID: 2100000, guid: 49e505db7e7671943b19982755e53b6f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89,25 +83,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Apt Build Kit/Interiors/Frames Windows Stairs & Doors/Int_apt_01_Staircase_01.prefab
---- !u!64 &6666822125206671542
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7364878623770452628}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 7359665457711502438, guid: c31198774d98d9f43be2ca79cb0a84dc, type: 3}
---- !u!1 &7666693397943320405
-========
 --- !u!1 &5464981251531914256
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 4.prefab
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,12 +91,6 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Apt Build Kit/Interiors/Frames Windows Stairs & Doors/Int_apt_01_Staircase_01.prefab
-  - component: {fileID: 6393942455669940875}
-  - component: {fileID: 702485154620323150}
-  - component: {fileID: 1987204309242188590}
-  - component: {fileID: 5777202487657363277}
-========
   - component: {fileID: 5464981251531914257}
   - component: {fileID: 5464981251531914260}
   - component: {fileID: 5464981251531914263}
@@ -129,47 +99,49 @@ GameObject:
   - component: {fileID: 1840759166226789955}
   - component: {fileID: 1415336770129465528}
   - component: {fileID: 5614013904376259130}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 4.prefab
   m_Layer: 0
-  m_Name: HandRail
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Name: Compound 4
+  m_TagString: C4
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6393942455669940875
+--- !u!4 &5464981251531914257
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7666693397943320405}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: -4.5619686e-10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7322839019957164238}
+  m_GameObject: {fileID: 5464981251531914256}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.25, z: 0.15}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5464981250411690872}
+  m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &702485154620323150
+--- !u!33 &5464981251531914260
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7666693397943320405}
-  m_Mesh: {fileID: 6264400023334017213, guid: c31198774d98d9f43be2ca79cb0a84dc, type: 3}
---- !u!23 &1987204309242188590
+  m_GameObject: {fileID: 5464981251531914256}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &5464981251531914263
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7666693397943320405}
+  m_GameObject: {fileID: 5464981251531914256}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -178,7 +150,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2149baccf21e31043a0e66c87a72bfcd, type: 2}
+  - {fileID: 2100000, guid: 8d8005e14b41fed4e9d3c0fe0dc26a27, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -200,22 +172,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5777202487657363277
-MeshCollider:
+--- !u!65 &5464981251531914262
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7666693397943320405}
+  m_GameObject: {fileID: 5464981251531914256}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/Apartment Kit/_Prefabs/Apt Build Kit/Interiors/Frames Windows Stairs & Doors/Int_apt_01_Staircase_01.prefab
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6264400023334017213, guid: c31198774d98d9f43be2ca79cb0a84dc, type: 3}
-========
   serializedVersion: 2
   m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
@@ -289,4 +255,3 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 4.prefab

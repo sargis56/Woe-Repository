@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1136872109576583123
+--- !u!1 &3026971014054974433
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,57 +8,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/_BPS Basic Assets/_Prefabs/Restroom/Fixtures/RR_UrinalDivider_01.prefab
-  - component: {fileID: 4250814306659743868}
-  - component: {fileID: 5343787348061584961}
-  - component: {fileID: 5523517209769467117}
-  - component: {fileID: 4627856724530054769}
-========
   - component: {fileID: 3026971014054974432}
   - component: {fileID: 3026971014054974437}
   - component: {fileID: 3026971014054974438}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 9.prefab
   m_Layer: 0
-  m_Name: RR_UrinalDivider_01
+  m_Name: Lid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4250814306659743868
+--- !u!4 &3026971014054974432
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136872109576583123}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2072552207574290003}
-  m_Father: {fileID: 0}
+  m_GameObject: {fileID: 3026971014054974433}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.55, z: 0}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3026971015171537262}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5343787348061584961
+--- !u!33 &3026971014054974437
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136872109576583123}
-  m_Mesh: {fileID: -8049056555775165531, guid: 37d1da0067b60bd4282c0eaee639654e, type: 3}
---- !u!23 &5523517209769467117
+  m_GameObject: {fileID: 3026971014054974433}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &3026971014054974438
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136872109576583123}
+  m_GameObject: {fileID: 3026971014054974433}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -67,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0dc30470004dae846a55ed5379ef2239, type: 2}
+  - {fileID: 2100000, guid: 49e505db7e7671943b19982755e53b6f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89,24 +83,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/_BPS Basic Assets/_Prefabs/Restroom/Fixtures/RR_UrinalDivider_01.prefab
---- !u!65 &4627856724530054769
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136872109576583123}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.5328692, y: 1.5844618, z: 0.054469414}
-  m_Center: {x: 0.32044762, y: -0.00000017881393, z: -0.0000005559996}
---- !u!1 &8169042270811722532
-========
 --- !u!1 &3026971015171537263
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 9.prefab
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,11 +91,6 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/_BPS Basic Assets/_Prefabs/Restroom/Fixtures/RR_UrinalDivider_01.prefab
-  - component: {fileID: 2072552207574290003}
-  - component: {fileID: 5991410362447191638}
-  - component: {fileID: 6712412416699228323}
-========
   - component: {fileID: 3026971015171537262}
   - component: {fileID: 3026971015171537251}
   - component: {fileID: 3026971015171537260}
@@ -127,47 +99,49 @@ GameObject:
   - component: {fileID: -4888739862503304139}
   - component: {fileID: -7774575365498728779}
   - component: {fileID: 9018010260719532769}
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 9.prefab
   m_Layer: 0
-  m_Name: Brackets.001
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Name: Compound 9
+  m_TagString: C9
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2072552207574290003
+--- !u!4 &3026971015171537262
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8169042270811722532}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.000000037690043, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4250814306659743868}
+  m_GameObject: {fileID: 3026971015171537263}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.25, z: 0.15}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3026971014054974432}
+  m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5991410362447191638
+--- !u!33 &3026971015171537251
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8169042270811722532}
-  m_Mesh: {fileID: 2891613939951777046, guid: 37d1da0067b60bd4282c0eaee639654e, type: 3}
---- !u!23 &6712412416699228323
+  m_GameObject: {fileID: 3026971015171537263}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &3026971015171537260
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8169042270811722532}
+  m_GameObject: {fileID: 3026971015171537263}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -176,7 +150,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fe522d7b1289c4345b686fc29ee51adf, type: 2}
+  - {fileID: 2100000, guid: 31bf0380f39dda3408a91a300701fead, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -198,8 +172,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
-<<<<<<<< HEAD:Woe_Unity/Assets/Brick Project Studio/_BPS Basic Assets/_Prefabs/Restroom/Fixtures/RR_UrinalDivider_01.prefab
-========
 --- !u!65 &3026971015171537261
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -283,4 +255,3 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
->>>>>>>> sargis:Woe_Unity/Assets/Prefabs/Items/Compound 9.prefab

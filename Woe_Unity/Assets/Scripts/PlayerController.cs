@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
+using System;
+using Unity.Netcode;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI itemText;
@@ -90,9 +92,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private bool canTakeDamage = true;
 
+    public GameObject pauseMenu;
+    public bool isInMenu;
+
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         director = GameObject.FindGameObjectWithTag("Director");
 
         damageProtectTime_ORG = damageProtectTime;
@@ -106,11 +112,15 @@ public class PlayerController : MonoBehaviour
 
         pesticideMachine = GameObject.FindGameObjectWithTag("PesticideMachine");
         deconStation = GameObject.FindGameObjectWithTag("DeconStation");
+
+        isInMenu = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) { return; }
+
         livesText.text = "Lives: " + director.GetComponent<GameController>().playerLives.ToString();
         if (director.GetComponent<GameController>().decontamination)
         {
@@ -248,6 +258,20 @@ public class PlayerController : MonoBehaviour
             AddHealth(5);
         }
         requestHealth = false;
+
+        if (isInMenu)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //cameraController.cameraMovementToggle = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            isInMenu = true;
+            pauseMenu.SetActive(true);
+        }
 
         if (Input.GetKeyDown("e") && buttonInRange) 
         {
