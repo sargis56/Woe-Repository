@@ -44,6 +44,8 @@ public class GameController : MonoBehaviour
     public GameObject dirLight;
     public GameObject labDoor;
 
+    public bool firstBotShutdown = true;
+
     [SerializeField]
     private bool removeDoors = false;
     public GameObject[] doors;
@@ -60,6 +62,8 @@ public class GameController : MonoBehaviour
         secBarriers = GameObject.FindGameObjectsWithTag("Security Barrier");
         dirLight = GameObject.FindGameObjectWithTag("DirLight");
         doors = GameObject.FindGameObjectsWithTag("Door");
+
+        firstBotShutdown = true;
 
         foreach (GameObject enemy in enemies)
         {
@@ -296,6 +300,28 @@ public class GameController : MonoBehaviour
                 secBarrier.SetActive(false);
             }
             monster.GetComponent<MonsterController>().pausePatrol = false;
+
+            foreach (GameObject bot in bots)
+            {
+                if ((bot != null) && (firstBotShutdown) && (!decontamination))
+                {
+                    bot.GetComponent<BotController>().shutDown = false;
+                    bot.GetComponent<BotController>().currentState = BotController.BotState.Idle;
+                }
+            }
+            firstBotShutdown = false;
+
+        }
+        else
+        {
+            foreach (GameObject bot in bots)
+            {
+                if (bot != null)
+                {
+                    bot.GetComponent<BotController>().shutDown = true;
+                    bot.GetComponent<BotController>().currentState = BotController.BotState.ShutDown;
+                }
+            }
         }
 
         if (removeDoors)
