@@ -272,16 +272,15 @@ public class MonsterController : NetworkBehaviour
             (Physics.Raycast(rayForwardR2, out hitForwardData, forwardRayDistance, playerLayerMask)) ||
             (Physics.Raycast(rayForwardL2, out hitForwardData, forwardRayDistance, playerLayerMask))) && currentState != MonsterState.Retreat)
         {
-            if (debug)
-            {
-                print("Hit");
-            }
 
             objectForward = hitForwardData.collider.gameObject;
 
-            playerTargeting = objectForward;
+            if (objectForward.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Alive)
+            {
+                playerTargeting = objectForward;
+                ChangeState(MonsterState.Attack);
+            }
 
-            ChangeState(MonsterState.Attack);
         }
 
         if (((Physics.Raycast(rayBackM, out hitBackData, backRayDistance, playerLayerMask)) ||

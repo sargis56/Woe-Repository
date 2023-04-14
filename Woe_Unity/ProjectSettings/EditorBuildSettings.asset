@@ -6,15 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SargisV2.unity
-    guid: 73a160c1c8bdc8c4db1dea0b41c6ef4f
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 5329607df557dd2469c4a1a36cb4ed3e
-  - enabled: 0
-    path: Assets/Scenes/TrevorNetworkTest.unity
-    guid: c6b09ac3e6620c74a9d21b9eba289b0c
   - enabled: 1
     path: Assets/Scenes/Andrew-Level.unity
     guid: ebc7a954c6cfde64f8018c5e9a5d1f0a
+  - enabled: 1
+    path: Assets/Scenes/WinScreen.unity
+    guid: 9b5ff220c6dd21243b956403b51bc9a8
+  - enabled: 1
+    path: Assets/Scenes/LoseScreen.unity
+    guid: 50a69947e46b96a44bc8a2b8577e3908
   m_configObjects: {}

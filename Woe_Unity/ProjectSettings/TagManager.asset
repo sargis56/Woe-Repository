@@ -39,6 +39,10 @@ TagManager:
   - DeconStation
   - Safe Zone
   - Door
+  - Security Barrier
+  - DirLight
+  - LabDoor
+  - LabKey
   layers:
   - Default
   - TransparentFX
@@ -61,7 +65,7 @@ TagManager:
   - PestPlace
   - MonsterHurtBox
   - MonsterKillBox
-  - 
+  - LockDownButton
   - 
   - 
   - 

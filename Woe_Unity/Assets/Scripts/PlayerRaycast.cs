@@ -19,6 +19,7 @@ public class PlayerRaycast : MonoBehaviour
 
     public LayerMask buttonLayerMask;
     public LayerMask deconButtonLayerMask;
+    public LayerMask lockDownButtonLayerMask;
 
     // Start is called before the first frame update
     void Start()
@@ -60,12 +61,16 @@ public class PlayerRaycast : MonoBehaviour
         }
         else
         {
-            if ((playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState == MonsterController.MonsterState.Caution) 
-                && (playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
+            if (playerController.GetComponent<PlayerController>().monster != null)
             {
-                playerController.GetComponent<PlayerController>().objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+                if ((playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState == MonsterController.MonsterState.Caution)
+                && (playerController.GetComponent<PlayerController>().monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Retreat))
+                {
+                    playerController.GetComponent<PlayerController>().objectForward.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+                }
+                playerController.GetComponent<PlayerController>().monsterInRange = false;
             }
-            playerController.GetComponent<PlayerController>().monsterInRange = false;
+
         }
 
         if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, playerController.GetComponent<PlayerController>().botLayerMask))
@@ -136,6 +141,26 @@ public class PlayerRaycast : MonoBehaviour
         else
         {
             playerController.GetComponent<PlayerController>().deconButtonInRange = false;
+        }
+
+        if (Physics.Raycast(rayForwardM, out hitForwardData, forwardRayDistance, lockDownButtonLayerMask))
+        {
+            playerController.GetComponent<PlayerController>().lockDownButtonInRange = true;
+            playerController.GetComponent<PlayerController>().objectForward = hitForwardData.collider.gameObject;
+
+            hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().selectMaterial;
+            if (!playerController.GetComponent<PlayerController>().director.GetComponent<GameController>().lockDown)
+            {
+                playerController.GetComponent<PlayerController>().infoText.text = "Lockdown has been lifted";
+            }
+            else
+            {
+                playerController.GetComponent<PlayerController>().infoText.text = "Use E: Lift lockdown";
+            }
+        }
+        else
+        {
+            playerController.GetComponent<PlayerController>().lockDownButtonInRange = false;
         }
 
         Debug.DrawRay(transform.position, forwardM * hitForwardData.distance, Color.yellow);

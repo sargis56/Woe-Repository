@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MouseController : NetworkBehaviour
 {
-    public float sensitivity = 1000.0f;
+    public float sensitivity = 500.0f; //1000.0f;
     public Transform body;
     Vector3 rotation = new Vector3(0.0f, 0.0f, 0.0f);
     Vector3 mouse = new Vector3(0.0f, 0.0f, 0.0f);

@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     public TextMeshProUGUI deadPlayersText;
+    public TextMeshProUGUI cheatText;
+    public TextMeshProUGUI cheatMonsterText;
+    private bool showMonsterCheatList = false;
 
     public enum GameDifficulty { Easy, Normal, Hard, Nightmare, Unrelenting};
     public GameDifficulty gameDifficulty;
@@ -20,21 +23,30 @@ public class GameController : MonoBehaviour
     public GameObject[] bots;
     public GameObject[] enemies;
     public GameObject[] safeZones;
+    public GameObject[] secBarriers;
 
     public GameObject[] vitaChambers;
 
     public int playerLives;
 
     public bool globalDebug = false;
+    public bool cheatCodes = false;
 
     public bool decontamination = false;
     public float decontaminationTime = 180.0f;
-    [SerializeField]
-    private float decontaminationTime_ORG;
     public bool updateDiff = false;
 
     [SerializeField]
     private int diffIndex = 0;
+
+    public bool unlockLabDoor = false;
+    public bool lockDown = true;
+    public GameObject dirLight;
+    public GameObject labDoor;
+
+    [SerializeField]
+    private bool removeDoors = false;
+    public GameObject[] doors;
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +57,9 @@ public class GameController : MonoBehaviour
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         vitaChambers = GameObject.FindGameObjectsWithTag("VitaChamber");
         safeZones = GameObject.FindGameObjectsWithTag("Safe Zone");
-        decontaminationTime_ORG = decontaminationTime;
+        secBarriers = GameObject.FindGameObjectsWithTag("Security Barrier");
+        dirLight = GameObject.FindGameObjectWithTag("DirLight");
+        doors = GameObject.FindGameObjectsWithTag("Door");
 
         foreach (GameObject enemy in enemies)
         {
@@ -93,16 +107,98 @@ public class GameController : MonoBehaviour
     {
         if (globalDebug)
         {
+            cheatCodes = true;
+
+            cheatText.GetComponent<TextMeshProUGUI>().enabled = true;
+
+            if (showMonsterCheatList)
+            {
+                cheatMonsterText.GetComponent<TextMeshProUGUI>().enabled = true;
+            }
+            else
+            {
+                cheatMonsterText.GetComponent<TextMeshProUGUI>().enabled = false;
+            }
+
             deadPlayersText.text = "Dead Players: " + deadPlayersNum.ToString();
         }
         else
         {
+            cheatText.GetComponent<TextMeshProUGUI>().enabled = false;
+            cheatMonsterText.GetComponent<TextMeshProUGUI>().enabled = false;
             deadPlayersText.text = "";
+        }
+
+        if (cheatCodes)
+        {
+            if (Input.GetKeyDown("m"))
+            {
+                lockDown = false;
+            }
+            if (Input.GetKeyDown("n"))
+            {
+                decontamination = true;
+            }
+            if (Input.GetKeyDown("b"))
+            {
+                foreach (GameObject player in players)
+                {
+                    if (player != null)
+                    {
+                        player.GetComponent<PlayerController>().hasPestFlask = true;
+                    }
+                }
+            }
+            if (Input.GetKeyDown("v"))
+            {
+                foreach (GameObject player in players)
+                {
+                    if (player != null)
+                    {
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp1Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp2Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp3Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp4Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp5Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp6Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp7Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp8Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp9Found = true;
+                    }
+                }
+            }
+            if (Input.GetKeyDown("c"))
+            {
+                unlockLabDoor = true;
+            }
+            if (Input.GetKeyDown("x"))
+            {
+                if (removeDoors)
+                {
+                    removeDoors = false;
+                }
+                else
+                {
+                    removeDoors = true;
+                }
+            }
+            if (Input.GetKeyDown("z"))
+            {
+                if (showMonsterCheatList)
+                {
+                    showMonsterCheatList = false;
+                }
+                else
+                {
+                    showMonsterCheatList = true;
+                }
+            }
         }
 
         if ((playerLives <= 0) && (deadPlayersNum == players.Length))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("LoseScreen");
         }
 
         players = GameObject.FindGameObjectsWithTag("Player");
@@ -192,6 +288,40 @@ public class GameController : MonoBehaviour
            
         }
 
+        if (!lockDown)
+        {
+            dirLight.SetActive(false);
+            foreach (GameObject secBarrier in secBarriers)
+            {
+                secBarrier.SetActive(false);
+            }
+            monster.GetComponent<MonsterController>().pausePatrol = false;
+        }
+
+        if (removeDoors)
+        {
+            foreach (GameObject door in doors)
+            {
+                door.SetActive(false);
+            }
+        }
+        else
+        {
+            foreach (GameObject door in doors)
+            {
+                door.SetActive(true);
+            }
+        }
+
+        if (unlockLabDoor)
+        {
+            labDoor.SetActive(false);
+        }
+        else
+        {
+            labDoor.SetActive(true);
+        }
+
         if (menaceSystem)
         {
             monster.GetComponent<MonsterController>().menaceSystemActive = true;
@@ -248,13 +378,19 @@ public class GameController : MonoBehaviour
 
     void Decontaminate()
     {
-        menaceSystem = true;
+        removeDoors = true;
+        menaceSystem = false;
 
         decontaminationTime -= Time.deltaTime;
         if (decontaminationTime < 0.0f)
         {
-            Destroy(monster.gameObject);
+            if (monster != null)
+            {
+                Destroy(monster.gameObject);
+            }
+            SceneManager.LoadScene("WinScreen");
         }
+
 
         if (monster != null)
         {

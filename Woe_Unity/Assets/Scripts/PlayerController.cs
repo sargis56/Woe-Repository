@@ -40,6 +40,7 @@ public class PlayerController : NetworkBehaviour
     public int currentHealth;
     
     public CharacterController charController;
+    public MovementController movementController;
     public Transform groundCheck;
     public float distanceFromGround = 0.4f;
     public LayerMask hazardLayerMask;
@@ -63,12 +64,14 @@ public class PlayerController : NetworkBehaviour
     public bool enemyInRange = false;
     public bool buttonInRange = false;
     public bool deconButtonInRange = false;
+    public bool lockDownButtonInRange = false;
 
     public LayerMask monsterLayerMask;
     public LayerMask monsterHurtBoxLayerMask;
     public LayerMask monsterKillBoxLayerMask;
     public LayerMask botLayerMask;
     public LayerMask enemyLayerMask;
+    public LayerMask pestPlaceLayerMask;
 
     public GameObject objectForward;
 
@@ -92,8 +95,13 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     private bool canTakeDamage = true;
 
+    [SerializeField]
+    private float respawnTime = 15.0f;
+    float respawnTime_ORG;
+
     public GameObject pauseMenu;
     public bool isInMenu;
+    public bool spawnDeadAssets;
 
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
@@ -102,6 +110,7 @@ public class PlayerController : NetworkBehaviour
         director = GameObject.FindGameObjectWithTag("Director");
 
         damageProtectTime_ORG = damageProtectTime;
+        respawnTime_ORG = respawnTime;
         playerState = PlayerState.Alive;
         currentItem = ItemState.Empty;
         monster = GameObject.FindGameObjectWithTag("Monster");
@@ -114,6 +123,7 @@ public class PlayerController : NetworkBehaviour
         deconStation = GameObject.FindGameObjectWithTag("DeconStation");
 
         isInMenu = false;
+        spawnDeadAssets = true;
     }
 
     // Update is called once per frame
@@ -157,7 +167,7 @@ public class PlayerController : NetworkBehaviour
                 break;
         }
 
-        if ((botInRange == false) && (buttonInRange == false) &&  (deconButtonInRange == false))
+        if ((botInRange == false) && (buttonInRange == false) &&  (deconButtonInRange == false) && (lockDownButtonInRange == false))
         {
             infoText.text = "";
         }
@@ -165,14 +175,19 @@ public class PlayerController : NetworkBehaviour
 
     void UpdateDead()
     {
-        healthText.text = "Dead";
+        movementController.enabled = false;
+        healthText.text = "Dead | Respawning in: " + respawnTime.ToString();
 
-        Instantiate(deadBodyToSpawn, deadBodyToSpawn.transform.position + this.transform.position, deadBodyToSpawn.transform.rotation);
-
-        if (hasPestFlask)
+        if (spawnDeadAssets)
         {
-            Instantiate(pestToSpawn, this.transform.position, Quaternion.identity);
-            hasPestFlask = false;
+            Instantiate(deadBodyToSpawn, deadBodyToSpawn.transform.position + this.transform.position, deadBodyToSpawn.transform.rotation);
+
+            if (hasPestFlask)
+            {
+                Instantiate(pestToSpawn, this.transform.position, Quaternion.identity);
+                hasPestFlask = false;
+            }
+            spawnDeadAssets = false;
         }
 
         charController.enabled = false;
@@ -184,9 +199,16 @@ public class PlayerController : NetworkBehaviour
         {
             director.GetComponent<GameController>().TakeDeadPlayer(1);
         }
-        AddHealth(999);
-        ChangeState(PlayerState.Alive);
 
+        respawnTime -= Time.deltaTime;
+        if (respawnTime < 0.0f)
+        {
+            AddHealth(999);
+            respawnTime = respawnTime_ORG;
+            spawnDeadAssets = true;
+            movementController.enabled = true;
+            ChangeState(PlayerState.Alive);
+        }
     }
 
     void UpdateAlive()
@@ -222,6 +244,10 @@ public class PlayerController : NetworkBehaviour
         if (currentHealth <= 0)
         {
             ChangeState(PlayerState.Dead);
+            if (!monster.GetComponent<MonsterController>().pausePatrol)
+            {
+                monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Patrol;
+            }
             director.GetComponent<GameController>().TakeLives(1);
             director.GetComponent<GameController>().AddDeadPlayer(1);
         }
@@ -289,6 +315,15 @@ public class PlayerController : NetworkBehaviour
             {
                 director.GetComponent<GameController>().decontamination = true;
             }
+        }
+        if (Input.GetKeyDown("e") && lockDownButtonInRange)
+        {
+            director.GetComponent<GameController>().lockDown = false;
+        }
+
+        if (Physics.CheckSphere(groundCheck.position, distanceFromGround, pestPlaceLayerMask))
+        {
+            deconStation.GetComponent<DeconStation>().flaskPlaced = true;
         }
 
         if (currentItem == ItemState.Empty)
@@ -507,6 +542,11 @@ public class PlayerController : NetworkBehaviour
         {
             Destroy(hit.gameObject);
             hasPestFlask = true;
+        }
+        if (hit.gameObject.tag == "LabKey")
+        {
+            Destroy(hit.gameObject);
+            director.GetComponent<GameController>().unlockLabDoor = true;
         }
     }
 
