@@ -219,7 +219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6429404626340150357
 Transform:
   m_ObjectHideFlags: 0
@@ -228,12 +228,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4361311640763214244}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.16000004, z: -0.2}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8653147066088488360}
-  m_RootOrder: 3
+  m_Father: {fileID: 8653147066983658983}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &8729743631820258205
 Camera:
@@ -924,8 +924,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190335
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+    rgba: 4289069311
+  m_fontColor: {r: 1, g: 0, b: 0.65007687, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1265,6 +1265,7 @@ GameObject:
   - component: {fileID: 8653147066088488360}
   - component: {fileID: 8653147066088488361}
   - component: {fileID: 8051490715455077085}
+  - component: {fileID: 403598917229014022}
   m_Layer: 0
   m_Name: Player1 Camera
   m_TagString: MainCamera
@@ -1287,7 +1288,6 @@ Transform:
   - {fileID: 8653147067605149691}
   - {fileID: 8653147067850689405}
   - {fileID: 8653147066983658983}
-  - {fileID: 6429404626340150357}
   m_Father: {fileID: 8653147067524247897}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1322,6 +1322,22 @@ MonoBehaviour:
   sprayProp: {fileID: 2535093558193279622}
   noisemakerProp: {fileID: 7231170335227826679}
   taserProp: {fileID: 2018404455888598991}
+--- !u!114 &403598917229014022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8653147066088488365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d0c7eb327fa75241b568210e3c32657, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraHolder: {fileID: 4361311640763214244}
+  offset: {x: 0, y: 0.7, z: 0}
+  crouchPoint: {fileID: 0}
+  straightPoint: {fileID: 0}
 --- !u!1 &8653147066374579845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1535,6 +1551,7 @@ Transform:
   m_Children:
   - {fileID: 8653147066609410714}
   - {fileID: 8653147067210570550}
+  - {fileID: 6429404626340150357}
   m_Father: {fileID: 8653147066088488360}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1836,7 +1853,7 @@ MonoBehaviour:
   pestPlaceLayerMask:
     serializedVersion: 2
     m_Bits: 262144
-  objectForward: {fileID: 0}
+  objectForward: {fileID: 4361311640763214244}
   requestHealth: 0
   pressure: 0
   pressureDistance: 50

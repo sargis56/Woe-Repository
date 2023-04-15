@@ -53,8 +53,9 @@ public class GameController : NetworkBehaviour
 
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
+    //public void Start()
     {
-        deadPlayersNum = 0;
+        deadPlayersNum = 30;
         monster = GameObject.FindGameObjectWithTag("Monster");
         bots = GameObject.FindGameObjectsWithTag("Bot");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
