@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
-public class GameController : MonoBehaviour
+public class GameController : NetworkBehaviour
 {
     public TextMeshProUGUI deadPlayersText;
     public TextMeshProUGUI cheatText;
@@ -51,7 +52,7 @@ public class GameController : MonoBehaviour
     public GameObject[] doors;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
         deadPlayersNum = 0;
         monster = GameObject.FindGameObjectWithTag("Monster");
@@ -109,6 +110,10 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         if (globalDebug)
         {
             cheatCodes = true;
@@ -202,7 +207,7 @@ public class GameController : MonoBehaviour
         if ((playerLives <= 0) && (deadPlayersNum == players.Length))
         {
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            SceneManager.LoadScene("LoseScreen");
+            //SceneManager.LoadScene("LoseScreen");
         }
 
         players = GameObject.FindGameObjectsWithTag("Player");
