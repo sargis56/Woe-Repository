@@ -1,33 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SojaExiles
 
 {
-	public class opencloseStallDoor : MonoBehaviour
-	{
+	public class opencloseStallDoor : NetworkBehaviour
+    {
 
 		public Animator openandclose;
 		public bool open;
-		public Transform Player;
+        public GameObject[] players;
 
-		void Start()
-		{
-			open = false;
-		}
+        public override void OnNetworkSpawn()
+        {
+            open = false;
+            players = GameObject.FindGameObjectsWithTag("Player");
+        }
 
 		void OnMouseOver()
 		{
-			{
-				if (Player)
-				{
-					float dist = Vector3.Distance(Player.position, transform.position);
-					if (dist < 15)
+			if (IsOwner) {
+                foreach (GameObject player in players)
+                {
+                    float dist = Vector3.Distance(player.transform.position, transform.position);
+                    if (dist < 15)
 					{
 						if (open == false)
 						{
-							if (Input.GetMouseButtonDown(0))
+							if (Input.GetKeyDown("e"))
 							{
 								StartCoroutine(opening());
 							}
@@ -36,7 +38,7 @@ namespace SojaExiles
 						{
 							if (open == true)
 							{
-								if (Input.GetMouseButtonDown(0))
+								if (Input.GetKeyDown("e"))
 								{
 									StartCoroutine(closing());
 								}
