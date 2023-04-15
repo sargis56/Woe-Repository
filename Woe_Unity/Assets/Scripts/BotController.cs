@@ -85,7 +85,7 @@ public class BotController : NetworkBehaviour
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
         currentState = BotState.Idle;
-        monster = GameObject.FindGameObjectWithTag("Monster");
+        monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
         defaultMaterial = this.GetComponent<MeshRenderer>().material;
         startingPostion = this.transform.position;
     }

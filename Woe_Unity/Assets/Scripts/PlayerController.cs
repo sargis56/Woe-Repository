@@ -104,7 +104,7 @@ public class PlayerController : NetworkBehaviour
     public bool spawnDeadAssets;
 
     // Start is called before the first frame update
-    public override void OnNetworkSpawn()
+    private void Start()
     {
         if (!IsOwner) { return; }
         director = GameObject.FindGameObjectWithTag("Director");
@@ -113,7 +113,7 @@ public class PlayerController : NetworkBehaviour
         respawnTime_ORG = respawnTime;
         playerState = PlayerState.Alive;
         currentItem = ItemState.Empty;
-        monster = GameObject.FindGameObjectWithTag("Monster");
+        monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
         healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<TextMeshProUGUI>();
         ammoText = GameObject.FindGameObjectWithTag("StaminaText").GetComponent<TextMeshProUGUI>();
         itemText = GameObject.FindGameObjectWithTag("ItemText").GetComponent<TextMeshProUGUI>();
@@ -129,7 +129,7 @@ public class PlayerController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner) { return; }
+         if (!IsOwner) { return; }
 
         livesText.text = "Lives: " + director.GetComponent<GameController>().playerLives.ToString();
         if (director.GetComponent<GameController>().decontamination)

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerRaycast : MonoBehaviour
+public class PlayerRaycast : NetworkBehaviour
 {
     public PlayerController playerController;
 
@@ -22,14 +23,18 @@ public class PlayerRaycast : MonoBehaviour
     public LayerMask lockDownButtonLayerMask;
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        
+        SetupRays();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         SetupRays();
     }
 

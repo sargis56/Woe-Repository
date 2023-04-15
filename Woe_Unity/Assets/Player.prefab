@@ -457,7 +457,7 @@ GameObject:
   - component: {fileID: 6333677153469607359}
   m_Layer: 5
   m_Name: DecontaminationText
-  m_TagString: InfoText
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1853,7 +1853,7 @@ MonoBehaviour:
   pestPlaceLayerMask:
     serializedVersion: 2
     m_Bits: 262144
-  objectForward: {fileID: 4361311640763214244}
+  objectForward: {fileID: 0}
   requestHealth: 0
   pressure: 0
   pressureDistance: 50

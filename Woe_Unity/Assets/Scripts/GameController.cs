@@ -56,7 +56,7 @@ public class GameController : NetworkBehaviour
     //public void Start()
     {
         deadPlayersNum = 30;
-        monster = GameObject.FindGameObjectWithTag("Monster");
+        //monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
         bots = GameObject.FindGameObjectsWithTag("Bot");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         vitaChambers = GameObject.FindGameObjectsWithTag("VitaChamber");

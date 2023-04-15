@@ -11,7 +11,7 @@ public class IgnoreMonster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        monster = GameObject.FindGameObjectWithTag("Monster");
+        monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
     }
 
     // Update is called once per frame

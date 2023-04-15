@@ -121,7 +121,8 @@ public class MonsterController : NetworkBehaviour
     public bool menaceSystemActive = true;
 
     // Start is called before the first frame update
-    public override void OnNetworkSpawn()
+    //public override void OnNetworkSpawn()
+    void Start()
     {
         navAgentSpeed_ORG = agent.speed;
         ambushWaitTime_ORG = ambushWaitTime;

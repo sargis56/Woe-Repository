@@ -63,7 +63,7 @@ public class ThrallController : NetworkBehaviour
         navAgentRadius_ORG = agent.radius;
         navAgentSpeed_ORG = agent.speed;
         currentState = ThrallState.Idle;
-        monster = GameObject.FindGameObjectWithTag("Monster");
+        monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
     }
 
     // Update is called once per frame
