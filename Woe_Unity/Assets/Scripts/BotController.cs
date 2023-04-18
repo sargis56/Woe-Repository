@@ -153,15 +153,20 @@ public class BotController : NetworkBehaviour
 
             if ((botType == BotType.SecurityBot) && (!shutDown))
             {
-                if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) && (Vector3.Distance(monster.transform.position, this.transform.position) > 25.0f))
+                if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) && 
+                    (objectForward.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Alive) &&
+                    (Vector3.Distance(monster.transform.position, this.transform.position) > 25.0f))
                 {
-                    monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
+                    monster.GetComponent<MonsterController>().playerTargeting = objectForward;
                     monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Investigate;
                 }
                 else
                 {
-                    monster.GetComponent<MonsterController>().playerTargeting = objectForward;
-                    monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+                    if (objectForward.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Alive)
+                    {
+                        monster.GetComponent<MonsterController>().playerTargeting = objectForward;
+                        monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+                    }
                 }
 
                 ChangeState(BotState.Task);

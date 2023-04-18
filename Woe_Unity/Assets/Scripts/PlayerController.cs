@@ -90,13 +90,13 @@ public class PlayerController : NetworkBehaviour
     public bool debug = false;
 
     [SerializeField]
-    private float damageProtectTime = 3.0f;
+    private float damageProtectTime = 1.5f;
     float damageProtectTime_ORG;
     [SerializeField]
     private bool canTakeDamage = true;
 
     [SerializeField]
-    private float respawnTime = 15.0f;
+    private float respawnTime = 5.0f;
     float respawnTime_ORG;
 
     public GameObject pauseMenu;
@@ -175,8 +175,9 @@ public class PlayerController : NetworkBehaviour
 
     void UpdateDead()
     {
+        movementController.sprintTimer = 0;
+        movementController.tired = false;
         movementController.enabled = false;
-        healthText.text = "Dead | Respawning in: " + respawnTime.ToString();
 
         if (spawnDeadAssets)
         {
@@ -195,19 +196,27 @@ public class PlayerController : NetworkBehaviour
         transform.rotation = Quaternion.identity;
         charController.enabled = true;
 
-        if (director.GetComponent<GameController>().deadPlayersNum > 0)
+        if (director.GetComponent<GameController>().playerLives <= 0)
         {
-            director.GetComponent<GameController>().TakeDeadPlayer(1);
+            healthText.text = "You are dead";
         }
-
-        respawnTime -= Time.deltaTime;
-        if (respawnTime < 0.0f)
+        else
         {
-            AddHealth(999);
-            respawnTime = respawnTime_ORG;
-            spawnDeadAssets = true;
-            movementController.enabled = true;
-            ChangeState(PlayerState.Alive);
+            healthText.text = "Dead | Respawning in: " + respawnTime.ToString();
+
+            respawnTime -= Time.deltaTime;
+            if (respawnTime < 0.0f)
+            {
+                AddHealth(999);
+                respawnTime = respawnTime_ORG;
+                spawnDeadAssets = true;
+                movementController.enabled = true;
+                if (director.GetComponent<GameController>().deadPlayersNum > 0)
+                {
+                    director.GetComponent<GameController>().TakeDeadPlayer(1);
+                }
+                ChangeState(PlayerState.Alive);
+            }
         }
     }
 
@@ -321,7 +330,7 @@ public class PlayerController : NetworkBehaviour
             director.GetComponent<GameController>().lockDown = false;
         }
 
-        if (Physics.CheckSphere(groundCheck.position, distanceFromGround, pestPlaceLayerMask))
+        if (Physics.CheckSphere(groundCheck.position, distanceFromGround, pestPlaceLayerMask) && hasPestFlask)
         {
             deconStation.GetComponent<DeconStation>().flaskPlaced = true;
         }
@@ -351,7 +360,7 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            pressure -= 0.025f * Time.deltaTime;
+            //pressure -= 0.025f * Time.deltaTime;
             if (pressure < 0)
             {
                 pressure = 0;

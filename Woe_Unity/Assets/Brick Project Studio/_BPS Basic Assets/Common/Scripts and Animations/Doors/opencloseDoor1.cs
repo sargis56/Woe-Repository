@@ -11,13 +11,17 @@ namespace SojaExiles
 
 		public Animator openandclose1;
 		public bool open;
-        public GameObject[] players;
-
-        public override void OnNetworkSpawn()
+		public GameObject[] players;
+		Material defaultMaterial;
+		bool highLight;
+		public LayerMask playerLayerMask;
+		public override void OnNetworkSpawn()
         {
             open = false;
             players = GameObject.FindGameObjectsWithTag("Player");
-        }
+			defaultMaterial = this.GetComponent<MeshRenderer>().material;
+			highLight = true;
+		}
 
         void OnMouseOver()
 		{
@@ -25,12 +29,18 @@ namespace SojaExiles
                 foreach (GameObject player in players)
                 {
                     float dist = Vector3.Distance(player.transform.position, transform.position);
-					if (dist < 15)
+					if (dist < 5) //originally 15
 					{
+						
+						if (highLight)
+						{
+							this.GetComponent<MeshRenderer>().material = player.GetComponent<PlayerController>().selectMaterial;
+						}
 						if (open == false)
 						{
 							if (Input.GetKeyDown("e"))
 							{
+								highLight = false;
 								StartCoroutine(opening());
 							}
 						}
@@ -40,6 +50,7 @@ namespace SojaExiles
 							{
 								if (Input.GetKeyDown("e"))
 								{
+									highLight = false;
 									StartCoroutine(closing());
 								}
 							}
@@ -47,8 +58,12 @@ namespace SojaExiles
 						}
 
 					}
+					else
+                    {
+						this.GetComponent<MeshRenderer>().material = defaultMaterial;
+					}
 				}
-
+				
 			}
 
 		}
@@ -58,7 +73,9 @@ namespace SojaExiles
 			print("you are opening the door");
 			openandclose1.Play("Opening 1");
 			open = true;
+			this.GetComponent<MeshRenderer>().material = defaultMaterial;
 			yield return new WaitForSeconds(.5f);
+			highLight = true;
 		}
 
 		IEnumerator closing()
@@ -66,7 +83,9 @@ namespace SojaExiles
 			print("you are closing the door");
 			openandclose1.Play("Closing 1");
 			open = false;
+			this.GetComponent<MeshRenderer>().material = defaultMaterial;
 			yield return new WaitForSeconds(.5f);
+			highLight = true;
 		}
 
 

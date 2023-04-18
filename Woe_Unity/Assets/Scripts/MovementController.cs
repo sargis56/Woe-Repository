@@ -17,7 +17,7 @@ public class MovementController : NetworkBehaviour
     public bool safe = false;
     public bool hidden = false;
 
-    bool tired = false;
+    public bool tired = false;
     public float sprintTimer = 0.0f;
     public float sprintSeconds = 5.0f;
 
@@ -44,6 +44,8 @@ public class MovementController : NetworkBehaviour
     public LayerMask safeZoneLayerMask;
     public LayerMask hiddenLayerMask;
 
+    GameObject monster;
+
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
     {
@@ -59,7 +61,7 @@ public class MovementController : NetworkBehaviour
         if (!IsOwner) { return; }
 
         staminaText.text = "Stamina: " + sprintTimer.ToString();
-
+        monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
         grounded = Physics.CheckSphere(groundCheck.position, distanceFromGround, groundLayerMask);
         bounce = Physics.CheckSphere(groundCheck.position, distanceFromGround, bounceLayerMask);
         safe = Physics.CheckSphere(groundCheck.position, distanceFromGround, safeZoneLayerMask);
@@ -122,6 +124,21 @@ public class MovementController : NetworkBehaviour
             }
 
             sprintTimer += Time.deltaTime;
+
+            if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) && 
+                (Vector3.Distance(monster.transform.position, this.transform.position) < 10.0f)
+                && (monster.GetComponent<MonsterController>().pausePatrol == false) && (monster.GetComponent<MonsterController>().enableSprintDetection))
+            {
+                monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
+                monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Attack;
+            }
+            else if ((monster.GetComponent<MonsterController>().currentState != MonsterController.MonsterState.Attack) &&
+                (Vector3.Distance(monster.transform.position, this.transform.position) < 20.0f)
+                && (monster.GetComponent<MonsterController>().pausePatrol == false) && (monster.GetComponent<MonsterController>().enableSprintDetection))
+            {
+                monster.GetComponent<MonsterController>().playerTargeting = this.gameObject;
+                monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Investigate;
+            }
 
             if (sprintTimer < sprintSeconds)
             {

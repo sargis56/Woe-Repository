@@ -113,6 +113,7 @@ public class MonsterController : NetworkBehaviour
     //Make Monster go to the start when it idles
     public bool idleToStart = false;
     public bool pausePatrol = false;
+    public bool enableSprintDetection = false;
     public bool debug = false;
 
     public bool decon = false;
@@ -121,8 +122,8 @@ public class MonsterController : NetworkBehaviour
     public bool menaceSystemActive = true;
 
     // Start is called before the first frame update
-    //public override void OnNetworkSpawn()
-    void Start()
+    public override void OnNetworkSpawn()
+    //void Start()
     {
         navAgentSpeed_ORG = agent.speed;
         ambushWaitTime_ORG = ambushWaitTime;
@@ -131,7 +132,7 @@ public class MonsterController : NetworkBehaviour
         cautionWaitTime_ORG = cautionWaitTime;
         colideWaitTime_ORG = colideWaitTime;
         waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
-        players = GameObject.FindGameObjectsWithTag("Player");
+        //players = GameObject.FindGameObjectsWithTag("Player");
         ambushSpots = GameObject.FindGameObjectsWithTag("Ambush Spot");
         vents = GameObject.FindGameObjectsWithTag("Vent");
 
@@ -143,6 +144,8 @@ public class MonsterController : NetworkBehaviour
     {
         if (!IsOwner) { return; }
 
+        players = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().players;
+
         if (debug)
         {
             stateText.text = "Monster's State: " + currentState.ToString();
@@ -152,6 +155,14 @@ public class MonsterController : NetworkBehaviour
         {
             stateText.text = "";
             targetText.text = "";
+        }
+
+        if (playerTargeting != null)
+        {
+            if (playerTargeting.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Dead)
+            {
+                ChangeState(MonsterState.Idle);
+            }
         }
 
         SetupRays();
@@ -198,6 +209,8 @@ public class MonsterController : NetworkBehaviour
                 vent.SetActive(false);
             }
         }
+
+
     }
 
     public void ChangeState(MonsterState state)
@@ -621,7 +634,7 @@ public class MonsterController : NetworkBehaviour
         if (patience >= patienceMax)
         {
             playerTarget = Random.Range(0, players.Length);
-            playerTargeting = players[playerTarget];
+            playerTargeting = players[0];
             if (Random.value < chanceToAmbush)
             {
                 if (decon)

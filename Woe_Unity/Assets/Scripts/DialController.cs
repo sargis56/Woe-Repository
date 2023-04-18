@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class DialController : MonoBehaviour
+public class DialController : NetworkBehaviour
 {
     public int dialCount;
     Material defaultMaterial;
+
+    public int dialCountMax = 9;
+    public int dialCountMin = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -17,14 +21,15 @@ public class DialController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (dialCount > 9)
+        if (!IsOwner) { return; }
+        if (dialCount > dialCountMax)
         {
-            dialCount = 0;
+            dialCount = dialCountMin;
         }
 
-        if (dialCount < 0)
+        if (dialCount < dialCountMin)
         {
-            dialCount = 9;
+            dialCount = dialCountMax;
         }
 
         this.GetComponent<MeshRenderer>().material = defaultMaterial;
