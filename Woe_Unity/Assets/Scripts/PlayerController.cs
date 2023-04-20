@@ -13,7 +13,6 @@ public class PlayerController : NetworkBehaviour
     public TextMeshProUGUI itemText;
     public TextMeshProUGUI infoText;
     public TextMeshProUGUI ammoText;
-    public TextMeshProUGUI livesText;
     public TextMeshProUGUI deconText;
     public Material selectMaterial;
     public Material attackMaterial;
@@ -131,7 +130,7 @@ public class PlayerController : NetworkBehaviour
     {
          if (!IsOwner) { return; }
 
-        livesText.text = "Lives: " + director.GetComponent<GameController>().playerLives.ToString();
+        
         if (director.GetComponent<GameController>().decontamination)
         {
             if (director.GetComponent<GameController>().decontaminationTime < 0)
@@ -196,7 +195,7 @@ public class PlayerController : NetworkBehaviour
         transform.rotation = Quaternion.identity;
         charController.enabled = true;
 
-        if (director.GetComponent<GameController>().playerLives <= 0)
+        if (director.GetComponent<GameController>().playerLives.Value <= 0)
         {
             healthText.text = "You are dead";
         }
@@ -211,9 +210,16 @@ public class PlayerController : NetworkBehaviour
                 respawnTime = respawnTime_ORG;
                 spawnDeadAssets = true;
                 movementController.enabled = true;
-                if (director.GetComponent<GameController>().deadPlayersNum > 0)
+                if (director.GetComponent<GameController>().deadPlayersNum.Value > 0)
                 {
-                    director.GetComponent<GameController>().TakeDeadPlayer(1);
+                    if (IsClient)
+                    {
+                        director.GetComponent<GameController>().TakeDeadPlayerServerRpc();
+                    }
+                    else
+                    {
+                        director.GetComponent<GameController>().TakeDeadPlayer(1);
+                    }
                 }
                 ChangeState(PlayerState.Alive);
             }
@@ -257,8 +263,25 @@ public class PlayerController : NetworkBehaviour
             {
                 monster.GetComponent<MonsterController>().currentState = MonsterController.MonsterState.Patrol;
             }
-            director.GetComponent<GameController>().TakeLives(1);
-            director.GetComponent<GameController>().AddDeadPlayer(1);
+
+
+            if (IsClient)
+            {
+                director.GetComponent<GameController>().TakeLivesServerRpc();
+            }
+            else
+            {
+                director.GetComponent<GameController>().TakeLives(1);
+            }
+
+            if (IsClient)
+            {
+                director.GetComponent<GameController>().AddDeadPlayerServerRpc();
+            }
+            else
+            {
+                director.GetComponent<GameController>().AddDeadPlayer(1);
+            }
         }
 
         if (Input.GetKeyDown(",") && debug)
@@ -327,7 +350,14 @@ public class PlayerController : NetworkBehaviour
         }
         if (Input.GetKeyDown("e") && lockDownButtonInRange)
         {
-            director.GetComponent<GameController>().lockDown = false;
+            if (IsClient)
+            {
+                director.GetComponent<GameController>().TurnOffLockDownServerRpc();
+            }
+            else
+            {
+                director.GetComponent<GameController>().lockDown.Value = false;
+            }
         }
 
         if (Physics.CheckSphere(groundCheck.position, distanceFromGround, pestPlaceLayerMask) && hasPestFlask)
@@ -498,7 +528,14 @@ public class PlayerController : NetworkBehaviour
         }
         if (hit.gameObject.tag == "Heart")
         {
-            director.GetComponent<GameController>().AddLives(1);
+            if (IsClient)
+            {
+                director.GetComponent<GameController>().AddLivesServerRpc();
+            }
+            else
+            {
+                director.GetComponent<GameController>().AddLives(1);
+            }
             Destroy(hit.gameObject);
         }
 

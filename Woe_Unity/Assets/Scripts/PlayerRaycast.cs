@@ -154,7 +154,7 @@ public class PlayerRaycast : NetworkBehaviour
             playerController.GetComponent<PlayerController>().objectForward = hitForwardData.collider.gameObject;
 
             hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().selectMaterial;
-            if (!playerController.GetComponent<PlayerController>().director.GetComponent<GameController>().lockDown)
+            if (!playerController.GetComponent<PlayerController>().director.GetComponent<GameController>().lockDown.Value)
             {
                 playerController.GetComponent<PlayerController>().infoText.text = "Lockdown has been lifted";
             }

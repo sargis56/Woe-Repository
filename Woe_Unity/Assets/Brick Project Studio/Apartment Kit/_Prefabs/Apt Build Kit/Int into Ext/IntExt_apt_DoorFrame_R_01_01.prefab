@@ -197,8 +197,8 @@ GameObject:
   - component: {fileID: 1099503060}
   - component: {fileID: 1099503061}
   - component: {fileID: 1045514634263077818}
-  - component: {fileID: 558435552869754647}
   - component: {fileID: 1364185440447521374}
+  - component: {fileID: 558435552869754647}
   m_Layer: 0
   m_Name: Glass.002
   m_TagString: Untagged
@@ -319,7 +319,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openandclose1: {fileID: 1099503060}
   open: 0
-  Player: {fileID: 0}
+  players: []
+  selectMaterial: {fileID: 2100000, guid: bac536cf52300fb4f9ee42241a73f370, type: 2}
 --- !u!114 &1045514634263077818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,20 +337,6 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &558435552869754647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6781225833794216697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 1099503060}
 --- !u!114 &1364185440447521374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,3 +363,17 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!114 &558435552869754647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6781225833794216697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 1099503060}

@@ -78,7 +78,8 @@ public class BotController : NetworkBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    public override void OnNetworkSpawn()
+    //void Start()
     {
         itemSpawnTime_ORG = itemSpawnTime;
         followWaitTime_ORG = followWaitTime;
@@ -93,7 +94,7 @@ public class BotController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner) { return; }
+        if (!IsSpawned) { return; }
         SetupRays();
         UpdateState();
 

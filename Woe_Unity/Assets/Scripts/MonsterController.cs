@@ -142,7 +142,7 @@ public class MonsterController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner) { return; }
+        if (!IsSpawned) { return; }
 
         players = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().players;
 

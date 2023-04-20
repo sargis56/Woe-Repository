@@ -14,6 +14,7 @@ public class GameController : NetworkBehaviour
     public TextMeshProUGUI playerNumScreenText;
     public TextMeshProUGUI monsterAIScreenText;
     public TextMeshProUGUI diffText;
+    public TextMeshProUGUI livesText;
     public GameObject diffDial;
     public Material deactiveMaterial;
     private bool showMonsterCheatList = false;
@@ -22,7 +23,7 @@ public class GameController : NetworkBehaviour
     public GameDifficulty gameDifficulty;
 
     public GameObject[] players;
-    public int deadPlayersNum;
+    public NetworkVariable<int> deadPlayersNum = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
     public GameObject monster;
 
     public bool menaceSystem;
@@ -34,7 +35,7 @@ public class GameController : NetworkBehaviour
 
     public GameObject[] vitaChambers;
 
-    public int playerLives;
+    public NetworkVariable<int> playerLives = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
 
     public bool globalDebug = false;
     public bool cheatCodes = false;
@@ -47,7 +48,7 @@ public class GameController : NetworkBehaviour
     private int diffIndex = 0;
 
     public bool unlockLabDoor = false;
-    public bool lockDown = true;
+    public NetworkVariable<bool> lockDown = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone);
     public GameObject dirLight;
     public GameObject labDoor;
 
@@ -61,7 +62,7 @@ public class GameController : NetworkBehaviour
     public override void OnNetworkSpawn()
     //public void Start()
     {
-        deadPlayersNum = 0;
+        //deadPlayersNum = 0;
         //monster = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().monster;
         bots = GameObject.FindGameObjectsWithTag("Bot");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -117,11 +118,14 @@ public class GameController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!IsOwner)
+        
+        players = GameObject.FindGameObjectsWithTag("Player");
+
+        if (!IsSpawned)
         {
+            print("I am not on a client");
             return;
         }
-        players = GameObject.FindGameObjectsWithTag("Player");
 
         if (globalDebug)
         {
@@ -138,7 +142,7 @@ public class GameController : NetworkBehaviour
                 cheatMonsterText.GetComponent<TextMeshProUGUI>().enabled = false;
             }
 
-            deadPlayersText.text = "Dead Players: " + deadPlayersNum.ToString() + " | Players: " + players.Length.ToString();
+            deadPlayersText.text = "Dead Players: " + deadPlayersNum.Value.ToString() + " | Players: " + players.Length.ToString();
         }
         else
         {
@@ -151,7 +155,7 @@ public class GameController : NetworkBehaviour
         {
             if (Input.GetKeyDown("m"))
             {
-                lockDown = false;
+                lockDown.Value = false;
                 players = GameObject.FindGameObjectsWithTag("Player");
             }
             if (Input.GetKeyDown("n"))
@@ -214,7 +218,7 @@ public class GameController : NetworkBehaviour
             }
         }
 
-        if ((playerLives <= 0) && (deadPlayersNum == players.Length))
+        if ((playerLives.Value <= 0) && (deadPlayersNum.Value == players.Length))
         {
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             SceneManager.LoadScene("LoseScreen");
@@ -305,7 +309,7 @@ public class GameController : NetworkBehaviour
            
         }
 
-        if (!lockDown)
+        if (!lockDown.Value)
         {
             dirLight.SetActive(false);
             foreach (GameObject secBarrier in secBarriers)
@@ -396,7 +400,8 @@ public class GameController : NetworkBehaviour
             monster.GetComponent<MonsterController>().menaceSystemActive = false;
         }
 
-        livesScreenText.text = playerLives.ToString();
+        livesText.text = "Lives: " + playerLives.Value.ToString();
+        livesScreenText.text = playerLives.Value.ToString();
         playerNumScreenText.text = players.Length.ToString();
 
         if (decontamination)
@@ -408,22 +413,22 @@ public class GameController : NetworkBehaviour
 
     public void AddLives(int lives)
     {
-        playerLives = playerLives + lives;
+        playerLives.Value = playerLives.Value + lives;
     }
 
     public void TakeLives(int lives)
     {
-        playerLives -= lives;
+        playerLives.Value = playerLives.Value - lives;
     }
 
     public void AddDeadPlayer(int amount)
     {
-        deadPlayersNum = deadPlayersNum + amount;
+        deadPlayersNum.Value = deadPlayersNum.Value + amount;
     }
 
     public void TakeDeadPlayer(int amount)
     {
-        deadPlayersNum -= amount;
+        deadPlayersNum.Value -= amount;
     }
 
     public GameObject GetClosestVitaChamber(Vector3 position_)
@@ -527,7 +532,7 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Easy";
         monsterAIScreenText.text = "Dumb";
-        playerLives = 30;
+        playerLives.Value = 30;
         monster.GetComponent<MonsterController>().enableSprintDetection = false;
         menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Dumb;
@@ -537,7 +542,7 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Normal";
         monsterAIScreenText.text = "Incompetent";
-        playerLives = 15;
+        playerLives.Value = 15;
         monster.GetComponent<MonsterController>().enableSprintDetection = false;
         menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Incompetent;
@@ -547,7 +552,7 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Hard";
         monsterAIScreenText.text = "Competent";
-        playerLives = 10;
+        playerLives.Value = 10;
         monster.GetComponent<MonsterController>().enableSprintDetection = true;
         menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Competent;
@@ -557,7 +562,7 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Nightmare";
         monsterAIScreenText.text = "Smart";
-        playerLives = 5;
+        playerLives.Value = 5;
         monster.GetComponent<MonsterController>().enableSprintDetection = true;
         menaceSystem = false;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Smart;
@@ -566,9 +571,38 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Unrelenting";
         monsterAIScreenText.text = "Apex Predator";
-        playerLives = 0;
+        playerLives.Value = 0;
         monster.GetComponent<MonsterController>().enableSprintDetection = true;
         menaceSystem = false;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.ApexPredator;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void AddLivesServerRpc()
+    {
+        playerLives.Value = playerLives.Value + 1;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeLivesServerRpc()
+    {
+        playerLives.Value = playerLives.Value - 1;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TurnOffLockDownServerRpc()
+    {
+        lockDown.Value = false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddDeadPlayerServerRpc()
+    {
+        deadPlayersNum.Value = deadPlayersNum.Value + 1;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeDeadPlayerServerRpc()
+    {
+        deadPlayersNum.Value -= 1;
     }
 }

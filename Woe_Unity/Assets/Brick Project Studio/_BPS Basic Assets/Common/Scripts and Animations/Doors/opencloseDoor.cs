@@ -13,19 +13,22 @@ namespace SojaExiles
 		public bool open;
 		public GameObject[] players;
 		Material defaultMaterial;
+		public Material selectMaterial;
 		bool highLight;
 
 		public override void OnNetworkSpawn()
         {
             open = false;
-            players = GameObject.FindGameObjectsWithTag("Player");
+            //players = GameObject.FindGameObjectsWithTag("Player");
 			defaultMaterial = this.GetComponent<MeshRenderer>().material;
 			highLight = true;
 		}
 
 		void OnMouseOver()
 		{
-			if (IsOwner) {
+			players = GameObject.FindGameObjectWithTag("Director").GetComponent<GameController>().players;
+
+			if (IsSpawned) {
 				foreach (GameObject player in players)
 				{
 					float dist = Vector3.Distance(player.transform.position, transform.position);
@@ -33,7 +36,7 @@ namespace SojaExiles
 					{
 						if (highLight)
 						{
-							this.GetComponent<MeshRenderer>().material = player.GetComponent<PlayerController>().selectMaterial;
+							this.GetComponent<MeshRenderer>().material = selectMaterial;
 						}
 						if (open == false)
 						{
