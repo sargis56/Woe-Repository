@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class VitaManager : MonoBehaviour
+public class VitaManager : NetworkBehaviour
 {
     public GameObject vitaLamp;
+    public Material vitaLampMat;
     public Material activeMaterial;
     public Material deactiveMaterial;
 
-    public bool isActive = true;
+    //public bool isActive = true;
+    [SerializeField]
+    public NetworkVariable<bool> isActive = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone);
 
     // Start is called before the first frame update
     void Start()
@@ -19,13 +23,20 @@ public class VitaManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isActive)
+        if (!IsSpawned)
         {
-            vitaLamp.GetComponent<MeshRenderer>().material = activeMaterial;
+            return;
+        }
+
+        if (isActive.Value)
+        {
+            vitaLampMat = activeMaterial;
         }
         else
         {
-            vitaLamp.GetComponent<MeshRenderer>().material = deactiveMaterial;
+            vitaLampMat = deactiveMaterial;
         }
+
+        vitaLamp.GetComponent<MeshRenderer>().material = vitaLampMat;
     }
 }

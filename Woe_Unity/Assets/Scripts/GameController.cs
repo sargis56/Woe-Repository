@@ -23,6 +23,8 @@ public class GameController : NetworkBehaviour
     public GameDifficulty gameDifficulty;
 
     public GameObject[] players;
+    //public NetworkVariable<NetworkObjectReference>[] playersNet = new NetworkVariable<NetworkObjectReference>(0, NetworkVariableReadPermission.Everyone);
+
     public NetworkVariable<int> deadPlayersNum = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
     public GameObject monster;
 
@@ -33,6 +35,7 @@ public class GameController : NetworkBehaviour
     public GameObject[] safeZones;
     public GameObject[] secBarriers;
 
+    public NetworkVariable<GameObject>[] vitaChambersNet;
     public GameObject[] vitaChambers;
 
     public NetworkVariable<int> playerLives = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
@@ -40,14 +43,14 @@ public class GameController : NetworkBehaviour
     public bool globalDebug = false;
     public bool cheatCodes = false;
 
-    public bool decontamination = false;
-    public float decontaminationTime = 180.0f;
+    public NetworkVariable<bool> decontamination = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+    public NetworkVariable<float> decontaminationTime = new NetworkVariable<float>(30, NetworkVariableReadPermission.Everyone);
     public bool updateDiff = false;
 
     [SerializeField]
     private int diffIndex = 0;
 
-    public bool unlockLabDoor = false;
+    public NetworkVariable<bool> unlockLabDoor = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public NetworkVariable<bool> lockDown = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone);
     public GameObject dirLight;
     public GameObject labDoor;
@@ -58,6 +61,8 @@ public class GameController : NetworkBehaviour
     private bool removeDoors = false;
     public GameObject[] doors;
 
+    public int currentChamberIndex = 0;
+
     // Start is called before the first frame update
     public override void OnNetworkSpawn()
     //public void Start()
@@ -67,6 +72,7 @@ public class GameController : NetworkBehaviour
         bots = GameObject.FindGameObjectsWithTag("Bot");
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         vitaChambers = GameObject.FindGameObjectsWithTag("VitaChamber");
+        //vitaChambersNet = vitaChambers;
         safeZones = GameObject.FindGameObjectsWithTag("Safe Zone");
         secBarriers = GameObject.FindGameObjectsWithTag("Security Barrier");
         dirLight = GameObject.FindGameObjectWithTag("DirLight");
@@ -121,6 +127,11 @@ public class GameController : NetworkBehaviour
         
         players = GameObject.FindGameObjectsWithTag("Player");
 
+        //for (int i = 0; i < players.Length; i++)
+        //{
+        //    playersNet[0].Value = players[0];
+        //}
+
         if (!IsSpawned)
         {
             print("I am not on a client");
@@ -151,7 +162,7 @@ public class GameController : NetworkBehaviour
             deadPlayersText.text = "";
         }
 
-        if (cheatCodes)
+        if ((cheatCodes) && (IsHost))
         {
             if (Input.GetKeyDown("m"))
             {
@@ -160,7 +171,7 @@ public class GameController : NetworkBehaviour
             }
             if (Input.GetKeyDown("n"))
             {
-                decontamination = true;
+                decontamination.Value = true;
             }
             if (Input.GetKeyDown("b"))
             {
@@ -178,21 +189,21 @@ public class GameController : NetworkBehaviour
                 {
                     if (player != null)
                     {
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp1Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp2Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp3Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp4Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp5Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp6Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp7Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp8Found = true;
-                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp9Found = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp1Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp2Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp3Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp4Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp5Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp6Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp7Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp8Found.Value = true;
+                        player.GetComponent<PlayerController>().pesticideMachine.GetComponent<VialMachineController>().comp9Found.Value = true;
                     }
                 }
             }
             if (Input.GetKeyDown("c"))
             {
-                unlockLabDoor = true;
+                unlockLabDoor.Value = true;
             }
             if (Input.GetKeyDown("x"))
             {
@@ -290,24 +301,33 @@ public class GameController : NetworkBehaviour
             }
         }
 
-        foreach (GameObject vitaChamber in vitaChambers)
+        if (IsClient)
         {
-            foreach (GameObject player in players)
+
+        }
+        else
+        {
+            foreach (GameObject vitaChamber in vitaChambers)
             {
-                if ((player != null) && (vitaChamber != null))
+                foreach (GameObject player in players)
                 {
-                    if (Vector3.Distance(vitaChamber.transform.position, player.transform.position) < 2.0f) 
+                    if ((player != null) && (vitaChamber != null))
                     {
-                        vitaChamber.GetComponent<VitaManager>().isActive = false;
-                    }
-                    else
-                    {
-                        vitaChamber.GetComponent<VitaManager>().isActive = true;
+                        if (Vector3.Distance(vitaChamber.transform.position, player.transform.position) < 2.0f)
+                        {
+                            vitaChamber.GetComponent<VitaManager>().isActive.Value = false;
+                        }
+                        else
+                        {
+                            vitaChamber.GetComponent<VitaManager>().isActive.Value = true;
+                        }
                     }
                 }
+
             }
-           
         }
+
+
 
         if (!lockDown.Value)
         {
@@ -320,7 +340,7 @@ public class GameController : NetworkBehaviour
 
             foreach (GameObject bot in bots)
             {
-                if ((bot != null) && (firstBotShutdown) && (!decontamination))
+                if ((bot != null) && (firstBotShutdown) && (!decontamination.Value))
                 {
                     bot.GetComponent<BotController>().shutDown = false;
                     bot.GetComponent<BotController>().currentState = BotController.BotState.Idle;
@@ -382,7 +402,7 @@ public class GameController : NetworkBehaviour
             }
         }
 
-        if (unlockLabDoor)
+        if (unlockLabDoor.Value)
         {
             labDoor.SetActive(false);
         }
@@ -404,7 +424,7 @@ public class GameController : NetworkBehaviour
         livesScreenText.text = playerLives.Value.ToString();
         playerNumScreenText.text = players.Length.ToString();
 
-        if (decontamination)
+        if (decontamination.Value)
         {
             Decontaminate();
         }
@@ -439,7 +459,7 @@ public class GameController : NetworkBehaviour
         {
             Vector3 diff = vitaChamber.transform.position - position_;
             float curDistance = diff.sqrMagnitude;
-            if ((curDistance < distance) && vitaChamber.GetComponent<VitaManager>().isActive)
+            if ((curDistance < distance) && vitaChamber.GetComponent<VitaManager>().isActive.Value)
             {
                 closestWaypoint = vitaChamber;
                 distance = curDistance;
@@ -454,8 +474,8 @@ public class GameController : NetworkBehaviour
         //removeDoors = true;
         menaceSystem = false;
 
-        decontaminationTime -= Time.deltaTime;
-        if (decontaminationTime < 0.0f)
+        decontaminationTime.Value -= Time.deltaTime;
+        if (decontaminationTime.Value < 0.0f)
         {
             if (monster != null)
             {
@@ -470,10 +490,10 @@ public class GameController : NetworkBehaviour
             monster.GetComponent<MonsterController>().decon = true;
         }
 
-        if ( ((decontaminationTime < 150) && diffIndex == 0) || 
-            ((decontaminationTime < 135) && diffIndex == 1) ||
-            ((decontaminationTime < 100) && diffIndex == 2) ||
-            ((decontaminationTime < 60) && diffIndex == 3))
+        if ( ((decontaminationTime.Value < 150) && diffIndex == 0) || 
+            ((decontaminationTime.Value < 135) && diffIndex == 1) ||
+            ((decontaminationTime.Value < 100) && diffIndex == 2) ||
+            ((decontaminationTime.Value < 60) && diffIndex == 3))
         {
             updateDiff = true;
         }
@@ -532,7 +552,14 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Easy";
         monsterAIScreenText.text = "Dumb";
-        playerLives.Value = 30;
+        if (IsClient)
+        {
+            SetLives1ServerRpc();
+        }
+        else
+        {
+            playerLives.Value = 30;
+        }
         monster.GetComponent<MonsterController>().enableSprintDetection = false;
         menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Dumb;
@@ -542,7 +569,14 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Normal";
         monsterAIScreenText.text = "Incompetent";
-        playerLives.Value = 15;
+        if (IsClient)
+        {
+            SetLives2ServerRpc();
+        }
+        else
+        {
+            playerLives.Value = 15;
+        }
         monster.GetComponent<MonsterController>().enableSprintDetection = false;
         menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Incompetent;
@@ -552,7 +586,14 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Hard";
         monsterAIScreenText.text = "Competent";
-        playerLives.Value = 10;
+        if (IsClient)
+        {
+            SetLives3ServerRpc();
+        }
+        else
+        {
+            playerLives.Value = 10;
+        }
         monster.GetComponent<MonsterController>().enableSprintDetection = true;
         menaceSystem = true;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Competent;
@@ -562,7 +603,14 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Nightmare";
         monsterAIScreenText.text = "Smart";
-        playerLives.Value = 5;
+        if (IsClient)
+        {
+            SetLives4ServerRpc();
+        }
+        else
+        {
+            playerLives.Value = 5;
+        }
         monster.GetComponent<MonsterController>().enableSprintDetection = true;
         menaceSystem = false;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.Smart;
@@ -571,7 +619,14 @@ public class GameController : NetworkBehaviour
     {
         diffText.text = "Unrelenting";
         monsterAIScreenText.text = "Apex Predator";
-        playerLives.Value = 0;
+        if (IsClient)
+        {
+            SetLives5ServerRpc();
+        }
+        else
+        {
+            playerLives.Value = 5;
+        }
         monster.GetComponent<MonsterController>().enableSprintDetection = true;
         menaceSystem = false;
         monster.GetComponent<MonsterController>().intelligence = MonsterController.MonsterIntelligence.ApexPredator;
@@ -593,6 +648,12 @@ public class GameController : NetworkBehaviour
     {
         lockDown.Value = false;
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void UnlockLabDoorServerRpc()
+    {
+        unlockLabDoor.Value = true;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void AddDeadPlayerServerRpc()
@@ -605,4 +666,50 @@ public class GameController : NetworkBehaviour
     {
         deadPlayersNum.Value -= 1;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DeactiveVitaChamberServerRpc()
+    {
+        vitaChambers[currentChamberIndex].GetComponent<VitaManager>().isActive.Value = false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ActiveVitaChamberServerRpc()
+    {
+        vitaChambers[currentChamberIndex].GetComponent<VitaManager>().isActive.Value = true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetLives1ServerRpc()
+    {
+        playerLives.Value = 30;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void SetLives2ServerRpc()
+    {
+        playerLives.Value = 15;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void SetLives3ServerRpc()
+    {
+        playerLives.Value = 10;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void SetLives4ServerRpc()
+    {
+        playerLives.Value = 5;
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void SetLives5ServerRpc()
+    {
+        playerLives.Value = 0;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DeconServerRpc()
+    {
+        decontamination.Value = true;
+    }
+
+
 }

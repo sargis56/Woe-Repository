@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 8983942384879612335}
   - component: {fileID: 7340387648828611189}
   - component: {fileID: 2495993652927973441}
+  - component: {fileID: 8966881770784244530}
   m_Layer: 0
   m_Name: Taser
   m_TagString: Taser
@@ -255,3 +256,16 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &8966881770784244530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4648017595194488097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6d8179b8585d54183e3e1126a00eb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lingerTime: 30

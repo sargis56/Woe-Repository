@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class RemoveObject : MonoBehaviour
+public class RemoveObject : NetworkBehaviour
 {
     [SerializeField]
     private float lingerTime = 30.0f;
@@ -19,7 +20,8 @@ public class RemoveObject : MonoBehaviour
         lingerTime -= Time.deltaTime;
         if (lingerTime < 0.0f)
         {
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            NetworkManager.Destroy(this.gameObject);
         }
     }
 }

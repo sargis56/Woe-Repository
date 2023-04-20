@@ -374,7 +374,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Decontamination in progress:'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -914,7 +914,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Info
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -1669,7 +1669,6 @@ MonoBehaviour:
   itemText: {fileID: 3640104158594654239}
   infoText: {fileID: 1455926951944142384}
   ammoText: {fileID: 7785242040368080470}
-  livesText: {fileID: 0}
   deconText: {fileID: 6333677153469607359}
   selectMaterial: {fileID: 2100000, guid: 4530944c16ff58d45968aa2decf7ed8a, type: 2}
   attackMaterial: {fileID: 2100000, guid: ae297fa630d67bb4099455336a5a0556, type: 2}
@@ -1732,6 +1731,8 @@ MonoBehaviour:
   pauseMenu: {fileID: 7425678006659778386}
   isInMenu: 0
   spawnDeadAssets: 0
+  backOff:
+    m_InternalValue: 0
 --- !u!114 &8653147067524247898
 MonoBehaviour:
   m_ObjectHideFlags: 0

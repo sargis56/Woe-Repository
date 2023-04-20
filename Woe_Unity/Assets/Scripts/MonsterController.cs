@@ -159,7 +159,7 @@ public class MonsterController : NetworkBehaviour
 
         if (playerTargeting != null)
         {
-            if (playerTargeting.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Dead)
+            if ((playerTargeting.GetComponent<PlayerController>().playerState == PlayerController.PlayerState.Dead) || (playerTargeting.GetComponent<PlayerController>().backOff.Value))
             {
                 ChangeState(MonsterState.Idle);
             }

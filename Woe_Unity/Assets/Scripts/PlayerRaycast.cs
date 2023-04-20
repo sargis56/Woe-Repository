@@ -129,7 +129,7 @@ public class PlayerRaycast : NetworkBehaviour
             hitForwardData.collider.gameObject.GetComponent<MeshRenderer>().material = playerController.GetComponent<PlayerController>().selectMaterial;
             if (playerController.GetComponent<PlayerController>().hasPestFlask)
             {
-                if (playerController.GetComponent<PlayerController>().director.GetComponent<GameController>().decontamination)
+                if (playerController.GetComponent<PlayerController>().director.GetComponent<GameController>().decontamination.Value)
                 {
                     playerController.GetComponent<PlayerController>().infoText.text = "Decontamination started";
                 }

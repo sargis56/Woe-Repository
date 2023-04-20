@@ -102,6 +102,8 @@ public class PlayerController : NetworkBehaviour
     public bool isInMenu;
     public bool spawnDeadAssets;
 
+    public NetworkVariable<bool> backOff = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -128,18 +130,17 @@ public class PlayerController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-         if (!IsOwner) { return; }
-
+        if (!IsOwner) { return; }
         
-        if (director.GetComponent<GameController>().decontamination)
+        if (director.GetComponent<GameController>().decontamination.Value)
         {
-            if (director.GetComponent<GameController>().decontaminationTime < 0)
+            if (director.GetComponent<GameController>().decontaminationTime.Value < 0)
             {
                 deconText.text = "Decontamination complete";
             }
             else
             {
-                deconText.text = "Decontamination in progress: " + director.GetComponent<GameController>().decontaminationTime;
+                deconText.text = "Decontamination in progress: " + director.GetComponent<GameController>().decontaminationTime.Value;
             }
         }
         else
@@ -174,6 +175,15 @@ public class PlayerController : NetworkBehaviour
 
     void UpdateDead()
     {
+        if (IsClient)
+        {
+            BackOffTrueServerRpc();
+        }
+        else
+        {
+
+            backOff.Value = true;
+        }
         movementController.sprintTimer = 0;
         movementController.tired = false;
         movementController.enabled = false;
@@ -228,6 +238,15 @@ public class PlayerController : NetworkBehaviour
 
     void UpdateAlive()
     {
+        if (IsClient)
+        {
+            BackOffFalseServerRpc();
+        }
+        else
+        {
+
+            backOff.Value = false;
+        }
         healthText.text = "Health: " + currentHealth.ToString();
 
         respawnPosition = director.GetComponent<GameController>().GetClosestVitaChamber(this.gameObject.transform.position).transform;
@@ -284,12 +303,12 @@ public class PlayerController : NetworkBehaviour
             }
         }
 
-        if (Input.GetKeyDown(",") && debug)
+        if (Input.GetKeyDown(",") && director.GetComponent<GameController>().cheatCodes)
         {
             TakeTrueDamage(50);
         }
 
-        if (Input.GetKeyDown(".") && debug)
+        if (Input.GetKeyDown(".") && director.GetComponent<GameController>().cheatCodes)
         {
             AddHealth(50);
         }
@@ -345,7 +364,14 @@ public class PlayerController : NetworkBehaviour
         {
             if (deconStation.GetComponent<DeconStation>().flaskPlaced)
             {
-                director.GetComponent<GameController>().decontamination = true;
+                if (IsClient)
+                {
+                    director.GetComponent<GameController>().DeconServerRpc();
+                }
+                else
+                {
+                    director.GetComponent<GameController>().decontamination.Value = true;
+                }
             }
         }
         if (Input.GetKeyDown("e") && lockDownButtonInRange)
@@ -496,6 +522,7 @@ public class PlayerController : NetworkBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+
         if (hit.gameObject.tag == "Spray")
         {
             if (hasSpray == false)
@@ -504,7 +531,14 @@ public class PlayerController : NetworkBehaviour
                 hasSpray = true;
             }
             sprayAmmo += 1;
-            Destroy(hit.gameObject);
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            }
         }
         if (hit.gameObject.tag == "Noisemaker")
         {
@@ -514,7 +548,14 @@ public class PlayerController : NetworkBehaviour
                 hasNoisemaker = true;
             }
             noisemakerAmmo += 1;
-            Destroy(hit.gameObject);
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            }
         }
         if (hit.gameObject.tag == "Taser")
         {
@@ -524,65 +565,145 @@ public class PlayerController : NetworkBehaviour
                 hasTaser = true;
             }
             taserAmmo += 1;
-            Destroy(hit.gameObject);
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            }
         }
         if (hit.gameObject.tag == "Heart")
         {
             if (IsClient)
             {
+                NetworkManager.Destroy(hit.gameObject);
                 director.GetComponent<GameController>().AddLivesServerRpc();
             }
             else
             {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
                 director.GetComponent<GameController>().AddLives(1);
             }
-            Destroy(hit.gameObject);
         }
 
         if (hit.gameObject.tag == "C1")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp1Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp1ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp1Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C2")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp2Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp2ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp2Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C3")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp3Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp3ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp3Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C4")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp4Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp4ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp4Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C5")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp5Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp5ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp5Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C6")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp6Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp6ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp6Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C7")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp7Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp7ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp7Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C8")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp8Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp8ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp8Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "C9")
         {
-            Destroy(hit.gameObject);
-            pesticideMachine.GetComponent<VialMachineController>().comp9Found = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                pesticideMachine.GetComponent<VialMachineController>().FoundComp9ServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                pesticideMachine.GetComponent<VialMachineController>().comp9Found.Value = true;
+            }
         }
         if (hit.gameObject.tag == "Pesticide")
         {
@@ -591,8 +712,16 @@ public class PlayerController : NetworkBehaviour
         }
         if (hit.gameObject.tag == "LabKey")
         {
-            Destroy(hit.gameObject);
-            director.GetComponent<GameController>().unlockLabDoor = true;
+            if (IsClient)
+            {
+                NetworkManager.Destroy(hit.gameObject);
+                director.GetComponent<GameController>().UnlockLabDoorServerRpc();
+            }
+            else
+            {
+                hit.gameObject.GetComponent<NetworkObject>().Despawn(true);
+                director.GetComponent<GameController>().unlockLabDoor.Value = true;
+            }
         }
     }
 
@@ -601,5 +730,15 @@ public class PlayerController : NetworkBehaviour
         playerState = state;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void BackOffTrueServerRpc()
+    {
+        backOff.Value = true;
+    }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void BackOffFalseServerRpc()
+    {
+        backOff.Value = false;
+    }
 }
